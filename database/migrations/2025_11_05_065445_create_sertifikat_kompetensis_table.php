@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('alur_pendaftarans', function (Blueprint $table) {
+        Schema::create('sertifikat_kompetensis', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unisignedInteger('no_urut')->unique();
-            $table->string('judul', 255);
-            $table->text('keterangan');
+            $table->foreignUuid('biodata_id')->constrained('biodatas')->cascadeOnDelete();
+            $table->string('nama_sertifikat');
+            $table->string('penerbit');
+            $table->date('tanggal_terbit');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('alur_pendaftarans');
+        Schema::dropIfExists('sertifikat_kompetensis');
     }
 };

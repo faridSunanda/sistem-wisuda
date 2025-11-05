@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('dokumen_persyaratans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('tipe_dokumen', 100); 
+            $table->string('tipe_dokumen', 100);
             $table->string('nama_dokumen', 255);
-            $table->text('keterangan'); 
-            $table->string('berkas', 255); 
-            $table->timestamps(); 
-
-            // Soft Deletes (deleted_at)
+            $table->text('keterangan');
+            $table->string('berkas', 255);
+            $table->timestamps();
             $table->softDeletes();
         });
     }
