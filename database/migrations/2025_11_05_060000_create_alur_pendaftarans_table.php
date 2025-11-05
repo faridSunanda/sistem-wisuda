@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('alur_pendaftarans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unisignedInteger('no_urut')->unique();
+            $table->unsignedInteger('no_urut')->unique();
             $table->string('judul', 255);
             $table->text('keterangan');
             $table->timestamps();

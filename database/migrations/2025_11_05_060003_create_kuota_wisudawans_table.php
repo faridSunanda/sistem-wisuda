@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('kuota_wisudawans', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('pendaftaran_wisuda_id');
-            $table->unsignedInteger('jumlah_kuota'); 
-            $table->timestamps(); 
+            $table->unsignedInteger('jumlah_kuota');
+            $table->timestamps();
             $table->softDeletes();
             $table->foreign('pendaftaran_wisuda_id')->references('id')->on('pendaftaran_wisudas')->onDelete('cascade');
         });

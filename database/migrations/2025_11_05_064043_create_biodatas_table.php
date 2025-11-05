@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('biodatas', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('nik')-nullable();
+            $table->string('nik')->nullable();
             $table->string('nim')->nullable();
             $table->string('nirm')->nullable();
             $table->string('nirl')->nullable();
