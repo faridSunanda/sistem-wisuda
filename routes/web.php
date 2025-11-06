@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DataWisudawanController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 
 Route::get('/', function () {
@@ -44,6 +45,40 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
     Route::get('/download-formulir', function () {
         return view('mahasiswa.download-formulir.index');
     })->name('download-formulir');
+    Route::post('/logout', function () {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('admin.dashboard');
+    });
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/data-wisudawan', [DataWisudawanController::class, 'index'])->name('data-wisudawan');
+    Route::get('/data-wisudawan/get-data', [DataWisudawanController::class, 'getData'])->name('data-wisudawan.get-data');
+    
+    Route::prefix('setting')->name('setting.')->group(function () {
+        Route::get('/alur-pendaftaran', function () {
+            return view('admin.setting.alur-pendaftaran.index');
+        })->name('alur-pendaftaran');
+        Route::get('/dokumen-persyaratan', function () {
+            return view('admin.setting.dokumen-persyaratan.index');
+        })->name('dokumen-persyaratan');
+        Route::get('/jadwal-pendaftaran', function () {
+            return view('admin.setting.jadwal-pendaftaran.index');
+        })->name('jadwal-pendaftaran');
+        Route::get('/jadwal-wisuda', function () {
+            return view('admin.setting.jadwal-wisuda.index');
+        })->name('jadwal-wisuda');
+        Route::get('/kuota-wisudawan', function () {
+            return view('admin.setting.kuota-wisudawan.index');
+        })->name('kuota-wisudawan');
+    });
+    
     Route::post('/logout', function () {
         Auth::logout();
         request()->session()->invalidate();

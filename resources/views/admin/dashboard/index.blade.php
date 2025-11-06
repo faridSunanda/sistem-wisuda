@@ -1,7 +1,11 @@
-@extends('mahasiswa.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="space-y-4 md:space-y-6">
+    <div class="mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+    </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <div class="bg-white rounded-lg shadow p-4 md:p-6 border border-gray-200">
             <div class="flex items-center justify-between mb-3 md:mb-4">
@@ -198,4 +202,3 @@
 </script>
 @endpush
 @endsection
-
