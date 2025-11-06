@@ -23,11 +23,13 @@
                 </h2>
             </div>
 
-            <button onclick="window.location.href='/mahasiswa'"
-                class="mt-4 flex items-center gap-2 bg-green-500 px-6 py-3 rounded-lg text-white font-semibold hover:bg-green-600 hover:scale-105 transition-all duration-300 shadow-lg shadow-green-500/30">
-                <i class="fa-solid fa-right-to-bracket text-lg"></i>
-                <span>Login SSO</span>
-            </button>
+            <div class="mt-6">
+                <a href="{{ route('mahasiswa.dashboard') }}"
+                    class="inline-flex items-center gap-2 bg-green-500 px-6 py-3 rounded-lg text-white font-semibold hover:bg-green-600 hover:scale-105 transition-all duration-300 shadow-lg shadow-green-500/30">
+                    <i class="fa-solid fa-right-to-bracket text-lg"></i>
+                    <span>Login SSO</span>
+                </a>
+            </div>
         </div>
     </section>
 
