@@ -50,9 +50,8 @@
                 <span>Lihat Halaman Depan</span>
             </a>
 
-            <form>
-                {{-- <form method="#" action="#"> --}}
-                {{-- @csrf --}}
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
                 <button type="submit"
                     class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200">
                     <i class="fa-solid fa-right-from-bracket w-5 text-center text-slate-400"></i>

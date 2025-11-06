@@ -1,21 +1,42 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
-// Arahkan Ke Portal Utama
 Route::get('/', function () {
     return view('portal.index');
+})->name('portal');
+
+
+Route::get('/login', [AuthController::class, 'create'])->name('login');
+Route::post('/login', [AuthController::class, 'store'])->name('login.store');
+Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
+
+//
+//          ADMIN ROUTES
+//
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
 });
 
 
-Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
+//
+//          MAHASISWA ROUTES
+//
+Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasiswa'])->group(function () {
+
     Route::get('/', function () {
         return redirect()->route('mahasiswa.dashboard');
     });
-    Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/dashboard', [App\Http\Controllers\Mahasiswa\DashboardController::class, 'index'])->name('dashboard');
+
     Route::get('/data-diri', function () {
         return view('mahasiswa.data-diri.index');
     })->name('data-diri');
+
     Route::prefix('sertifikat')->name('sertifikat.')->group(function () {
         Route::get('/', function () {
             return redirect()->route('mahasiswa.sertifikat.kompetensi');
@@ -39,13 +60,9 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
             return view('mahasiswa.sertifikat.sertifikat-organisasi.index');
         })->name('organisasi');
     });
+
     Route::get('/download-formulir', function () {
         return view('mahasiswa.download-formulir.index');
     })->name('download-formulir');
-    Route::post('/logout', function () {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect('/');
-    })->name('logout');
+
 });
