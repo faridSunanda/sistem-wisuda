@@ -3,82 +3,57 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
-use App\Models\SertifikatPendidikanKarakter;
-use App\Models\Biodata;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class SertifikatPendidikanKarakterController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        
-        // Cek apakah user sudah punya biodata, jika belum buat dummy
-        $biodata = $user->biodata;
-        
-        if (!$biodata) {
-            $biodata = Biodata::create([
-                'id' => Str::uuid(),
-                'user_id' => $user->id,
-                'nik' => '1234567890123456',
-                'nim' => '20210001',
-                'nirm' => 'NIRM001',
-                'nirl' => 'NIRL001',
-                'tempat_lahir' => 'Semarang',
-                'tanggal_lahir' => '2000-01-01',
-                'jenis_kelamin' => 'Laki-laki',
-                'status_mahasiswa' => 'Baru',
-                'tahun_masuk' => '2021',
-                'fakultas' => 'Fakultas Teknik',
-                'program_studi' => 'Teknik Informatika',
-                'alamat_rumah' => 'Jl. Test No. 123',
-                'no_telepon' => '081234567890',
-            ]);
+        $biodata = Auth::user()->biodata;
+        $sertifikats = collect(); 
+
+        if ($biodata) {
+            $biodata->load('sertifikatPendidikanKarakter');
+            $sertifikats = $biodata->sertifikatPendidikanKarakter;
         }
 
-        $sertifikatPendidikanKarakter = $biodata->sertifikatPendidikanKarakter ?? collect();
-        
-        return view('mahasiswa.sertifikat.sertifikat-pendidikan-karakter.index', compact('sertifikatPendidikanKarakter'));
+        return view('mahasiswa.sertifikat.sertifikat-pendidikan-karakter.index', compact('sertifikats'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'sertifikat_pendidikan_karakter' => 'required|array|min:1|max:5',
-            'sertifikat_pendidikan_karakter.*.nama_sertifikat' => 'required|string|max:255',
-            'sertifikat_pendidikan_karakter.*.penerbit' => 'required|string|max:255',
-            'sertifikat_pendidikan_karakter.*.tanggal_terbit' => 'required|date',
+        $validator = Validator::make($request->all(), [
+            'nama_sertifikat'   => 'required|array|min:1|max:5',
+            'nama_sertifikat.*' => 'required|string|max:255',
+            'penerbit'          => 'required|array|min:1|max:5',
+            'penerbit.*'        => 'required|string|max:255',
+            'tanggal_terbit'    => 'required|array|min:1|max:5',
+            'tanggal_terbit.*'  => 'required|date',
         ]);
 
-        $user = auth()->user();
-        $biodata = $user->biodata;
-
-        // Jika belum ada biodata, buat dulu
-        if (!$biodata) {
-            $biodata = Biodata::create([
-                'id' => Str::uuid(),
-                'user_id' => $user->id,
-                'nim' => '20210001',
-            ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
         }
 
-        // Delete existing
-        SertifikatPendidikanKarakter::where('biodata_id', $biodata->id)->delete();
+        $biodata = Auth::user()->biodata;
+        if (!$biodata) {
+            return back()->with('error', 'Profil biodata tidak ditemukan.');
+        }
 
-        // Create new
-        foreach ($request->sertifikat_pendidikan_karakter as $sertifikat) {
-            if (!empty($sertifikat['nama_sertifikat'])) {
-                SertifikatPendidikanKarakter::create([
-                    'id' => Str::uuid(),
-                    'biodata_id' => $biodata->id,
-                    'nama_sertifikat' => $sertifikat['nama_sertifikat'],
-                    'penerbit' => $sertifikat['penerbit'],
-                    'tanggal_terbit' => $sertifikat['tanggal_terbit'],
+        $biodata->sertifikatPendidikanKarakter()->forceDelete();
+
+        foreach ($request->nama_sertifikat as $index => $nama) {
+            if (!empty($nama)) {
+                $biodata->sertifikatPendidikanKarakter()->create([
+                    'nama_sertifikat' => $nama,
+                    'penerbit'        => $request->penerbit[$index],
+                    'tanggal_terbit'  => $request->tanggal_terbit[$index],
                 ]);
             }
         }
 
-        return redirect()->back()->with('success', 'Data sertifikat pendidikan karakter berhasil disimpan.');
+        return back()->with('success', 'Data sertifikat pendidikan karakter berhasil diperbarui!');
     }
 }

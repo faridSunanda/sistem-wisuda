@@ -3,71 +3,57 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
-use App\Models\SertifikatPenghargaan;
-use App\Models\Biodata;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class SertifikatPenghargaanController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
-        
-        // Cek apakah user sudah punya biodata, jika belum buat dummy
-        $biodata = $user->biodata;
-        
-        if (!$biodata) {
-            $biodata = Biodata::create([
-                'id' => Str::uuid(),
-                'user_id' => $user->id,
-                'nim' => '20210001',
-                // ... field lainnya
-            ]);
+        $biodata = Auth::user()->biodata;
+        $sertifikats = collect(); 
+
+        if ($biodata) {
+            $biodata->load('sertifikatPenghargaan');
+            $sertifikats = $biodata->sertifikatPenghargaan;
         }
 
-        $sertifikatPenghargaans = $biodata->sertifikatPenghargaans ?? collect();
-        
-        // PERBAIKAN: Update path view sesuai struktur folder
-        return view('mahasiswa.sertifikat.sertifikat-penghargaan.index', compact('sertifikatPenghargaans'));
+        return view('mahasiswa.sertifikat.sertifikat-penghargaan.index', compact('sertifikats'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'sertifikat_penghargaan' => 'required|array|min:1|max:5',
-            'sertifikat_penghargaan.*.nama_sertifikat' => 'required|string|max:255',
-            'sertifikat_penghargaan.*.penerbit' => 'required|string|max:255',
-            'sertifikat_penghargaan.*.tanggal_terbit' => 'required|date',
+        $validator = Validator::make($request->all(), [
+            'nama_sertifikat'   => 'required|array|min:1|max:5',
+            'nama_sertifikat.*' => 'required|string|max:255',
+            'penerbit'          => 'required|array|min:1|max:5',
+            'penerbit.*'        => 'required|string|max:255',
+            'tanggal_terbit'    => 'required|array|min:1|max:5',
+            'tanggal_terbit.*'  => 'required|date',
         ]);
 
-        $user = auth()->user();
-        $biodata = $user->biodata;
-
-        if (!$biodata) {
-            $biodata = Biodata::create([
-                'id' => Str::uuid(),
-                'user_id' => $user->id,
-                'nim' => '20210001',
-            ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
         }
 
-        // Delete existing
-        SertifikatPenghargaan::where('biodata_id', $biodata->id)->delete();
+        $biodata = Auth::user()->biodata;
+        if (!$biodata) {
+            return back()->with('error', 'Profil biodata tidak ditemukan.');
+        }
 
-        // Create new
-        foreach ($request->sertifikat_penghargaan as $sertifikat) {
-            if (!empty($sertifikat['nama_sertifikat'])) {
-                SertifikatPenghargaan::create([
-                    'id' => Str::uuid(),
-                    'biodata_id' => $biodata->id,
-                    'nama_sertifikat' => $sertifikat['nama_sertifikat'],
-                    'penerbit' => $sertifikat['penerbit'],
-                    'tanggal_terbit' => $sertifikat['tanggal_terbit'],
+        $biodata->sertifikatPenghargaan()->forceDelete();
+
+        foreach ($request->nama_sertifikat as $index => $nama) {
+            if (!empty($nama)) {
+                $biodata->sertifikatPenghargaan()->create([
+                    'nama_sertifikat' => $nama,
+                    'penerbit'        => $request->penerbit[$index],
+                    'tanggal_terbit'  => $request->tanggal_terbit[$index],
                 ]);
             }
         }
 
-        return redirect()->back()->with('success', 'Data sertifikat penghargaan berhasil disimpan.');
+        return back()->with('success', 'Data sertifikat penghargaan berhasil diperbarui!');
     }
 }
