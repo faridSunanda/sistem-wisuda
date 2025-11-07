@@ -38,4 +38,19 @@ class Biodata extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function sertifikatKompetensi()
+    {
+        return $this->hasMany(SertifikatKompetensi::class);
+    }
+
+    public function sertifikatBahasaInternasional()
+    {
+        return $this->hasMany(SertifikatBahasaInternasional::class);
+    }
+
+    public function sertifikatMagang()
+    {
+        return $this->hasMany(SertifikatMagang::class);
+    }
 }
