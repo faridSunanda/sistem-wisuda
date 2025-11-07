@@ -36,25 +36,77 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/data-wisudawan', [DataWisudawanController::class, 'index'])->name('data-wisudawan');
-    Route::get('/data-wisudawan/get-data', [DataWisudawanController::class, 'getData'])->name('data-wisudawan.get-data');
+    
+    Route::prefix('data-wisudawan')->name('data-wisudawan.')->group(function () {
+        Route::get('/', [DataWisudawanController::class, 'index'])->name('index');
+        Route::get('/get-data', [DataWisudawanController::class, 'getData'])->name('get-data');
+        Route::get('/export', [DataWisudawanController::class, 'exportData'])->name('export');
+        Route::get('/{id}/edit', [DataWisudawanController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [DataWisudawanController::class, 'update'])->name('update');
+        Route::delete('/{id}', [DataWisudawanController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}', [DataWisudawanController::class, 'show'])->name('show');
+    });
 
     Route::prefix('setting')->name('setting.')->group(function () {
-        Route::get('/alur-pendaftaran', function () {
-            return view('admin.setting.alur-pendaftaran.index');
-        })->name('alur-pendaftaran');
-        Route::get('/dokumen-persyaratan', function () {
-            return view('admin.setting.dokumen-persyaratan.index');
-        })->name('dokumen-persyaratan');
-        Route::get('/jadwal-pendaftaran', function () {
-            return view('admin.setting.jadwal-pendaftaran.index');
-        })->name('jadwal-pendaftaran');
-        Route::get('/jadwal-wisuda', function () {
-            return view('admin.setting.jadwal-wisuda.index');
-        })->name('jadwal-wisuda');
-        Route::get('/kuota-wisudawan', function () {
-            return view('admin.setting.kuota-wisudawan.index');
-        })->name('kuota-wisudawan');
+        // Alur Pendaftaran
+        Route::prefix('alur-pendaftaran')->name('alur-pendaftaran.')->group(function () {
+            Route::get('/data/get-data', [\App\Http\Controllers\Admin\Setting\AlurPendaftaranController::class, 'getData'])->name('get-data');
+            Route::get('/', [\App\Http\Controllers\Admin\Setting\AlurPendaftaranController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\Setting\AlurPendaftaranController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\Setting\AlurPendaftaranController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\Setting\AlurPendaftaranController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\Setting\AlurPendaftaranController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\Setting\AlurPendaftaranController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\Setting\AlurPendaftaranController::class, 'show'])->name('show');
+        });
+
+        // Dokumen Persyaratan
+        Route::prefix('dokumen-persyaratan')->name('dokumen-persyaratan.')->group(function () {
+            Route::get('/data/get-data', [\App\Http\Controllers\Admin\Setting\DokumenPersyaratanController::class, 'getData'])->name('get-data');
+            Route::get('/', [\App\Http\Controllers\Admin\Setting\DokumenPersyaratanController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\Setting\DokumenPersyaratanController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\Setting\DokumenPersyaratanController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\Setting\DokumenPersyaratanController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\Setting\DokumenPersyaratanController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\Setting\DokumenPersyaratanController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\Setting\DokumenPersyaratanController::class, 'show'])->name('show');
+        });
+
+        // Jadwal Pendaftaran
+        Route::prefix('jadwal-pendaftaran')->name('jadwal-pendaftaran.')->group(function () {
+            Route::get('/data/get-data', [\App\Http\Controllers\Admin\Setting\JadwalPendaftaranController::class, 'getData'])->name('get-data');
+            Route::get('/', [\App\Http\Controllers\Admin\Setting\JadwalPendaftaranController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\Setting\JadwalPendaftaranController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\Setting\JadwalPendaftaranController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\Setting\JadwalPendaftaranController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\Setting\JadwalPendaftaranController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\Setting\JadwalPendaftaranController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\Setting\JadwalPendaftaranController::class, 'show'])->name('show');
+        });
+
+        // Jadwal Wisuda
+        Route::prefix('jadwal-wisuda')->name('jadwal-wisuda.')->group(function () {
+            Route::get('/data/get-data', [\App\Http\Controllers\Admin\Setting\JadwalWisudaController::class, 'getData'])->name('get-data');
+            Route::get('/', [\App\Http\Controllers\Admin\Setting\JadwalWisudaController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\Setting\JadwalWisudaController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\Setting\JadwalWisudaController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\Setting\JadwalWisudaController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\Setting\JadwalWisudaController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\Setting\JadwalWisudaController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\Setting\JadwalWisudaController::class, 'show'])->name('show');
+        });
+
+        // Kuota Wisudawan
+        Route::prefix('kuota-wisudawan')->name('kuota-wisudawan.')->group(function () {
+            Route::get('/data/get-data', [\App\Http\Controllers\Admin\Setting\KuotaWisudawanController::class, 'getData'])->name('get-data');
+            Route::get('/', [\App\Http\Controllers\Admin\Setting\KuotaWisudawanController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\Setting\KuotaWisudawanController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\Setting\KuotaWisudawanController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\Setting\KuotaWisudawanController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\Setting\KuotaWisudawanController::class, 'update'])->name('update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\Setting\KuotaWisudawanController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\Setting\KuotaWisudawanController::class, 'show'])->name('show');
+        });
     });
 });
 

@@ -1,7 +1,7 @@
 @extends('mahasiswa.layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-4 md:space-y-6">
+<div class="max-w-4xl mx-auto space-y-4 md:space-y-6 pb-10">
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
         <h2 class="text-lg md:text-xl font-semibold text-gray-900 mb-4 md:mb-6">Foto Profil</h2>
         <div class="flex flex-col sm:flex-row items-start gap-4 md:gap-6">

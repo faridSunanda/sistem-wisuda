@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         User::create([
             'name_lengkap' => 'Admin Wisuda',
             'email' => 'admin@wisuda.com',
-            'password' => '123',
+            'password' => Hash::make('123'),
             'role' => 'admin',
             'is_admin' => true,
             'email_verified_at' => now(),
@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
         User::create([
             'name_lengkap' => 'Mahasiswa Wisuda',
             'email' => 'mahasiswa@wisuda.com',
-            'password' => '123',
+            'password' => Hash::make('123'),
             'role' => 'mahasiswa',
             'is_admin' => false,
             'email_verified_at' => now(),

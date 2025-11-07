@@ -24,7 +24,7 @@
         <div>
             <p class="px-3 md:px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Menu</p>
         </div>
-        <a href="{{ route('admin.data-wisudawan') }}"
+        <a href="{{ route('admin.data-wisudawan.index') }}"
             class="flex items-center gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg transition-colors {{ request()->routeIs('admin.data-wisudawan*') ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -54,24 +54,24 @@
             </button>
 
             <div id="setting-menu" class="mt-1 space-y-1 {{ request()->routeIs('admin.setting*') ? '' : 'hidden' }}">
-                <a href="{{ route('admin.setting.alur-pendaftaran') }}"
-                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.alur-pendaftaran') ? 'bg-gray-100 font-medium' : '' }}">
+                <a href="{{ route('admin.setting.alur-pendaftaran.index') }}"
+                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.alur-pendaftaran*') ? 'bg-gray-100 font-medium' : '' }}">
                     Alur Pendaftaran
                 </a>
-                <a href="{{ route('admin.setting.dokumen-persyaratan') }}"
-                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.dokumen-persyaratan') ? 'bg-gray-100 font-medium' : '' }}">
+                <a href="{{ route('admin.setting.dokumen-persyaratan.index') }}"
+                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.dokumen-persyaratan*') ? 'bg-gray-100 font-medium' : '' }}">
                     Dokumen Persyaratan
                 </a>
-                <a href="{{ route('admin.setting.jadwal-pendaftaran') }}"
-                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.jadwal-pendaftaran') ? 'bg-gray-100 font-medium' : '' }}">
+                <a href="{{ route('admin.setting.jadwal-pendaftaran.index') }}"
+                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.jadwal-pendaftaran*') ? 'bg-gray-100 font-medium' : '' }}">
                     Jadwal Pendaftaran
                 </a>
-                <a href="{{ route('admin.setting.jadwal-wisuda') }}"
-                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.jadwal-wisuda') ? 'bg-gray-100 font-medium' : '' }}">
+                <a href="{{ route('admin.setting.jadwal-wisuda.index') }}"
+                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.jadwal-wisuda*') ? 'bg-gray-100 font-medium' : '' }}">
                     Jadwal Wisuda
                 </a>
-                <a href="{{ route('admin.setting.kuota-wisudawan') }}"
-                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.kuota-wisudawan') ? 'bg-gray-100 font-medium' : '' }}">
+                <a href="{{ route('admin.setting.kuota-wisudawan.index') }}"
+                    class="block px-3 md:px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors {{ request()->routeIs('admin.setting.kuota-wisudawan*') ? 'bg-gray-100 font-medium' : '' }}">
                     Kuota Wisudawan
                 </a>
             </div>
