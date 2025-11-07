@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('name_lengkap');
             $table->string('email')->unique();
             $table->string('role');
+
+            // Sementara
+            $table->boolean('is_admin')->default(false);
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

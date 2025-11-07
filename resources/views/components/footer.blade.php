@@ -4,7 +4,7 @@
             <div class="col-span-2">
                 <div class="flex items-center space-x-2 mb-4">
                     <div class="w-12 h-12 flex items-center justify-center">
-                        <img src="{{ asset('img/favicon.png') }}" alt="" />
+                        <img src="https://sicantik.unwahas.ac.id/assets/images/Unwahas.png" alt="" />
                     </div>
                     <div>
                         <h4 class="text-xl font-bold">Universitas Wahid Hasyim</h4>
