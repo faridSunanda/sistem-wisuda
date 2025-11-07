@@ -1,46 +1,40 @@
-<footer id="main-footer"
-    class="bg-white/70 backdrop-blur-2xl border-t border-gray-200 py-4 px-4 md:px-6 hidden transition-all duration-300">
+<footer id="main-footer" class="fixed inset-x-0 bottom-0 z-40 bg-white/80 backdrop-blur-xl border-t border-gray-200 py-3 px-4 md:px-6 transition-opacity duration-200 opacity-0 pointer-events-none">
     <div class="text-center text-sm text-gray-600">
         <p>© UPT PSID | All Rights Reserved | Powered by Universitas Wahid Hasyim</p>
     </div>
 </footer>
 
 @push('scripts')
-    <script>
-        (function() {
-            const footer = document.getElementById('main-footer');
-            const mainContent = document.querySelector('main');
+<script>
+    (function () {
+        const main = document.querySelector('main');
+        const footer = document.getElementById('main-footer');
+        if (!main || !footer) return;
 
-            if (footer && mainContent) {
-                function checkScroll() {
-                    const scrollTop = mainContent.scrollTop;
-                    const scrollHeight = mainContent.scrollHeight;
-                    const clientHeight = mainContent.clientHeight;
+        let lastTop = 0;
+        function updateFooterVisibility() {
+            const top = main.scrollTop;
+            const height = main.clientHeight;
+            const scrollHeight = main.scrollHeight;
+            const scrollingDown = top > lastTop;
+            lastTop = top;
 
-                    const isScrollable = scrollHeight > clientHeight;
-                    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 20;
-
-                    if (!isScrollable || isAtBottom) {
-                        footer.classList.remove('hidden');
-                    } else {
-                        footer.classList.add('hidden');
-                    }
-                }
-
-                mainContent.addEventListener('scroll', checkScroll);
-
-                const observer = new MutationObserver(checkScroll);
-                if (mainContent) {
-                    observer.observe(mainContent, {
-                        childList: true,
-                        subtree: true,
-                        attributes: true
-                    });
-                }
-
-                setTimeout(checkScroll, 100);
-                window.addEventListener('resize', checkScroll);
+            const scrollable = scrollHeight > height;
+            if (!scrollable) {
+                footer.classList.add('opacity-0');
+                return;
             }
-        })();
+
+            if (scrollingDown) {
+                footer.classList.remove('opacity-0');
+            } else {
+                footer.classList.add('opacity-0');
+            }
+        }
+
+        main.addEventListener('scroll', updateFooterVisibility, { passive: true });
+        window.addEventListener('resize', updateFooterVisibility);
+        setTimeout(updateFooterVisibility, 100);
+    })();
     </script>
 @endpush
