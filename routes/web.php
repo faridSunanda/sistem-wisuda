@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DataWisudawanController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
 use App\Http\Controllers\Mahasiswa\SertifikatOrganisasiController;
 use App\Http\Controllers\Mahasiswa\SertifikatPenghargaanController;
+use App\Http\Controllers\Mahasiswa\SertifikatPendidikanKarakterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,11 +89,17 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
         })->name('magang');
         Route::get('/pendidikan-karakter', function () {
             return view('mahasiswa.sertifikat.sertifikat-pendidikan-karakter.index');
-        })->name('pendidikan-karakter');
-        // Update routes for penghargaan and organisasi
+        })->name('pendidikan-karakter'); 
+
+        // Sertifikat Pendidikan Karakter Routes
+        Route::get('/pendidikan-karakter', [SertifikatPendidikanKarakterController::class, 'index'])->name('pendidikan-karakter');
+        Route::post('/pendidikan-karakter', [SertifikatPendidikanKarakterController::class, 'store'])->name('pendidikan-karakter.store');
+
+        // Sertifikat Penghargaam
         Route::get('/penghargaan', [SertifikatPenghargaanController::class, 'index'])->name('penghargaan');
         Route::post('/penghargaan', [SertifikatPenghargaanController::class, 'store'])->name('penghargaan.store');
         
+        // Sertifikat Organisasi
         Route::get('/organisasi', [SertifikatOrganisasiController::class, 'index'])->name('organisasi');
         Route::post('/organisasi', [SertifikatOrganisasiController::class, 'store'])->name('organisasi.store');
     });

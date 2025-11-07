@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
-use App\Models\SertifikatOrganisasi;
+use App\Models\SertifikatPendidikanKarakter;
 use App\Models\Biodata;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class SertifikatOrganisasiController extends Controller
+class SertifikatPendidikanKarakterController extends Controller
 {
     public function index()
     {
@@ -37,19 +37,18 @@ class SertifikatOrganisasiController extends Controller
             ]);
         }
 
-        $sertifikatOrganisasis = $biodata->sertifikatOrganisasis ?? collect();
+        $sertifikatPendidikanKarakter = $biodata->sertifikatPendidikanKarakter ?? collect();
         
-        // PERBAIKAN: Update path view sesuai struktur folder
-        return view('mahasiswa.sertifikat.sertifikat-organisasi.index', compact('sertifikatOrganisasis'));
+        return view('mahasiswa.sertifikat.sertifikat-pendidikan-karakter.index', compact('sertifikatPendidikanKarakter'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'sertifikat_organisasi' => 'required|array|min:1|max:5',
-            'sertifikat_organisasi.*.nama_sertifikat' => 'required|string|max:255',
-            'sertifikat_organisasi.*.tanggal_mulai' => 'required|date',
-            'sertifikat_organisasi.*.tanggal_selesai' => 'required|date|after_or_equal:sertifikat_organisasi.*.tanggal_mulai',
+            'sertifikat_pendidikan_karakter' => 'required|array|min:1|max:5',
+            'sertifikat_pendidikan_karakter.*.nama_sertifikat' => 'required|string|max:255',
+            'sertifikat_pendidikan_karakter.*.penerbit' => 'required|string|max:255',
+            'sertifikat_pendidikan_karakter.*.tanggal_terbit' => 'required|date',
         ]);
 
         $user = auth()->user();
@@ -65,21 +64,21 @@ class SertifikatOrganisasiController extends Controller
         }
 
         // Delete existing
-        SertifikatOrganisasi::where('biodata_id', $biodata->id)->delete();
+        SertifikatPendidikanKarakter::where('biodata_id', $biodata->id)->delete();
 
         // Create new
-        foreach ($request->sertifikat_organisasi as $sertifikat) {
+        foreach ($request->sertifikat_pendidikan_karakter as $sertifikat) {
             if (!empty($sertifikat['nama_sertifikat'])) {
-                SertifikatOrganisasi::create([
+                SertifikatPendidikanKarakter::create([
                     'id' => Str::uuid(),
                     'biodata_id' => $biodata->id,
                     'nama_sertifikat' => $sertifikat['nama_sertifikat'],
-                    'tanggal_mulai' => $sertifikat['tanggal_mulai'],
-                    'tanggal_selesai' => $sertifikat['tanggal_selesai'],
+                    'penerbit' => $sertifikat['penerbit'],
+                    'tanggal_terbit' => $sertifikat['tanggal_terbit'],
                 ]);
             }
         }
 
-        return redirect()->back()->with('success', 'Data sertifikat organisasi berhasil disimpan.');
+        return redirect()->back()->with('success', 'Data sertifikat pendidikan karakter berhasil disimpan.');
     }
 }

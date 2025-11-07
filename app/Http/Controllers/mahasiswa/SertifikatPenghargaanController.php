@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\SertifikatPenghargaan;
+use App\Models\Biodata;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -11,10 +12,24 @@ class SertifikatPenghargaanController extends Controller
 {
     public function index()
     {
-        $biodata = auth()->user()->biodata;
+        $user = auth()->user();
+        
+        // Cek apakah user sudah punya biodata, jika belum buat dummy
+        $biodata = $user->biodata;
+        
+        if (!$biodata) {
+            $biodata = Biodata::create([
+                'id' => Str::uuid(),
+                'user_id' => $user->id,
+                'nim' => '20210001',
+                // ... field lainnya
+            ]);
+        }
+
         $sertifikatPenghargaans = $biodata->sertifikatPenghargaans ?? collect();
         
-        return view('mahasiswa.sertifikat-penghargaan', compact('sertifikatPenghargaans'));
+        // PERBAIKAN: Update path view sesuai struktur folder
+        return view('mahasiswa.sertifikat.sertifikat-penghargaan.index', compact('sertifikatPenghargaans'));
     }
 
     public function store(Request $request)
@@ -26,7 +41,16 @@ class SertifikatPenghargaanController extends Controller
             'sertifikat_penghargaan.*.tanggal_terbit' => 'required|date',
         ]);
 
-        $biodata = auth()->user()->biodata;
+        $user = auth()->user();
+        $biodata = $user->biodata;
+
+        if (!$biodata) {
+            $biodata = Biodata::create([
+                'id' => Str::uuid(),
+                'user_id' => $user->id,
+                'nim' => '20210001',
+            ]);
+        }
 
         // Delete existing
         SertifikatPenghargaan::where('biodata_id', $biodata->id)->delete();
