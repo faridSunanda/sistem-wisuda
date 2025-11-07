@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DataWisudawanController;
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
+use App\Http\Controllers\Mahasiswa\SertifikatOrganisasiController;
+use App\Http\Controllers\Mahasiswa\SertifikatPenghargaanController;
 
 Route::get('/', function () {
     return view('portal.index');
@@ -35,12 +37,12 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
         Route::get('/pendidikan-karakter', function () {
             return view('mahasiswa.sertifikat.sertifikat-pendidikan-karakter.index');
         })->name('pendidikan-karakter');
-        Route::get('/penghargaan', function () {
-            return view('mahasiswa.sertifikat.sertifikat-penghargaan.index');
-        })->name('penghargaan');
-        Route::get('/organisasi', function () {
-            return view('mahasiswa.sertifikat.sertifikat-organisasi.index');
-        })->name('organisasi');
+        // Update routes for penghargaan and organisasi
+        Route::get('/penghargaan', [SertifikatPenghargaanController::class, 'index'])->name('penghargaan');
+        Route::post('/penghargaan', [SertifikatPenghargaanController::class, 'store'])->name('penghargaan.store');
+        
+        Route::get('/organisasi', [SertifikatOrganisasiController::class, 'index'])->name('organisasi');
+        Route::post('/organisasi', [SertifikatOrganisasiController::class, 'store'])->name('organisasi.store');
     });
     Route::get('/download-formulir', function () {
         return view('mahasiswa.download-formulir.index');
