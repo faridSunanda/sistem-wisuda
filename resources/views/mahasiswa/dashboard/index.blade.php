@@ -1,7 +1,7 @@
 @extends('mahasiswa.layouts.app')
 
 @section('content')
-<div class="space-y-4 md:space-y-6">
+<div class="space-y-4 md:space-y-6 pb-10">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <div class="bg-white rounded-lg shadow p-4 md:p-6 border border-gray-200">
             <div class="flex items-center justify-between mb-3 md:mb-4">
