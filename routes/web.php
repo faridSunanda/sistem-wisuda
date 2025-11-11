@@ -16,6 +16,16 @@ use App\Http\Controllers\Admin\Setting\KuotaWisudaController;
 
 // Mahasiswa
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
+use App\Http\Controllers\Mahasiswa\SertifikatOrganisasiController;
+use App\Http\Controllers\Mahasiswa\SertifikatPenghargaanController;
+use App\Http\Controllers\Mahasiswa\SertifikatPendidikanKarakterController;
+
+// Mahasiswa
+use App\Http\Controllers\Mahasiswa\BiodataController;
+use App\Http\Controllers\Mahasiswa\SertifikatKompetensiController;
+use App\Http\Controllers\Mahasiswa\SertifikatBahasaInternasionalController;
+use App\Http\Controllers\Mahasiswa\SertifikatMagangController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -135,32 +145,36 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
 
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/data-diri', function () {
-        return view('mahasiswa.data-diri.index');
-    })->name('data-diri');
+    Route::prefix('biodata')->name('biodata.')->group(function () {
+        // Ini mendaftarkan nama: 'mahasiswa.biodata.edit' (untuk GET)
+        Route::get('/', [BiodataController::class, 'edit'])->name('edit');
+
+        // Ini mendaftarkan nama: 'mahasiswa.biodata.update' (untuk POST)
+        Route::post('/', [BiodataController::class, 'update'])->name('update');
+    });
 
     Route::prefix('sertifikat')->name('sertifikat.')->group(function () {
-        Route::get('/', function () {
-            return redirect()->route('mahasiswa.sertifikat.kompetensi');
-        })->name('index');
-        Route::get('/kompetensi', function () {
-            return view('mahasiswa.sertifikat.sertifikat-kompetensi.index');
-        })->name('kompetensi');
-        Route::get('/bahasa-internasional', function () {
-            return view('mahasiswa.sertifikat.sertifikat-bahasa-internasional.index');
-        })->name('bahasa-internasional');
-        Route::get('/magang', function () {
-            return view('mahasiswa.sertifikat.sertifikat-magang.index');
-        })->name('magang');
+        Route::get('/kompetensi', [SertifikatKompetensiController::class, 'index'])->name('kompetensi');
+        Route::post('/kompetensi', [SertifikatKompetensiController::class, 'store'])->name('kompetensi.store');
+        Route::get('/bahasa-internasional', [SertifikatBahasaInternasionalController::class, 'index'])->name('bahasa-internasional');
+        Route::post('/bahasa-internasional', [SertifikatBahasaInternasionalController::class, 'store'])->name('bahasa-internasional.store');
+        Route::get('/magang', [SertifikatMagangController::class, 'index'])->name('magang');
+        Route::post('/magang', [SertifikatMagangController::class, 'store'])->name('magang.store');
         Route::get('/pendidikan-karakter', function () {
             return view('mahasiswa.sertifikat.sertifikat-pendidikan-karakter.index');
-        })->name('pendidikan-karakter');
-        Route::get('/penghargaan', function () {
-            return view('mahasiswa.sertifikat.sertifikat-penghargaan.index');
-        })->name('penghargaan');
-        Route::get('/organisasi', function () {
-            return view('mahasiswa.sertifikat.sertifikat-organisasi.index');
-        })->name('organisasi');
+        })->name('pendidikan-karakter'); 
+
+        // Sertifikat Pendidikan Karakter Routes
+        Route::get('/pendidikan-karakter', [SertifikatPendidikanKarakterController::class, 'index'])->name('pendidikan-karakter');
+        Route::post('/pendidikan-karakter', [SertifikatPendidikanKarakterController::class, 'store'])->name('pendidikan-karakter.store');
+
+        // Sertifikat Penghargaam
+        Route::get('/penghargaan', [SertifikatPenghargaanController::class, 'index'])->name('penghargaan');
+        Route::post('/penghargaan', [SertifikatPenghargaanController::class, 'store'])->name('penghargaan.store');
+        
+        // Sertifikat Organisasi
+        Route::get('/organisasi', [SertifikatOrganisasiController::class, 'index'])->name('organisasi');
+        Route::post('/organisasi', [SertifikatOrganisasiController::class, 'store'])->name('organisasi.store');
     });
 
     Route::get('/download-formulir', function () {

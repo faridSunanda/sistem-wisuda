@@ -34,8 +34,42 @@ class Biodata extends Model
         'kesan_pesan',
     ];
 
+     protected $casts = [
+        'tanggal_lahir' => 'date',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function sertifikatKompetensi()
+    {
+        return $this->hasMany(SertifikatKompetensi::class);
+    }
+
+    public function sertifikatBahasaInternasional()
+    {
+        return $this->hasMany(SertifikatBahasaInternasional::class);
+    }
+
+    public function sertifikatMagang()
+    {
+        return $this->hasMany(SertifikatMagang::class);
+    }
+
+    public function sertifikatPendidikanKarakter()
+    {
+        return $this->hasMany(SertifikatPendidikanKarakter::class);
+    }
+
+    public function sertifikatOrganisasi()
+    {
+        return $this->hasMany(SertifikatOrganisasi::class);
+    }
+
+    public function sertifikatPenghargaan()
+    {
+        return $this->hasMany(SertifikatPenghargaan::class);
     }
 }
