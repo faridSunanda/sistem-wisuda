@@ -1,17 +1,16 @@
-// Main Dokumen Persyaratan Initialization
-// Import modules here when needed
-// import { initTable } from './table.js';
-// import { initForm } from './form.js';
+import { initDataTable } from './table.js';
+import { initExports } from './export.js';
+import { initActions } from './actions.js';
 
 window.initDokumenPersyaratan = function(config) {
-    // Initialize components here
-    // const table = initTable(config);
-    // initForm(config);
-    
-    console.log('Dokumen Persyaratan initialized with config:', config);
+    const table = initDataTable(config);
+    window.dokumenPersyaratanTable = table;
+
+    initExports(config);
+
+    initActions(config);
 };
 
-// Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof window.dokumenPersyaratanConfig !== 'undefined' && typeof window.initDokumenPersyaratan === 'function') {
@@ -19,9 +18,7 @@ if (document.readyState === 'loading') {
         }
     });
 } else {
-    // DOM already loaded
     if (typeof window.dokumenPersyaratanConfig !== 'undefined' && typeof window.initDokumenPersyaratan === 'function') {
         window.initDokumenPersyaratan(window.dokumenPersyaratanConfig);
     }
 }
-

@@ -1,4 +1,269 @@
-/* Dokumen Persyaratan Styles */
+/* Dokumen Persyaratan Table Styles */
+#dokumenPersyaratanTable {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100% !important;
+    margin: 0;
+}
 
-/* Add your custom styles here */
+#dokumenPersyaratanTable_wrapper {
+    width: 100%;
+}
 
+#dokumenPersyaratanTable_wrapper .dataTables_scrollHead {
+    border: none;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_scrollHeadInner {
+    width: 100% !important;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_scrollHeadInner table {
+    width: 100% !important;
+}
+
+#dokumenPersyaratanTable thead th {
+    position: relative;
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db;
+    font-weight: bold;
+    color: #111827;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+#dokumenPersyaratanTable thead th:first-child {
+    border-left: 1px solid #d1d5db;
+}
+
+#dokumenPersyaratanTable thead th:last-child {
+    border-right: 1px solid #d1d5db;
+}
+
+#dokumenPersyaratanTable thead th.sorting {
+    padding-right: 30px;
+}
+
+#dokumenPersyaratanTable thead th.sorting_asc,
+#dokumenPersyaratanTable thead th.sorting_desc {
+    padding-right: 30px;
+}
+
+#dokumenPersyaratanTable thead th.sorting:after {
+    content: "";
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #9ca3af;
+    opacity: 0.5;
+}
+
+#dokumenPersyaratanTable thead th.sorting_asc:after {
+    content: "";
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 6px solid #435ebe;
+    opacity: 1;
+    border-top: none;
+}
+
+#dokumenPersyaratanTable thead th.sorting_desc:after {
+    content: "";
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #435ebe;
+    opacity: 1;
+    border-bottom: none;
+}
+
+#dokumenPersyaratanTable tbody td {
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+}
+
+#dokumenPersyaratanTable tbody tr {
+    background-color: #ffffff;
+}
+
+#dokumenPersyaratanTable tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_length,
+#dokumenPersyaratanTable_wrapper .dataTables_filter {
+    margin-bottom: 1rem;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_length select,
+#dokumenPersyaratanTable_wrapper .dataTables_filter input {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    background-color: white;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_length select:focus,
+#dokumenPersyaratanTable_wrapper .dataTables_filter input:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #435ebe;
+    border-color: #435ebe;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 0.375rem;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_paginate .paginate_button.current {
+    background: #435ebe;
+    color: white;
+    border-color: #435ebe;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+#dokumenPersyaratanTable_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: #3a52a8;
+    border-color: #3a52a8;
+    color: white;
+}
+
+#dokumenPersyaratanTable_processing {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+/* Action Buttons */
+.btn-action {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    margin: 0 2px;
+}
+
+.btn-action i {
+    color: white;
+    font-size: 12px;
+}
+
+.btn-view {
+    background-color: #435ebe;
+}
+
+.btn-view:hover {
+    background-color: #3a52a8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(67, 94, 190, 0.3);
+}
+
+.btn-edit {
+    background-color: #f59e0b;
+}
+
+.btn-edit:hover {
+    background-color: #d97706;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+}
+
+.btn-delete {
+    background-color: #ef4444;
+}
+
+.btn-delete:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Export Button Styles */
+#exportExcelBtn,
+#exportPdfBtn,
+#printBtn {
+    transition: all 0.2s ease;
+}
+
+#exportExcelBtn:hover {
+    background-color: #dcfce7;
+    color: #166534;
+    transform: translateY(-1px);
+}
+
+#exportPdfBtn:hover {
+    background-color: #fef2f2;
+    color: #991b1b;
+    transform: translateY(-1px);
+}
+
+#printBtn:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+    #dokumenPersyaratanTable_wrapper .dataTables_length,
+    #dokumenPersyaratanTable_wrapper .dataTables_filter {
+        text-align: left;
+        margin-bottom: 0.5rem;
+    }
+
+    #dokumenPersyaratanTable_wrapper .dataTables_paginate {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .btn-action {
+        width: 32px;
+        height: 32px;
+        margin: 0 1px;
+    }
+
+    .btn-action i {
+        font-size: 11px;
+    }
+}

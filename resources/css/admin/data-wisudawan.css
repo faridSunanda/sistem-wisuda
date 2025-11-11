@@ -1,4 +1,4 @@
-/* Data Wisudawan Table Styles */
+/* Dokumen Persyaratan Table Styles */
 #dataWisudawanTable {
     border-collapse: separate;
     border-spacing: 0;
@@ -73,7 +73,7 @@
     height: 0;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-bottom: 6px solid #3b82f6;
+    border-bottom: 6px solid #435ebe;
     opacity: 1;
     border-top: none;
 }
@@ -88,7 +88,7 @@
     height: 0;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-top: 6px solid #3b82f6;
+    border-top: 6px solid #435ebe;
     opacity: 1;
     border-bottom: none;
 }
@@ -115,6 +115,16 @@
 #dataWisudawanTable_wrapper .dataTables_filter input {
     padding: 0.5rem;
     border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    background-color: white;
+}
+
+#dataWisudawanTable_wrapper .dataTables_length select:focus,
+#dataWisudawanTable_wrapper .dataTables_filter input:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #435ebe;
+    border-color: #435ebe;
 }
 
 #dataWisudawanTable_wrapper .dataTables_paginate .paginate_button {
@@ -122,22 +132,28 @@
     margin: 0 0.25rem;
     border-radius: 0.375rem;
     border: 1px solid #d1d5db;
+    background-color: white;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 #dataWisudawanTable_wrapper .dataTables_paginate .paginate_button.current {
-    background: #3b82f6;
+    background: #435ebe;
     color: white;
-    border-color: #3b82f6;
+    border-color: #435ebe;
 }
 
 #dataWisudawanTable_wrapper .dataTables_paginate .paginate_button:hover {
     background: #e5e7eb;
     border-color: #d1d5db;
+    color: #374151;
 }
 
 #dataWisudawanTable_wrapper .dataTables_paginate .paginate_button.current:hover {
-    background: #2563eb;
-    border-color: #2563eb;
+    background: #3a52a8;
+    border-color: #3a52a8;
+    color: white;
 }
 
 #dataWisudawanTable_processing {
@@ -149,6 +165,7 @@
     padding: 1rem;
     border-radius: 0.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
 }
 
 /* Action Buttons */
@@ -163,20 +180,22 @@
     justify-content: center;
     transition: all 0.2s ease;
     font-size: 14px;
+    margin: 0 2px;
 }
 
 .btn-action i {
     color: white;
+    font-size: 12px;
 }
 
 .btn-view {
-    background-color: #3b82f6;
+    background-color: #435ebe;
 }
 
 .btn-view:hover {
-    background-color: #2563eb;
+    background-color: #3a52a8;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 8px rgba(67, 94, 190, 0.3);
 }
 
 .btn-edit {
@@ -199,55 +218,52 @@
     box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
 }
 
-/* Filter Select Styles */
-#filterFakultas,
-#filterProdi,
-#filterTahunMasuk,
-#filterJenjang {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 1rem center;
-    background-repeat: no-repeat;
-    background-size: 1.25em 1.25em;
-    padding-right: 2.75rem;
+/* Export Button Styles */
+#exportExcelBtn,
+#exportPdfBtn,
+#printBtn {
+    transition: all 0.2s ease;
 }
 
-#filterFakultas:focus,
-#filterProdi:focus,
-#filterTahunMasuk:focus,
-#filterJenjang:focus {
-    outline: none;
+#exportExcelBtn:hover {
+    background-color: #dcfce7;
+    color: #166534;
+    transform: translateY(-1px);
 }
 
-/* Print Styles */
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    
-    .print-content, 
-    .print-content * {
-        visibility: visible;
-    }
-    
-    .print-content {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-    }
-    
-    .no-print {
-        display: none !important;
-    }
-    
-    table {
-        border-collapse: collapse;
-    }
-    
-    th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
+#exportPdfBtn:hover {
+    background-color: #fef2f2;
+    color: #991b1b;
+    transform: translateY(-1px);
 }
 
+#printBtn:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+    #dataWisudawanTable_wrapper .dataTables_length,
+    #dataWisudawanTable_wrapper .dataTables_filter {
+        text-align: left;
+        margin-bottom: 0.5rem;
+    }
+
+    #dataWisudawanTable_wrapper .dataTables_paginate {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .btn-action {
+        width: 32px;
+        height: 32px;
+        margin: 0 1px;
+    }
+
+    .btn-action i {
+        font-size: 11px;
+    }
+}

@@ -1,7 +1,7 @@
 // DataTable Initialization
 export function initDataTable(config) {
     const { getDataUrl } = config;
-    
+
     return $('#dataWisudawanTable').DataTable({
         processing: true,
         serverSide: true,
@@ -42,6 +42,7 @@ export function initDataTable(config) {
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
         },
+        scrollX: true,
         pageLength: 10,
         lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
         order: [[1, 'asc']],

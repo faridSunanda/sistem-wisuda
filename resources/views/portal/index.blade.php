@@ -70,7 +70,7 @@
 
             <div class="max-w-6xl mx-auto">
                 <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Kartu Persyaratan -->
+
                     <div class="bg-blue-50 rounded-xl p-6 hover:shadow-lg transition-all">
                         <div class="flex items-center mb-4">
                             <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-4">
@@ -80,22 +80,26 @@
                                 Dokumen Persyaratan
                             </h4>
                         </div>
-                        <ul class="space-y-3 text-gray-700">
-                            <li class="flex items-start gap-2">
-                                <i class="fa-sharp fa-regular fa-file-circle-check text-blue-600 mt-1"></i>
-                                <span>Syarat-syarat yang harus dilengkapi untuk mendaftar</span>
-                            </li>
-                            <li class="flex items-start">
-                                <a href="https://wisuda.unwahas.ac.id/document/persyaratan.pdf" target="_blank"
-                                    class="flex items-center gap-2 bg-blue-600 p-3 rounded-md text-white hover:bg-blue-700 transition-all duration-300">
-                                    <i class="fa-sharp fa-solid fa-download"></i>
-                                    <span>Download</span>
-                                </a>
-                            </li>
-                        </ul>
+
+                        @if ($dokumenPersyaratan)
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-sharp fa-regular fa-file-lines text-blue-600 mt-1"></i>
+                                    <span>{{ $dokumenPersyaratan->keterangan }}</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <a href="{{ asset('storage/' . $dokumenPersyaratan->berkas) }}" target="_blank"
+                                        class="flex items-center gap-2 bg-blue-600 p-3 rounded-md text-white hover:bg-blue-700 transition-all duration-300">
+                                        <i class="fa-sharp fa-solid fa-download"></i>
+                                        <span>Download</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        @else
+                            <p class="text-gray-600">Dokumen persyaratan belum tersedia.</p>
+                        @endif
                     </div>
 
-                    <!-- Kartu Tanda Terima -->
                     <div class="bg-green-50 rounded-xl p-6 hover:shadow-lg transition-all">
                         <div class="flex items-center mb-4">
                             <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-4">
@@ -103,24 +107,30 @@
                             </div>
                             <h4 class="text-xl font-bold text-gray-800">Tanda Terima</h4>
                         </div>
-                        <ul class="space-y-3 text-gray-700">
-                            <li class="flex items-start gap-2">
-                                <i class="fa-sharp fa-regular fa-file-lines text-green-600 mt-1"></i>
-                                <span>Tanda terima pendaftaran sudah termasuk dalam file PDF formulir pendaftaran</span>
-                            </li>
-                            <li class="flex items-start">
-                                <a href="https://wisuda.unwahas.ac.id/document/terima.pdf" target="_blank"
-                                    class="flex items-center gap-2 bg-green-600 p-3 rounded-md text-white hover:bg-green-700 transition-all duration-300">
-                                    <i class="fa-sharp fa-solid fa-download"></i>
-                                    <span>Download</span>
-                                </a>
-                            </li>
-                        </ul>
+
+                        @if ($dokumenTandaTerima)
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-sharp fa-regular fa-file-lines text-green-600 mt-1"></i>
+                                    <span>{{ $dokumenTandaTerima->keterangan }}</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <a href="{{ asset('storage/' . $dokumenTandaTerima->berkas) }}" target="_blank"
+                                        class="flex items-center gap-2 bg-green-600 p-3 rounded-md text-white hover:bg-green-700 transition-all duration-300">
+                                        <i class="fa-sharp fa-solid fa-download"></i>
+                                        <span>Download</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        @else
+                            <p class="text-gray-600">Dokumen tanda terima belum tersedia.</p>
+                        @endif
                     </div>
+
                 </div>
 
                 <!-- Alur Pendaftaran -->
-                <div class="mt-12 bg-gray-50 rounded-xl p-8">
+                {{-- <div class="mt-12 bg-gray-50 rounded-xl p-8">
                     <h4 class="text-2xl font-bold text-gray-800 mb-6 text-center">
                         Alur Pendaftaran Wisuda
                     </h4>
@@ -136,6 +146,30 @@
                                 <h5 class="font-semibold text-gray-800 mb-2">{{ $step[1] }}</h5>
                                 <p class="text-sm text-gray-600">
                                     {{ $step[2] }}
+                                </p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div> --}}
+                <div class="mt-12 bg-gray-50 rounded-xl p-8">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                        Alur Pendaftaran Wisuda
+                    </h4>
+                    <div class="w-32 h-1 bg-green-600 mx-auto mb-8 rounded-lg"></div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        @foreach ($alurPendaftaran as $alur)
+                            <div class="text-center hover:shadow-md p-4 rounded-md transition-all">
+                                <div
+                                    class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span class="text-white text-3xl font-bold">
+                                        {{ $alur->no_urut }}
+                                    </span>
+
+                                </div>
+                                <h5 class="font-semibold text-gray-800 mb-2">{{ $alur->judul }}</h5>
+                                <p class="text-sm text-gray-600">
+                                    {{ $alur->keterangan }}
                                 </p>
                             </div>
                         @endforeach

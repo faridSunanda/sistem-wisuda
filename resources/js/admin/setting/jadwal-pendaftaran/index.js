@@ -1,27 +1,35 @@
-// Main Jadwal Pendaftaran Initialization
-// Import modules here when needed
-// import { initTable } from './table.js';
-// import { initForm } from './form.js';
+import { initDataTable } from './table.js';
+import { initExports } from './export.js';
+import { initActions } from './actions.js';
 
 window.initJadwalPendaftaran = function(config) {
-    // Initialize components here
-    // const table = initTable(config);
-    // initForm(config);
-    
-    console.log('Jadwal Pendaftaran initialized with config:', config);
+
+    try {
+        const table = initDataTable(config);
+        window.jadwalPendaftaranTable = table;
+
+        initExports(config);
+
+        initActions(config);
+
+    } catch (error) {
+        console.error('Error initializing Jadwal Pendaftaran:', error);
+    }
 };
 
-// Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM Content Loaded');
         if (typeof window.jadwalPendaftaranConfig !== 'undefined' && typeof window.initJadwalPendaftaran === 'function') {
             window.initJadwalPendaftaran(window.jadwalPendaftaranConfig);
+        } else {
+            console.error('Jadwal Pendaftaran config or function not found');
         }
     });
 } else {
-    // DOM already loaded
     if (typeof window.jadwalPendaftaranConfig !== 'undefined' && typeof window.initJadwalPendaftaran === 'function') {
         window.initJadwalPendaftaran(window.jadwalPendaftaranConfig);
+    } else {
+        console.error('Jadwal Pendaftaran config or function not found');
     }
 }
-

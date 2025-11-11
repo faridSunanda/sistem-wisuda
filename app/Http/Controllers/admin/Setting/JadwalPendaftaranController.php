@@ -3,141 +3,240 @@
 namespace App\Http\Controllers\Admin\Setting;
 
 use App\Http\Controllers\Controller;
+use App\Models\JadwalPendaftaran;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class JadwalPendaftaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // TODO: Fetch data from database
-        // $jadwalPendaftarans = PendaftaranWisuda::latest()->get();
-        
-        return view('admin.setting.jadwal-pendaftaran.index', [
-            // 'jadwalPendaftarans' => $jadwalPendaftarans,
-        ]);
+        return view('admin.setting.jadwal-pendaftaran.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function getData(Request $request)
+    {
+        try {
+            $data = JadwalPendaftaran::query()->orderBy('tahun_wisuda', 'desc');
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status_badge', function($row) {
+                    return $this->getStatusBadge($row->status);
+                })
+                ->addColumn('waktu_buka_formatted', function($row) {
+                    return Carbon::parse($row->waktu_buka_pendaftaran)->format('d F Y H:i');
+                })
+                ->addColumn('waktu_tutup_formatted', function($row) {
+                    return Carbon::parse($row->waktu_tutup_pendaftaran)->format('d F Y H:i');
+                })
+                ->addColumn('status_waktu', function($row) {
+                    return $this->getStatusWaktu($row);
+                })
+                ->addColumn('aksi', function($row) {
+                    return $this->getActionButtons($row->id);
+                })
+                ->rawColumns(['status_badge', 'status_waktu', 'aksi'])
+                ->make(true);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'draw' => intval($request->input('draw')),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => [],
+                'error' => 'Terjadi kesalahan saat memuat data'
+            ], 500);
+        }
+    }
+
+    private function getStatusBadge($status)
+    {
+        $badgeClass = 'badge ';
+
+        if ($status == 'Aktif') {
+            $badgeClass .= 'badge-success';
+        } elseif ($status == 'Draft') {
+            $badgeClass .= 'badge-warning';
+        } elseif ($status == 'Nonaktif' || $status == 'Selesai') {
+            $badgeClass .= 'badge-danger';
+        } else {
+            $badgeClass .= 'badge-info';
+        }
+
+        return '<span class="'.$badgeClass.'">'.$status.'</span>';
+    }
+
+    private function getStatusWaktu($item)
+    {
+        $now = now();
+        $buka = Carbon::parse($item->waktu_buka_pendaftaran);
+        $tutup = Carbon::parse($item->waktu_tutup_pendaftaran);
+
+        if ($now < $buka) {
+            return '<span class="badge badge-warning">Belum Dimulai</span>';
+        } elseif ($now >= $buka && $now <= $tutup) {
+            return '<span class="badge badge-success">Sedang Berlangsung</span>';
+        } else {
+            return '<span class="badge badge-danger">Sudah Berakhir</span>';
+        }
+    }
+
+    private function getActionButtons($id)
+    {
+        return '<div class="flex items-center justify-center gap-2">' .
+               '<button class="btn-action btn-view" onclick="lihatData(\''.$id.'\')" title="Lihat">' .
+               '<i class="fas fa-eye"></i>' .
+               '</button>' .
+               '<button class="btn-action btn-edit" onclick="editData(\''.$id.'\')" title="Edit">' .
+               '<i class="fas fa-pencil-alt"></i>' .
+               '</button>' .
+               '<button class="btn-action btn-delete" onclick="hapusData(event, \''.$id.'\')" title="Hapus">' . // <-- DIPERBAIKI DI SINI
+               '<i class="fas fa-trash"></i>' .
+               '</button>' .
+               '</div>';
+    }
+
+    public function exportData(Request $request)
+    {
+        try {
+            $data = JadwalPendaftaran::query()
+                ->select('tahun_wisuda', 'status', 'waktu_buka_pendaftaran', 'waktu_tutup_pendaftaran')
+                ->orderBy('tahun_wisuda', 'desc')
+                ->get()
+                ->map(function($item) {
+                    return [
+                        'tahun_wisuda' => $item->tahun_wisuda,
+                        'status' => $item->status,
+                        'waktu_buka_pendaftaran' => Carbon::parse($item->waktu_buka_pendaftaran)->format('d F Y H:i'),
+                        'waktu_tutup_pendaftaran' => Carbon::parse($item->waktu_tutup_pendaftaran)->format('d F Y H:i'),
+                    ];
+                });
+
+            if ($data->isEmpty()) {
+                return response()->json([]);
+            }
+
+            return response()->json($data->toArray());
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Terjadi kesalahan server: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function create()
     {
         return view('admin.setting.jadwal-pendaftaran.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'tahun_wisuda' => 'required|integer|min:2000|max:2100',
-            'status' => 'required|string|in:Draft,Aktif,Nonaktif',
+            'status' => 'required|in:Draft,Aktif,Nonaktif,Selesai',
             'waktu_buka_pendaftaran' => 'required|date',
             'waktu_tutup_pendaftaran' => 'required|date|after:waktu_buka_pendaftaran',
         ]);
 
-        try {
-            // TODO: Create new record
-            // PendaftaranWisuda::create($validated);
-            
-            return redirect()
-                ->route('admin.setting.jadwal-pendaftaran.index')
-                ->with('success', 'Jadwal pendaftaran berhasil ditambahkan.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
+        $existing = JadwalPendaftaran::where('tahun_wisuda', $validated['tahun_wisuda'])->exists();
+        if ($existing) {
+            return redirect()->back()
                 ->withInput()
-                ->with('error', 'Terjadi kesalahan saat menambahkan jadwal pendaftaran.');
+                ->with('error', 'Jadwal untuk tahun wisuda ' . $validated['tahun_wisuda'] . ' sudah ada.');
         }
+
+        JadwalPendaftaran::create($validated);
+
+        return redirect()->route('admin.setting.jadwal-pendaftaran.index')
+            ->with('success', 'Jadwal pendaftaran wisuda berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        // TODO: Fetch data from database
-        // $jadwalPendaftaran = PendaftaranWisuda::findOrFail($id);
-        
+        $jadwal = JadwalPendaftaran::findOrFail($id);
+
         return view('admin.setting.jadwal-pendaftaran.show', [
-            // 'jadwalPendaftaran' => $jadwalPendaftaran,
+            'jadwal' => $jadwal
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        // TODO: Fetch data from database
-        // $jadwalPendaftaran = PendaftaranWisuda::findOrFail($id);
-        
+        $jadwal = JadwalPendaftaran::findOrFail($id);
+
         return view('admin.setting.jadwal-pendaftaran.edit', [
-            // 'jadwalPendaftaran' => $jadwalPendaftaran,
+            'jadwal' => $jadwal
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
+        $jadwal = JadwalPendaftaran::findOrFail($id);
+
         $validated = $request->validate([
             'tahun_wisuda' => 'required|integer|min:2000|max:2100',
-            'status' => 'required|string|in:Draft,Aktif,Nonaktif',
+            'status' => 'required|in:Draft,Aktif,Nonaktif,Selesai',
             'waktu_buka_pendaftaran' => 'required|date',
             'waktu_tutup_pendaftaran' => 'required|date|after:waktu_buka_pendaftaran',
         ]);
 
-        try {
-            // TODO: Update record
-            // $jadwalPendaftaran = PendaftaranWisuda::findOrFail($id);
-            // $jadwalPendaftaran->update($validated);
-            
-            return redirect()
-                ->route('admin.setting.jadwal-pendaftaran.index')
-                ->with('success', 'Jadwal pendaftaran berhasil diperbarui.');
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
+        // Validasi tambahan: cek apakah tahun wisuda sudah ada (kecuali untuk data ini)
+        $existing = JadwalPendaftaran::where('tahun_wisuda', $validated['tahun_wisuda'])
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($existing) {
+            return redirect()->back()
                 ->withInput()
-                ->with('error', 'Terjadi kesalahan saat memperbarui jadwal pendaftaran.');
+                ->with('error', 'Jadwal untuk tahun wisuda ' . $validated['tahun_wisuda'] . ' sudah ada.');
         }
+
+        $jadwal->update($validated);
+
+        return redirect()->route('admin.setting.jadwal-pendaftaran.index')
+            ->with('success', 'Jadwal pendaftaran wisuda berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         try {
-            // TODO: Delete record
-            // $jadwalPendaftaran = PendaftaranWisuda::findOrFail($id);
-            // $jadwalPendaftaran->delete();
-            
+            $jadwal = JadwalPendaftaran::findOrFail($id);
+            $jadwal->delete();
+
             return response()->json([
                 'success' => true,
-                'message' => 'Jadwal pendaftaran berhasil dihapus.'
+                'message' => 'Jadwal pendaftaran wisuda berhasil dihapus.'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat menghapus jadwal pendaftaran.'
+                'message' => 'Gagal menghapus data: ' . $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Get data for DataTables or API.
-     */
-    public function getData(Request $request)
+    public function activate(string $id)
     {
-        // TODO: Implement DataTables server-side processing
-        // return response()->json($data);
+        try {
+            $jadwal = JadwalPendaftaran::findOrFail($id);
+
+            JadwalPendaftaran::where('status', 'Aktif')->update(['status' => 'Nonaktif']);
+
+            $jadwal->update(['status' => 'Aktif']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Jadwal pendaftaran berhasil diaktifkan.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengaktifkan jadwal: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
-
