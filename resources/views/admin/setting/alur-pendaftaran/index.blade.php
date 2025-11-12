@@ -77,6 +77,8 @@
         window.alurPendaftaranConfig = {
             getDataUrl: "{{ route('admin.setting.alur-pendaftaran.get-data') }}",
             exportUrl: "{{ route('admin.setting.alur-pendaftaran.export') }}",
+            exportExcelUrl: "{{ route('admin.setting.alur-pendaftaran.export-excel') }}",
+            exportPdfUrl: "{{ route('admin.setting.alur-pendaftaran.export-pdf') }}",
             detailUrl: "{{ route('admin.setting.alur-pendaftaran.show', ':id') }}",
             editUrl: "{{ route('admin.setting.alur-pendaftaran.edit', ':id') }}",
             deleteUrl: "{{ route('admin.setting.alur-pendaftaran.destroy', ':id') }}",

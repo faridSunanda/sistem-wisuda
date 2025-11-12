@@ -1,6 +1,5 @@
-// Export Functions
 export function initExports(config) {
-    const { exportUrl, exportExcelBtn, exportPdfBtn, printBtn } = config;
+    const { exportExcelUrl, exportPdfUrl, exportUrl, exportExcelBtn, exportPdfBtn, printBtn } = config;
 
     function handleExport($btn, callback) {
         const originalHtml = $btn.html();
@@ -40,7 +39,6 @@ export function initExports(config) {
                     const errorResponse = JSON.parse(xhr.responseText);
                     errorMsg = errorResponse.error || errorMsg;
                 } catch (e) {
-                    // Jika tidak bisa parse JSON, gunakan default message
                 }
                 showToast(errorMsg, 'error');
             },
@@ -50,67 +48,30 @@ export function initExports(config) {
         });
     }
 
-    // --- Excel Export ---
     $(exportExcelBtn).on('click', function() {
-        handleExport($(this), function(headers, data) {
-            try {
-                if (typeof XLSX === 'undefined') {
-                    return showToast('Library Excel (XLSX) tidak terload.', 'error');
-                }
-                const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'Kuota Wisuda');
-
-                ws['!cols'] = [ {wch: 5}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 20} ];
-
-                const fileName = `Kuota_Wisuda_${new Date().toISOString().split('T')[0]}.xlsx`;
-                XLSX.writeFile(wb, fileName);
-            } catch (error) {
-                console.error('Excel creation error:', error);
-                showToast('Terjadi kesalahan saat membuat file Excel.', 'error');
-            }
-        });
+        const $btn = $(this);
+        const originalHtml = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> <span>Loading...</span>');
+        
+        window.location.href = exportExcelUrl;
+        
+        setTimeout(() => {
+            $btn.prop('disabled', false).html(originalHtml);
+        }, 2000);
     });
 
-    // --- PDF Export ---
     $(exportPdfBtn).on('click', function() {
-        handleExport($(this), function(headers, data) {
-            try {
-                if (typeof jspdf === 'undefined' || typeof doc.autoTable === 'undefined') {
-                    return showToast('Library PDF (jsPDF) tidak terload.', 'error');
-                }
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('l', 'mm', 'a4');
-
-                doc.setFontSize(16);
-                doc.setTextColor(40);
-                doc.text('DATA KUOTA WISUDA', 14, 15);
-
-                doc.autoTable({
-                    head: [headers],
-                    body: data,
-                    startY: 25,
-                    theme: 'grid',
-                    headStyles: {
-                        fillColor: [67, 94, 190],
-                        textColor: 255,
-                        fontStyle: 'bold'
-                    },
-                    alternateRowStyles: {
-                        fillColor: [240, 240, 240]
-                    }
-                });
-
-                const fileName = `Kuota_Wisuda_${new Date().toISOString().split('T')[0]}.pdf`;
-                doc.save(fileName);
-            } catch (error) {
-                console.error('PDF creation error:', error);
-                showToast('Terjadi kesalahan saat membuat file PDF.', 'error');
-            }
-        });
+        const $btn = $(this);
+        const originalHtml = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> <span>Loading...</span>');
+        
+        window.location.href = exportPdfUrl;
+        
+        setTimeout(() => {
+            $btn.prop('disabled', false).html(originalHtml);
+        }, 2000);
     });
 
-    // --- Print ---
     $(printBtn).on('click', function() {
         handleExport($(this), function(headers, data) {
             try {

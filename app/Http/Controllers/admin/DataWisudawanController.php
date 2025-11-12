@@ -8,6 +8,10 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Biodata;
+use App\Exports\DataWisudawanExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class DataWisudawanController extends Controller
 {
@@ -94,6 +98,104 @@ class DataWisudawanController extends Controller
         }
 
         return response()->json($query->get());
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try {
+            $query = DB::table('users')
+                ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
+                ->select(
+                    'users.name_lengkap as nama',
+                    DB::raw('COALESCE(biodatas.nim, "") as nim'),
+                    DB::raw('COALESCE(biodatas.tahun_masuk, "") as tahun_masuk'),
+                    DB::raw('COALESCE("", "") as jenjang'),
+                    DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
+                    DB::raw('COALESCE(biodatas.program_studi, "") as prodi')
+                )
+                ->where('users.role', 'mahasiswa');
+
+            if ($request->filled('fakultas')) {
+                $query->where('biodatas.fakultas', $request->fakultas);
+            }
+
+            if ($request->filled('prodi')) {
+                $query->where('biodatas.program_studi', $request->prodi);
+            }
+
+            if ($request->filled('tahun_masuk')) {
+                $query->where('biodatas.tahun_masuk', $request->tahun_masuk);
+            }
+
+            if ($request->filled('jenjang')) {
+                // Filter jenjang jika ada di database nanti
+            }
+
+            $data = $query->get();
+            $fileName = 'Data_Wisudawan_' . date('Y-m-d') . '.xlsx';
+
+            return Excel::download(new DataWisudawanExport($data), $fileName);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat export Excel: ' . $e->getMessage());
+        }
+    }
+
+    public function exportPdf(Request $request)
+    {
+        try {
+            $query = DB::table('users')
+                ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
+                ->select(
+                    'users.name_lengkap as nama',
+                    DB::raw('COALESCE(biodatas.nim, "") as nim'),
+                    DB::raw('COALESCE(biodatas.tahun_masuk, "") as tahun_masuk'),
+                    DB::raw('COALESCE("", "") as jenjang'),
+                    DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
+                    DB::raw('COALESCE(biodatas.program_studi, "") as prodi')
+                )
+                ->where('users.role', 'mahasiswa');
+
+            if ($request->filled('fakultas')) {
+                $query->where('biodatas.fakultas', $request->fakultas);
+            }
+
+            if ($request->filled('prodi')) {
+                $query->where('biodatas.program_studi', $request->prodi);
+            }
+
+            if ($request->filled('tahun_masuk')) {
+                $query->where('biodatas.tahun_masuk', $request->tahun_masuk);
+            }
+
+            if ($request->filled('jenjang')) {
+                // Filter jenjang jika ada di database nanti
+            }
+
+            $data = $query->get();
+            $fileName = 'Data_Wisudawan_' . date('Y-m-d') . '.pdf';
+
+            $html = view('admin.data-wisudawan.pdf', [
+                'data' => $data,
+                'title' => 'Data Wisudawan'
+            ])->render();
+
+            $options = new Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('isHtml5ParserEnabled', true);
+            
+            $dompdf = new Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('a4', 'landscape');
+            $dompdf->render();
+
+            return response()->streamDownload(function() use ($dompdf) {
+                echo $dompdf->output();
+            }, $fileName, [
+                'Content-Type' => 'application/pdf',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat export PDF: ' . $e->getMessage());
+        }
     }
 
     public function show($id)

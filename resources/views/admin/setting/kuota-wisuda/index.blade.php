@@ -81,6 +81,8 @@
         window.kuotaWisudaConfig = {
             getDataUrl: "{{ route('admin.setting.kuota-wisuda.get-data') }}",
             exportUrl: "{{ route('admin.setting.kuota-wisuda.export') }}",
+            exportExcelUrl: "{{ route('admin.setting.kuota-wisuda.export-excel') }}",
+            exportPdfUrl: "{{ route('admin.setting.kuota-wisuda.export-pdf') }}",
             detailUrl: "{{ route('admin.setting.kuota-wisuda.show', ':id') }}",
             editUrl: "{{ route('admin.setting.kuota-wisuda.edit', ':id') }}",
             deleteUrl: "{{ route('admin.setting.kuota-wisuda.destroy', ':id') }}",

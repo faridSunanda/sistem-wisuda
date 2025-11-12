@@ -54,6 +54,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/', [DataWisudawanController::class, 'index'])->name('index');
         Route::get('/get-data', [DataWisudawanController::class, 'getData'])->name('get-data');
         Route::get('/export', [DataWisudawanController::class, 'exportData'])->name('export');
+        Route::get('/export-excel', [DataWisudawanController::class, 'exportExcel'])->name('export-excel');
+        Route::get('/export-pdf', [DataWisudawanController::class, 'exportPdf'])->name('export-pdf');
         Route::get('/{id}/edit', [DataWisudawanController::class, 'edit'])->name('edit');
         Route::put('/{id}', [DataWisudawanController::class, 'update'])->name('update');
         Route::delete('/{id}', [DataWisudawanController::class, 'destroy'])->name('destroy');
@@ -66,6 +68,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::prefix('alur-pendaftaran')->name('alur-pendaftaran.')->group(function () {
             Route::get('/data/get-data', [AlurPendaftaranController::class, 'getData'])->name('get-data');
             Route::get('/data/export', [AlurPendaftaranController::class, 'exportData'])->name('export');
+            Route::get('/export-excel', [AlurPendaftaranController::class, 'exportExcel'])->name('export-excel');
+            Route::get('/export-pdf', [AlurPendaftaranController::class, 'exportPdf'])->name('export-pdf');
             Route::get('/', [AlurPendaftaranController::class, 'index'])->name('index');
             Route::get('/create', [AlurPendaftaranController::class, 'create'])->name('create');
             Route::post('/', [AlurPendaftaranController::class, 'store'])->name('store');
@@ -73,13 +77,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             Route::put('/{alur_pendaftaran}', [AlurPendaftaranController::class, 'update'])->name('update');
             Route::delete('/{alur_pendaftaran}', [AlurPendaftaranController::class, 'destroy'])->name('destroy');
             Route::get('/{alur_pendaftaran}', [AlurPendaftaranController::class, 'show'])->name('show');
-            // Route::get('/export', [AlurPendaftaranController::class, 'exportData'])->name('export');
         });
 
         // Dokumen Persyaratan
         Route::prefix('dokumen-persyaratan')->name('dokumen-persyaratan.')->group(function () {
             Route::get('/data/get-data', [DokumenPersyaratanController::class, 'getData'])->name('get-data');
             Route::get('/export', [DokumenPersyaratanController::class, 'exportData'])->name('export');
+            Route::get('/export-excel', [DokumenPersyaratanController::class, 'exportExcel'])->name('export-excel');
+            Route::get('/export-pdf', [DokumenPersyaratanController::class, 'exportPdf'])->name('export-pdf');
             Route::get('/', [DokumenPersyaratanController::class, 'index'])->name('index');
             Route::get('/create', [DokumenPersyaratanController::class, 'create'])->name('create');
             Route::post('/', [DokumenPersyaratanController::class, 'store'])->name('store');
@@ -93,6 +98,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::prefix('jadwal-pendaftaran')->name('jadwal-pendaftaran.')->group(function () {
             Route::get('/data/get-data', [JadwalPendaftaranController::class, 'getData'])->name('get-data');
             Route::get('/export', [JadwalPendaftaranController::class, 'exportData'])->name('export');
+            Route::get('/export-excel', [JadwalPendaftaranController::class, 'exportExcel'])->name('export-excel');
+            Route::get('/export-pdf', [JadwalPendaftaranController::class, 'exportPdf'])->name('export-pdf');
             Route::get('/', [JadwalPendaftaranController::class, 'index'])->name('index');
             Route::get('/create', [JadwalPendaftaranController::class, 'create'])->name('create');
             Route::post('/', [JadwalPendaftaranController::class, 'store'])->name('store');
@@ -108,6 +115,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             Route::get('/', [JadwalWisudaController::class, 'index'])->name('index');
             Route::get('/get-data', [JadwalWisudaController::class, 'getData'])->name('get-data');
             Route::get('/export', [JadwalWisudaController::class, 'exportData'])->name('export');
+            Route::get('/export-excel', [JadwalWisudaController::class, 'exportExcel'])->name('export-excel');
+            Route::get('/export-pdf', [JadwalWisudaController::class, 'exportPdf'])->name('export-pdf');
             Route::get('/create', [JadwalWisudaController::class, 'create'])->name('create');
             Route::post('/', [JadwalWisudaController::class, 'store'])->name('store');
             Route::get('/{id}', [JadwalWisudaController::class, 'show'])->name('show');
@@ -122,6 +131,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             Route::get('/', [KuotaWisudaController::class, 'index'])->name('index');
             Route::get('/get-data', [KuotaWisudaController::class, 'getData'])->name('get-data');
             Route::get('/export', [KuotaWisudaController::class, 'exportData'])->name('export');
+            Route::get('/export-excel', [KuotaWisudaController::class, 'exportExcel'])->name('export-excel');
+            Route::get('/export-pdf', [KuotaWisudaController::class, 'exportPdf'])->name('export-pdf');
             Route::get('/create', [KuotaWisudaController::class, 'create'])->name('create');
             Route::post('/', [KuotaWisudaController::class, 'store'])->name('store');
             Route::get('/{id}', [KuotaWisudaController::class, 'show'])->name('show');
