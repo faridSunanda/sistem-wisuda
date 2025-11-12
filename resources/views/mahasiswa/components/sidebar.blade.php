@@ -21,7 +21,15 @@
 
         <div class="pt-4">
             <p class="px-3 md:px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pendaftaran</p>
-
+        
+         <a href="{{ route('mahasiswa.pembayaran') }}"
+           class="flex items-center gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg transition-colors {{ request()->routeIs('mahasiswa.pembayaran*') ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+            </svg>
+            <span class="text-sm md:text-base">Pembayaran</span>
+        </a>
+        
         <a href="{{ route('mahasiswa.biodata.edit') }}"
         class="flex items-center gap-3 px-3 md:px-4 py-2 md:py-3 rounded-lg transition-colors {{ request()->routeIs('mahasiswa.biodata.*') ? 'bg-blue-900 text-white' : 'text-gray-700 hover:bg-gray-100' }}">
             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

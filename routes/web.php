@@ -19,6 +19,7 @@ use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardCont
 use App\Http\Controllers\Mahasiswa\SertifikatOrganisasiController;
 use App\Http\Controllers\Mahasiswa\SertifikatPenghargaanController;
 use App\Http\Controllers\Mahasiswa\SertifikatPendidikanKarakterController;
+use App\Http\Controllers\Mahasiswa\PembayaranController;
 
 // Mahasiswa
 use App\Http\Controllers\Mahasiswa\BiodataController;
@@ -154,6 +155,9 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
         return redirect()->route('mahasiswa.dashboard');
     });
 
+    Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran');
+    Route::post('/pembayaran/check-status', [PembayaranController::class, 'checkStatus'])->name('pembayaran.check-status');
+
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('biodata')->name('biodata.')->group(function () {
@@ -179,7 +183,7 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
         Route::get('/pendidikan-karakter', [SertifikatPendidikanKarakterController::class, 'index'])->name('pendidikan-karakter');
         Route::post('/pendidikan-karakter', [SertifikatPendidikanKarakterController::class, 'store'])->name('pendidikan-karakter.store');
 
-        // Sertifikat Penghargaam
+        // Sertifikat Penghargaan
         Route::get('/penghargaan', [SertifikatPenghargaanController::class, 'index'])->name('penghargaan');
         Route::post('/penghargaan', [SertifikatPenghargaanController::class, 'store'])->name('penghargaan.store');
         
