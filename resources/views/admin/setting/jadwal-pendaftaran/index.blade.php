@@ -90,6 +90,8 @@
         window.jadwalPendaftaranConfig = {
             getDataUrl: "{{ route('admin.setting.jadwal-pendaftaran.get-data') }}",
             exportUrl: "{{ route('admin.setting.jadwal-pendaftaran.export') }}",
+            exportExcelUrl: "{{ route('admin.setting.jadwal-pendaftaran.export-excel') }}",
+            exportPdfUrl: "{{ route('admin.setting.jadwal-pendaftaran.export-pdf') }}",
             detailUrl: "{{ route('admin.setting.jadwal-pendaftaran.show', ':id') }}",
             editUrl: "{{ route('admin.setting.jadwal-pendaftaran.edit', ':id') }}",
             deleteUrl: "{{ route('admin.setting.jadwal-pendaftaran.destroy', ':id') }}",

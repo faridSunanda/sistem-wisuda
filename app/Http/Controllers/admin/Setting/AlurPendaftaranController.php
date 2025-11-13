@@ -7,6 +7,10 @@ use App\Models\AlurPendaftaran;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
+use App\Exports\AlurPendaftaranExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class AlurPendaftaranController extends Controller
 {
@@ -132,6 +136,54 @@ class AlurPendaftaranController extends Controller
                 'success' => false,
                 'message' => 'Gagal menghapus data: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try {
+            $data = AlurPendaftaran::query()
+                ->orderBy('no_urut', 'asc')
+                ->get();
+
+            $fileName = 'Alur_Pendaftaran_' . date('Y-m-d') . '.xlsx';
+
+            return Excel::download(new AlurPendaftaranExport($data), $fileName);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat export Excel: ' . $e->getMessage());
+        }
+    }
+
+    public function exportPdf(Request $request)
+    {
+        try {
+            $data = AlurPendaftaran::query()
+                ->orderBy('no_urut', 'asc')
+                ->get();
+
+            $fileName = 'Alur_Pendaftaran_' . date('Y-m-d') . '.pdf';
+
+            $html = view('admin.setting.alur-pendaftaran.pdf', [
+                'data' => $data,
+                'title' => 'Alur Pendaftaran'
+            ])->render();
+
+            $options = new Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('isHtml5ParserEnabled', true);
+            
+            $dompdf = new Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('a4', 'landscape');
+            $dompdf->render();
+
+            return response()->streamDownload(function() use ($dompdf) {
+                echo $dompdf->output();
+            }, $fileName, [
+                'Content-Type' => 'application/pdf',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat export PDF: ' . $e->getMessage());
         }
     }
 

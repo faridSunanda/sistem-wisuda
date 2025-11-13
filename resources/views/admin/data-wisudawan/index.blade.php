@@ -130,19 +130,23 @@
 @endpush
 
 @push('scripts')
-    <script>
-        window.dataWisudawanConfig = {
-            getDataUrl: "{{ route('admin.data-wisudawan.get-data') }}",
-            exportUrl: "{{ route('admin.data-wisudawan.export') }}",
-            detailUrl: "{{ route('admin.data-wisudawan.show', ':id') }}",
-            editUrl: "{{ route('admin.data-wisudawan.edit', ':id') }}",
-            deleteUrl: "{{ route('admin.data-wisudawan.destroy', ':id') }}",
-            resetFiltersBtn: '#resetFiltersBtn',
-            exportExcelBtn: '#exportExcelBtn',
-            exportPdfBtn: '#exportPdfBtn',
-            printBtn: '#printBtn',
-            filterSelectors: '#filterFakultas, #filterProdi, #filterTahunMasuk, #filterJenjang'
-        };
-    </script>
-    @vite('resources/js/admin/data-wisudawan/index.js')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script>
+    window.dataWisudawanConfig = {
+        getDataUrl: "{{ route('admin.data-wisudawan.get-data') }}",
+        exportUrl: "{{ route('admin.data-wisudawan.export') }}",
+        exportExcelUrl: "{{ route('admin.data-wisudawan.export-excel') }}",
+        exportPdfUrl: "{{ route('admin.data-wisudawan.export-pdf') }}",
+        detailUrl: "{{ route('admin.data-wisudawan.show', ':id') }}",
+        editUrl: "{{ route('admin.data-wisudawan.edit', ':id') }}",
+        deleteUrl: "{{ route('admin.data-wisudawan.destroy', ':id') }}",
+        resetFiltersBtn: '#resetFiltersBtn',
+        exportExcelBtn: '#exportExcelBtn',
+        exportPdfBtn: '#exportPdfBtn',
+        printBtn: '#printBtn',
+        filterSelectors: '#filterFakultas, #filterProdi, #filterTahunMasuk, #filterJenjang'
+    };
+</script>
+@vite('resources/js/admin/data-wisudawan/index.js')
 @endpush

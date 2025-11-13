@@ -8,6 +8,10 @@ use App\Models\JadwalPendaftaran;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
+use App\Exports\KuotaWisudaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class KuotaWisudaController extends Controller
 {
@@ -273,6 +277,66 @@ class KuotaWisudaController extends Controller
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        try {
+            $data = KuotaWisudawan::with(['jadwalPendaftaran'])
+                ->get()
+                ->map(function($item) {
+                    return (object)[
+                        'tahun_wisuda' => $item->jadwalPendaftaran->tahun_wisuda ?? '',
+                        'jumlah_kuota' => $item->jumlah_kuota,
+                        'status_periode' => $item->jadwalPendaftaran->status ?? 'Tidak Aktif'
+                    ];
+                });
+
+            $fileName = 'Kuota_Wisuda_' . date('Y-m-d') . '.xlsx';
+
+            return Excel::download(new KuotaWisudaExport($data), $fileName);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat export Excel: ' . $e->getMessage());
+        }
+    }
+
+    public function exportPdf(Request $request)
+    {
+        try {
+            $data = KuotaWisudawan::with(['jadwalPendaftaran'])
+                ->get()
+                ->map(function($item) {
+                    return (object)[
+                        'tahun_wisuda' => $item->jadwalPendaftaran->tahun_wisuda ?? '',
+                        'jumlah_kuota' => $item->jumlah_kuota,
+                        'status_periode' => $item->jadwalPendaftaran->status ?? 'Tidak Aktif'
+                    ];
+                });
+
+            $fileName = 'Kuota_Wisuda_' . date('Y-m-d') . '.pdf';
+
+            $html = view('admin.setting.kuota-wisuda.pdf', [
+                'data' => $data,
+                'title' => 'Kuota Wisuda'
+            ])->render();
+
+            $options = new Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('isHtml5ParserEnabled', true);
+            
+            $dompdf = new Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('a4', 'landscape');
+            $dompdf->render();
+
+            return response()->streamDownload(function() use ($dompdf) {
+                echo $dompdf->output();
+            }, $fileName, [
+                'Content-Type' => 'application/pdf',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat export PDF: ' . $e->getMessage());
         }
     }
 }

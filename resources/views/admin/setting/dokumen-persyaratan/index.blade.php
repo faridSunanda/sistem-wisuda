@@ -81,6 +81,8 @@
         window.dokumenPersyaratanConfig = {
             getDataUrl: "{{ route('admin.setting.dokumen-persyaratan.get-data') }}",
             exportUrl: "{{ route('admin.setting.dokumen-persyaratan.export') }}",
+            exportExcelUrl: "{{ route('admin.setting.dokumen-persyaratan.export-excel') }}",
+            exportPdfUrl: "{{ route('admin.setting.dokumen-persyaratan.export-pdf') }}",
             detailUrl: "{{ route('admin.setting.dokumen-persyaratan.show', ':id') }}",
             editUrl: "{{ route('admin.setting.dokumen-persyaratan.edit', ':id') }}",
             deleteUrl: "{{ route('admin.setting.dokumen-persyaratan.destroy', ':id') }}",

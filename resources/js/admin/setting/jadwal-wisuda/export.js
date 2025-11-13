@@ -1,5 +1,5 @@
 export function initExports(config) {
-    const { exportUrl, exportExcelBtn, exportPdfBtn, printBtn } = config;
+    const { exportExcelUrl, exportPdfUrl, exportUrl, exportExcelBtn, exportPdfBtn, printBtn } = config;
 
     function handleExport($btn, exportType, callback) {
         const originalHtml = $btn.html();
@@ -12,7 +12,6 @@ export function initExports(config) {
             success: function(response) {
                 console.log('Export response:', response);
 
-                // Handle empty response
                 if (!response || (Array.isArray(response) && response.length === 0)) {
                     alert('Tidak ada data jadwal wisuda untuk di-export.');
                     return;
@@ -42,7 +41,6 @@ export function initExports(config) {
                     const errorResponse = JSON.parse(xhr.responseText);
                     errorMsg = errorResponse.error || errorMsg;
                 } catch (e) {
-                    // Jika tidak bisa parse JSON, gunakan default message
                 }
 
                 alert(errorMsg);
@@ -53,77 +51,30 @@ export function initExports(config) {
         });
     }
 
-    // Excel Export
     $(exportExcelBtn).on('click', function() {
         const $btn = $(this);
-
-        handleExport($btn, 'excel', function(headers, data) {
-            try {
-                // Pastikan SheetJS tersedia
-                if (typeof XLSX === 'undefined') {
-                    alert('Library Excel tidak tersedia. Pastikan SheetJS terload.');
-                    return;
-                }
-
-                const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'Jadwal Wisuda');
-
-                const fileName = `Jadwal_Wisuda_${new Date().toISOString().split('T')[0]}.xlsx`;
-                XLSX.writeFile(wb, fileName);
-            } catch (error) {
-                console.error('Excel creation error:', error);
-                alert('Terjadi kesalahan saat membuat file Excel.');
-            }
-        });
+        const originalHtml = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> <span>Loading...</span>');
+        
+        window.location.href = exportExcelUrl;
+        
+        setTimeout(() => {
+            $btn.prop('disabled', false).html(originalHtml);
+        }, 2000);
     });
 
-    // PDF Export
     $(exportPdfBtn).on('click', function() {
         const $btn = $(this);
-
-        handleExport($btn, 'pdf', function(headers, data) {
-            try {
-                // Pastikan jsPDF tersedia
-                if (typeof jspdf === 'undefined') {
-                    alert('Library PDF tidak tersedia. Pastikan jsPDF terload.');
-                    return;
-                }
-
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('l', 'mm', 'a4');
-
-                // Title
-                doc.setFontSize(16);
-                doc.text('DATA JADWAL WISUDA', 14, 15);
-
-                // Table
-                doc.autoTable({
-                    head: [headers],
-                    body: data,
-                    startY: 25,
-                    theme: 'grid',
-                    styles: {
-                        fontSize: 9,
-                        cellPadding: 3
-                    },
-                    headStyles: {
-                        fillColor: [67, 94, 190], // #435ebe
-                        textColor: 255,
-                        fontStyle: 'bold'
-                    }
-                });
-
-                const fileName = `Jadwal_Wisuda_${new Date().toISOString().split('T')[0]}.pdf`;
-                doc.save(fileName);
-            } catch (error) {
-                console.error('PDF creation error:', error);
-                alert('Terjadi kesalahan saat membuat file PDF.');
-            }
-        });
+        const originalHtml = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> <span>Loading...</span>');
+        
+        window.location.href = exportPdfUrl;
+        
+        setTimeout(() => {
+            $btn.prop('disabled', false).html(originalHtml);
+        }, 2000);
     });
 
-    // Print
     $(printBtn).on('click', function() {
         const $btn = $(this);
 

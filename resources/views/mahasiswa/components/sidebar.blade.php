@@ -23,60 +23,72 @@
             <span class="font-medium">Dashboard</span>
         </a>
 
-        <div class="border-t border-gray-100 my-2 pt-2">
-             <p class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pendaftaran</p>
-        </div>
-
-        <a href="{{ route('mahasiswa.biodata.edit') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.biodata.*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
-            <i class="fas fa-id-card text-lg w-5 text-center"></i>
-            <span>Data Diri</span>
-        </a>
-
-        <div x-data="{ sertifikatOpen: {{ request()->routeIs('mahasiswa.sertifikat.*') ? 'true' : 'false' }} }">
-            <button @click="sertifikatOpen = !sertifikatOpen"
-                class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.*') ? 'text-[#435ebe] bg-[#435ebe]/10 border border-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
-                <span class="flex items-center gap-3">
-                    <i class="fas fa-scroll text-lg w-5 text-center"></i>
-                    <span>Sertifikat</span>
-                </span>
-                <i class="fas fa-chevron-down text-xs transition-transform duration-200"
-                    :class="{ 'rotate-180': sertifikatOpen, 'text-[#435ebe]': sertifikatOpen }"></i>
-            </button>
-
-            <div x-show="sertifikatOpen" x-collapse class="mt-1 space-y-1 pl-11 border-l-2 border-[#435ebe]/20 ml-4">
-                <a href="{{ route('mahasiswa.sertifikat.kompetensi') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.kompetensi') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Sertifikat Kompetensi
-                </a>
-                <a href="{{ route('mahasiswa.sertifikat.bahasa-internasional') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.bahasa-internasional') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Sertifikat Bahasa Internasional
-                </a>
-                <a href="{{ route('mahasiswa.sertifikat.magang') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.magang') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Sertifikat Magang
-                </a>
-                <a href="{{ route('mahasiswa.sertifikat.pendidikan-karakter') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.pendidikan-karakter') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Sertifikat Pendidikan Karakter
-                </a>
-                <a href="{{ route('mahasiswa.sertifikat.penghargaan') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.penghargaan') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Sertifikat Penghargaan
-                </a>
-                <a href="{{ route('mahasiswa.sertifikat.organisasi') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.organisasi') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Sertifikat Organisasi
-                </a>
-            </div>
-        </div>
+        <div class="pt-4">
+            <p class="px-3 md:px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pendaftaran</p>
         
-        <a href="{{ route('mahasiswa.download-formulir') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
-            <i class="fas fa-file-arrow-down text-lg w-5 text-center"></i>
-            <span>Download Formulir</span>
-        </a>
+            {{-- [PERUBAHAN]: Menambahkan <div> dengan space-y-2 di sini --}}
+            <div class="space-y-2">
+
+                <a href="{{ route('mahasiswa.pembayaran') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.pembayaran*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                    <i class="fas fa-credit-card text-lg w-5 text-center"></i>
+                    <span class="font-medium">Pembayaran</span>
+                </a>
+                
+                <a href="{{ route('mahasiswa.biodata.edit') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.biodata.*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                    <i class="fas fa-id-card text-lg w-5 text-center"></i>
+                    <span class="font-medium">Data Diri</span>
+                </a>
+
+                <div x-data="{ sertifikatOpen: {{ request()->routeIs('mahasiswa.sertifikat.*') ? 'true' : 'false' }} }">
+                    <button @click="sertifikatOpen = !sertifikatOpen"
+                        class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.*') ? 'text-[#435ebe] bg-[#435ebe]/10 border border-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                        <span class="flex items-center gap-3">
+                            <i class="fas fa-scroll text-lg w-5 text-center"></i>
+                            <span class="font-medium">Sertifikat</span>
+                        </span>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200"
+                            :class="{ 'rotate-180': sertifikatOpen, 'text-[#435ebe]': sertifikatOpen }"></i>
+                    </button>
+
+                    <div x-show="sertifikatOpen" x-collapse class="mt-1 space-y-1 pl-11 border-l-2 border-[#435ebe]/20 ml-4">
+                        <a href="{{ route('mahasiswa.sertifikat.kompetensi') }}"
+                            class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.kompetensi') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                            Sertifikat Kompetensi
+                        </a>
+                        <a href="{{ route('mahasiswa.sertifikat.bahasa-internasional') }}"
+                            class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.bahasa-internasional') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                            Sertifikat Bahasa Internasional
+                        </a>
+                        <a href="{{ route('mahasiswa.sertifikat.magang') }}"
+                            class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.magang') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                            Sertifikat Magang
+                        </a>
+                        <a href="{{ route('mahasiswa.sertifikat.pendidikan-karakter') }}"
+                            class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.pendidikan-karakter') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                            Sertifikat Pendidikan Karakter
+                        </a>
+                        <a href="{{ route('mahasiswa.sertifikat.penghargaan') }}"
+                            class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.penghargaan') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                            Sertifikat Penghargaan
+                        </a>
+                        <a href="{{ route('mahasiswa.sertifikat.organisasi') }}"
+                            class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.organisasi') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                            Sertifikat Organisasi
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="{{ route('mahasiswa.download-formulir') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                    <i class="fas fa-file-arrow-down text-lg w-5 text-center"></i>
+                    <span class="font-medium">Download Formulir</span>
+                </a>
+
+            </div> {{-- [PERUBAHAN]: Penutup <div> --}}
+
+        </div>
     </nav>
 </aside>
 

@@ -81,6 +81,8 @@
         window.jadwalWisudaConfig = {
             getDataUrl: "{{ route('admin.setting.jadwal-wisuda.get-data') }}",
             exportUrl: "{{ route('admin.setting.jadwal-wisuda.export') }}",
+            exportExcelUrl: "{{ route('admin.setting.jadwal-wisuda.export-excel') }}",
+            exportPdfUrl: "{{ route('admin.setting.jadwal-wisuda.export-pdf') }}",
             detailUrl: "{{ route('admin.setting.jadwal-wisuda.show', ':id') }}",
             editUrl: "{{ route('admin.setting.jadwal-wisuda.edit', ':id') }}",
             deleteUrl: "{{ route('admin.setting.jadwal-wisuda.destroy', ':id') }}",

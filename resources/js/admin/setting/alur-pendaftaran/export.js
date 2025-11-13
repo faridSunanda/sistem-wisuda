@@ -1,98 +1,30 @@
 export function initExports(config) {
-    const { exportUrl, exportExcelBtn, exportPdfBtn, printBtn } = config;
+    const { exportExcelUrl, exportPdfUrl, exportUrl, exportExcelBtn, exportPdfBtn, printBtn } = config;
 
-    // Excel Export
     $(exportExcelBtn).on('click', function() {
         const $btn = $(this);
         const originalHtml = $btn.html();
         $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> <span>Loading...</span>');
-
-        $.ajax({
-            url: exportUrl,
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (!Array.isArray(response)) {
-                    throw new Error('Invalid response format');
-                }
-
-                const headers = ['No', 'No Urut', 'Judul', 'Keterangan'];
-                const data = response.map((row, index) => [
-                    index + 1,
-                    row.no_urut || '',
-                    row.judul || '',
-                    row.keterangan || ''
-                ]);
-
-                const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'Alur Pendaftaran');
-
-                const fileName = 'Alur_Pendaftaran_' + new Date().toISOString().split('T')[0] + '.xlsx';
-                XLSX.writeFile(wb, fileName);
-            },
-            error: function(xhr, status, error) {
-                console.error('Export error:', error);
-                alert('Terjadi kesalahan saat mengambil data untuk export.');
-            },
-            complete: function() {
-                $btn.prop('disabled', false).html(originalHtml);
-            }
-        });
+        
+        window.location.href = exportExcelUrl;
+        
+        setTimeout(() => {
+            $btn.prop('disabled', false).html(originalHtml);
+        }, 2000);
     });
 
-    // PDF Export
     $(exportPdfBtn).on('click', function() {
         const $btn = $(this);
         const originalHtml = $btn.html();
         $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> <span>Loading...</span>');
-
-        $.ajax({
-            url: exportUrl,
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                if (!Array.isArray(response)) {
-                    throw new Error('Invalid response format');
-                }
-
-                const headers = ['No', 'No Urut', 'Judul', 'Keterangan'];
-                const data = response.map((row, index) => [
-                    index + 1,
-                    row.no_urut || '',
-                    row.judul || '',
-                    row.keterangan || ''
-                ]);
-
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('l', 'mm', 'a4');
-
-                doc.setFontSize(16);
-                doc.text('Data Alur Pendaftaran', 14, 15);
-
-                doc.autoTable({
-                    head: [headers],
-                    body: data,
-                    startY: 25,
-                    theme: 'grid',
-                    styles: { fontSize: 10, cellPadding: 3 },
-                    headStyles: { fillColor: [59, 130, 246], textColor: 255, fontStyle: 'bold' }
-                });
-
-                const fileName = 'Alur_Pendaftaran_' + new Date().toISOString().split('T')[0] + '.pdf';
-                doc.save(fileName);
-            },
-            error: function(xhr, status, error) {
-                console.error('Export error:', error);
-                alert('Terjadi kesalahan saat mengambil data untuk export.');
-            },
-            complete: function() {
-                $btn.prop('disabled', false).html(originalHtml);
-            }
-        });
+        
+        window.location.href = exportPdfUrl;
+        
+        setTimeout(() => {
+            $btn.prop('disabled', false).html(originalHtml);
+        }, 2000);
     });
 
-    // Print
     $(printBtn).on('click', function() {
         const $btn = $(this);
         const originalHtml = $btn.html();
