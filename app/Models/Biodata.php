@@ -43,6 +43,12 @@ class Biodata extends Model
         return $this->belongsTo(User::class);
     }
 
+public function dosenPembimbings()
+    {
+        // Satu Biodata 'hasMany' (memiliki banyak) DosenPembimbing
+        return $this->hasMany(DosenPembimbing::class, 'biodata_id');
+    }
+
     public function sertifikatKompetensi()
     {
         return $this->hasMany(SertifikatKompetensi::class);
