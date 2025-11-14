@@ -57,11 +57,13 @@
                         </label>
                         <select id="status" name="status" required
                             class="w-full px-4 py-2.5 text-sm bg-gray-50 border-0 rounded-lg text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:bg-white transition-all">
+
                             <option value="">Pilih Status</option>
+
                             <option value="Draft" {{ old('status') == 'Draft' ? 'selected' : '' }}>Draft</option>
-                            <option value="Aktif" {{ old('status') == 'Aktif' ? 'selected' : '' }}>Aktif</option>
-                            <option value="Nonaktif" {{ old('status') == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
-                            <option value="Selesai" {{ old('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                            <option value="Buka" {{ old('status') == 'Buka' ? 'selected' : '' }}>Buka</option>
+                            <option value="Tutup" {{ old('status') == 'Tutup' ? 'selected' : '' }}>Tutup</option>
+
                         </select>
                     </div>
 
@@ -88,7 +90,7 @@
                     <button type="submit"
                         class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#435ebe] text-white hover:bg-[#3a52a8] rounded-lg transition-colors">
                         <i class="fas fa-save"></i>
-                        <span>Simpan Jadwal</span>
+                        <span>Simpan Data</span>
                     </button>
                     <a href="{{ route('admin.setting.jadwal-pendaftaran.index') }}"
                         class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white border border-[#435ebe] text-[#435ebe] hover:bg-[#435ebe] hover:text-white rounded-lg transition-all">

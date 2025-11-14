@@ -68,7 +68,7 @@ class JadwalWisudaController extends Controller
                 $btn .= '<i class="fas fa-pencil-alt"></i>';
                 $btn .= '</button>';
 
-                $btn .= '<button class="btn-action btn-delete" onclick="hapusData(\''.$id.'\')" title="Hapus">';
+                $btn .= '<button class="btn-action btn-delete" onclick="hapusData(\''.$row->id.'\', this)" title="Hapus">';
                 $btn .= '<i class="fas fa-trash"></i>';
                 $btn .= '</button>';
 
@@ -250,7 +250,7 @@ class JadwalWisudaController extends Controller
             $options = new Options();
             $options->set('isRemoteEnabled', true);
             $options->set('isHtml5ParserEnabled', true);
-            
+
             $dompdf = new Dompdf($options);
             $dompdf->loadHtml($html);
             $dompdf->setPaper('a4', 'landscape');

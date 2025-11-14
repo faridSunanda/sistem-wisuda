@@ -89,7 +89,7 @@
                 <a href="{{ route('admin.setting.jadwal-pendaftaran.edit', $jadwal->id) }}"
                     class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-[#435ebe] text-white hover:bg-[#3a52a8] rounded-lg transition-colors">
                     <i class="fas fa-pencil-alt"></i>
-                    <span>Edit Jadwal</span>
+                    <span>Edit</span>
                 </a>
 
                 <a href="{{ route('admin.setting.jadwal-pendaftaran.index') }}"

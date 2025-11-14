@@ -10,16 +10,16 @@
             <form action="{{ route('admin.setting.kuota-wisuda.store') }}" method="POST">
                 @csrf
 
-                @if (session('success'))
+                {{-- @if (session('success'))
                     <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-lg">
                         <div class="flex items-center">
                             <i class="fas fa-check-circle mr-2"></i>
                             <span>{{ session('success') }}</span>
                         </div>
                     </div>
-                @endif
+                @endif --}}
 
-                @if ($errors->any())
+                {{-- @if ($errors->any())
                     <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
                         <div class="flex items-start">
                             <i class="fas fa-exclamation-circle mr-2 mt-0.5"></i>
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                @endif --}}
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                     <div class="md:col-span-2">

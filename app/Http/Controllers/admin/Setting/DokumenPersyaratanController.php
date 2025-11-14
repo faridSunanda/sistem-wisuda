@@ -35,7 +35,7 @@ class DokumenPersyaratanController extends Controller
                 $btn .= '<button class="btn-action btn-edit" onclick="editData(\''.$id.'\')" title="Edit">';
                 $btn .= '<i class="fas fa-pencil-alt"></i>';
                 $btn .= '</button>';
-                $btn .= '<button class="btn-action btn-delete" onclick="hapusData(\''.$id.'\')" title="Hapus">';
+                $btn .= '<button class="btn-action btn-delete" onclick="hapusData(\''.$row->id.'\', this)" title="Hapus">';
                 $btn .= '<i class="fas fa-trash"></i>';
                 $btn .= '</button>';
                 $btn .= '</div>';
@@ -202,7 +202,7 @@ class DokumenPersyaratanController extends Controller
             $options = new Options();
             $options->set('isRemoteEnabled', true);
             $options->set('isHtml5ParserEnabled', true);
-            
+
             $dompdf = new Dompdf($options);
             $dompdf->loadHtml($html);
             $dompdf->setPaper('a4', 'landscape');

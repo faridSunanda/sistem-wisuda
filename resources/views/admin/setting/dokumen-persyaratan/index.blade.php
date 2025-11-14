@@ -19,7 +19,7 @@
             <a href="{{ route('admin.setting.dokumen-persyaratan.create') }}"
                 class="flex items-center gap-2 px-4 py-2 text-sm bg-[#435ebe] text-white hover:bg-[#3a52a8] rounded-lg transition-all">
                 <i class="fas fa-plus"></i>
-                <span>Tambah Dokumen</span>
+                <span>Tambah</span>
             </a>
         </div>
 

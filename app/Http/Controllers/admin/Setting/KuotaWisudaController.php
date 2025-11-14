@@ -50,8 +50,7 @@ class KuotaWisudaController extends Controller
                     $btn = '<div class="flex items-center justify-center gap-2">';
                     $btn .= '<button class="btn-action btn-view" onclick="lihatData(\''.$id.'\')" title="Lihat"><i class="fas fa-eye"></i></button>';
                     $btn .= '<button class="btn-action btn-edit" onclick="editData(\''.$id.'\')" title="Edit"><i class="fas fa-pencil-alt"></i></button>';
-                    $btn .= '<button class="btn-action btn-delete" onclick="hapusData(event, \''.$id.'\')" title="Hapus"><i class="fas fa-trash"></i></button>';
-                    $btn .= '</div>';
+                    $btn .= '<button class="btn-action btn-delete" onclick="hapusData(\''.$id.'\', this)" title="Hapus"><i class="fas fa-trash"></i></button>';                    $btn .= '</div>';
                     return $btn;
                 })
                 ->rawColumns(['status_periode', 'aksi'])
@@ -324,7 +323,7 @@ class KuotaWisudaController extends Controller
             $options = new Options();
             $options->set('isRemoteEnabled', true);
             $options->set('isHtml5ParserEnabled', true);
-            
+
             $dompdf = new Dompdf($options);
             $dompdf->loadHtml($html);
             $dompdf->setPaper('a4', 'landscape');

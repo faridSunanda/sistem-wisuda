@@ -34,10 +34,16 @@
     <section class="flex justify-center font-semibold w-full px-4">
         <div
             class="relative w-full md:w-1/2 text-center bg-white shadow-xl -mt-12 rounded-xl p-6 pt-10 border border-gray-100">
-            <div
+            {{-- <div
                 class="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-500 text-white text-sm px-4 py-1 rounded-full shadow-md">
                 Pendaftaran Ditutup
-            </div>
+            </div> --}}
+            @if (isset($statusInfo))
+                <div
+                    class="absolute -top-3 left-1/2 -translate-x-1/2 {{ $statusInfo['color'] }} text-white text-sm px-4 py-1 rounded-full shadow-md">
+                    {{ $statusInfo['text'] }}
+                </div>
+            @endif
 
             <p class="text-base md:text-xl text-gray-700 flex flex-wrap justify-center items-center gap-1">
                 <i class="fa-sharp fa-solid fa-graduation-cap text-indigo-500 text-lg animate-bounce-smooth"></i>

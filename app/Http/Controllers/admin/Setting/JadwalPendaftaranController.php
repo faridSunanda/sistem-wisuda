@@ -58,19 +58,27 @@ class JadwalPendaftaranController extends Controller
 
     private function getStatusBadge($status)
     {
+        $statusText = $status;
         $badgeClass = 'badge ';
 
-        if ($status == 'Aktif') {
+        if ($status == 'Buka') {
+            $statusText = 'Buka';
             $badgeClass .= 'badge-success';
+
+        } elseif ($status == 'Tutup') {
+            $statusText = 'Tutup';
+            $badgeClass .= 'badge-secondary';
+
         } elseif ($status == 'Draft') {
+            $statusText = 'Draft';
             $badgeClass .= 'badge-warning';
-        } elseif ($status == 'Nonaktif' || $status == 'Selesai') {
-            $badgeClass .= 'badge-danger';
+
         } else {
+            $statusText = $status;
             $badgeClass .= 'badge-info';
         }
 
-        return '<span class="'.$badgeClass.'">'.$status.'</span>';
+        return '<span class="'.$badgeClass.'">'.$statusText.'</span>';
     }
 
     private function getStatusWaktu($item)
@@ -91,16 +99,16 @@ class JadwalPendaftaranController extends Controller
     private function getActionButtons($id)
     {
         return '<div class="flex items-center justify-center gap-2">' .
-               '<button class="btn-action btn-view" onclick="lihatData(\''.$id.'\')" title="Lihat">' .
-               '<i class="fas fa-eye"></i>' .
-               '</button>' .
-               '<button class="btn-action btn-edit" onclick="editData(\''.$id.'\')" title="Edit">' .
-               '<i class="fas fa-pencil-alt"></i>' .
-               '</button>' .
-               '<button class="btn-action btn-delete" onclick="hapusData(event, \''.$id.'\')" title="Hapus">' . // <-- DIPERBAIKI DI SINI
-               '<i class="fas fa-trash"></i>' .
-               '</button>' .
-               '</div>';
+            '<button class="btn-action btn-view" onclick="lihatData(\''.$id.'\')" title="Lihat">' .
+            '<i class="fas fa-eye"></i>' .
+            '</button>' .
+            '<button class="btn-action btn-edit" onclick="editData(\''.$id.'\')" title="Edit">' .
+            '<i class="fas fa-pencil-alt"></i>' .
+            '</button>' .
+            '<button class="btn-action btn-delete" onclick="hapusData(\''.$id.'\', this)" title="Hapus">' .
+            '<i class="fas fa-trash"></i>' .
+            '</button>' .
+            '</div>';
     }
 
     public function exportData(Request $request)
@@ -141,7 +149,7 @@ class JadwalPendaftaranController extends Controller
     {
         $validated = $request->validate([
             'tahun_wisuda' => 'required|integer|min:2000|max:2100',
-            'status' => 'required|in:Draft,Aktif,Nonaktif,Selesai',
+            'status' => 'required|in:Draft,Buka,Tutup',
             'waktu_buka_pendaftaran' => 'required|date',
             'waktu_tutup_pendaftaran' => 'required|date|after:waktu_buka_pendaftaran',
         ]);
@@ -183,7 +191,7 @@ class JadwalPendaftaranController extends Controller
 
         $validated = $request->validate([
             'tahun_wisuda' => 'required|integer|min:2000|max:2100',
-            'status' => 'required|in:Draft,Aktif,Nonaktif,Selesai',
+            'status' => 'required|in:Draft,Buka,Tutup',
             'waktu_buka_pendaftaran' => 'required|date',
             'waktu_tutup_pendaftaran' => 'required|date|after:waktu_buka_pendaftaran',
         ]);
@@ -276,7 +284,7 @@ class JadwalPendaftaranController extends Controller
             $options = new Options();
             $options->set('isRemoteEnabled', true);
             $options->set('isHtml5ParserEnabled', true);
-            
+
             $dompdf = new Dompdf($options);
             $dompdf->loadHtml($html);
             $dompdf->setPaper('a4', 'landscape');
