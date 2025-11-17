@@ -12,7 +12,6 @@
         </div>
         <button @click="sidebarOpen = false" class="lg:hidden p-2 text-gray-500 hover:text-gray-700 flex-shrink-0">
             <i class="fas fa-times text-lg"></i>
-            
         </button>
     </div>
 
@@ -26,10 +25,9 @@
         <div class="pt-4">
             <p class="px-3 md:px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pendaftaran</p>
         
-            {{-- [PERUBAHAN]: Menambahkan <div> dengan space-y-2 di sini --}}
             <div class="space-y-2">
 
-                <a href="{{ route('mahasiswa.pembayaran') }}"
+                <a href="{{ route('mahasiswa.pembayaran.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.pembayaran*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                     <i class="fas fa-credit-card text-lg w-5 text-center"></i>
                     <span class="font-medium">Pembayaran</span>
@@ -78,7 +76,6 @@
                             Sertifikat Organisasi
                         </a>
                     </div>
-                </div>
                 
                 <a href="{{ route('mahasiswa.download-formulir') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
@@ -86,15 +83,11 @@
                     <span class="font-medium">Download Formulir</span>
                 </a>
 
-            </div> {{-- [PERUBAHAN]: Penutup <div> --}}
-
+            </div>
         </div>
     </nav>
 </aside>
 
-<div x-show="sidebarOpen" @click="sidebarOpen = false"
-    class="fixed inset-0 z-40 bg-gray-500/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
-    x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
-    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-</div>
+@push('scripts')
+@vite('resources/js/mahasiswa/components/sidebar.js')
+@endpush

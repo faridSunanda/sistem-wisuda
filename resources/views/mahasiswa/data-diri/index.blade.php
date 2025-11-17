@@ -10,7 +10,46 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto pb-10"> 
-    
+
+    @if (session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded" role="alert">
+            <p>{{ session('error') }}</p>
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded" role="alert">
+            <p class="font-bold">Terjadi Kesalahan:</p>
+            <ul class="list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    @if (config('services.biodata.api_url'))
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-blue-900">Sinkronisasi dengan API</p>
+                    <p class="text-xs text-blue-700 mt-1">Klik tombol di bawah untuk menyinkronkan data dari API</p>
+                </div>
+                <form action="{{ route('mahasiswa.biodata.sync') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors text-sm font-medium">
+                        <i class="fa-solid fa-sync-alt mr-2"></i>Sinkronisasi
+                    </button>
+                </form>
+            </div>
+        </div>
+    @endif
+>>>>>>> Stashed changes
     
     <form action="{{ route('mahasiswa.biodata.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
@@ -194,6 +233,6 @@
 </div>
 
 @push('scripts')
-    @vite('resources/js/mahasiswa/data-diri/index.js')
+@vite('resources/js/mahasiswa/data-diri/index.js')
 @endpush
 @endsection

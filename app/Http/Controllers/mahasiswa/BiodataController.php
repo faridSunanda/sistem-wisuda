@@ -20,9 +20,7 @@ class BiodataController extends Controller
     {
         $user = Auth::user();
         
-        
         $biodata = $user->biodata()->with('dosenPembimbings')->first();
-        
         
         return view('mahasiswa.data-diri.index', compact('biodata'));
     }
@@ -75,20 +73,16 @@ class BiodataController extends Controller
         try {
             DB::beginTransaction();
 
-            
             $user->update([
                 'name_lengkap' => $request->input('name_lengkap'),
                 'email'        => $request->input('email'),
             ]);
 
-            
             $biodataData = $request->except([
                 '_token', 'name_lengkap', 'email', 'foto_profile', 'dosen_pembimbing'
             ]);
 
-            
             if ($request->hasFile('foto_profile')) {
-                
                 if ($user->biodata && $user->biodata->foto_profile) {
                     Storage::disk('public')->delete($user->biodata->foto_profile);
                 }
@@ -97,40 +91,30 @@ class BiodataController extends Controller
                 $biodataData['foto_profile'] = $path;
             }
 
-            
             $biodata = $user->biodata()->updateOrCreate(
                 ['user_id' => $user->id], 
                 $biodataData              
             );
 
-            
-            
-            
-            
             $biodata->dosenPembimbings()->delete();
 
-            
             $dosenNames = $request->input('dosen_pembimbing', []);
             $dosenDataToInsert = [];
             foreach ($dosenNames as $namaDosen) {
                 if (!empty($namaDosen)) {
-                    
                     $dosenDataToInsert[] = ['nama' => $namaDosen]; 
                 }
             }
 
-            
             if (!empty($dosenDataToInsert)) {
                 $biodata->dosenPembimbings()->createMany($dosenDataToInsert);
             }
 
-            
             DB::commit();
 
             return back()->with('success', 'Biodata berhasil diperbarui!');
 
         } catch (\Exception $e) {
-            
             DB::rollBack();
             
             return back()->with('error', 'Gagal memperbarui biodata: ' . $e->getMessage()); 

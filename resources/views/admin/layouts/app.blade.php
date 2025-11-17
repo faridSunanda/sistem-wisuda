@@ -15,11 +15,16 @@
     @stack('styles')
 </head>
 
-<body class="bg-gray-50" x-data="{
-    sidebarOpen: false,
-    showFooter: true
-}">
+<body class="bg-gray-50" x-data="{ sidebarOpen: false, showFooter: true }">
     <div class="flex h-screen overflow-hidden">
+        <!-- Backdrop for Mobile -->
+        <div x-show="sidebarOpen" @click="sidebarOpen = false"
+            class="fixed inset-0 z-40 bg-gray-500/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
+            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        </div>
+
         <!-- Sidebar -->
         @include('admin.components.sidebar')
 
@@ -57,10 +62,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Set up template Toast di kanan atas
         const Toast = Swal.mixin({
             toast: true,
-            position: 'top-end', // Ini adalah 'dikanan atas'
+            position: 'top-end',
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true,
@@ -70,7 +74,6 @@
             }
         });
 
-        // Cek jika ada session 'success' dari PHP
         @if (session('success'))
             Toast.fire({
                 icon: 'success',
@@ -78,7 +81,6 @@
             });
         @endif
 
-        // Cek jika ada session 'error' dari PHP
         @if (session('error'))
             Toast.fire({
                 icon: 'error',
@@ -86,7 +88,6 @@
             });
         @endif
 
-        // Cek jika ada error validasi (opsional, tapi bagus)
         @if ($errors->any())
             Toast.fire({
                 icon: 'error',

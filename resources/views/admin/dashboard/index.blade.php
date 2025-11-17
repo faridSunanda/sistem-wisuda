@@ -11,7 +11,7 @@
             <div class="flex items-center justify-between mb-3 md:mb-4">
                 <h3 class="text-xs md:text-sm font-medium text-gray-600 flex items-center gap-2">
                     <i class="fa-solid fa-circle-check text-green-600"></i>
-                    <span>Wisudawan Verified</span>
+                    <span>Wisudawan Terverifikasi</span>
                 </h3>
             </div>
             <div class="flex items-baseline">
@@ -31,7 +31,7 @@
             <div class="flex items-center justify-between mb-3 md:mb-4">
                 <h3 class="text-xs md:text-sm font-medium text-gray-600 flex items-center gap-2">
                     <i class="fa-solid fa-circle-xmark text-blue-500"></i>
-                    <span>Wisudawan Not Verified</span>
+                    <span>Wisudawan Belum Terverifikasi</span>
                 </h3>
             </div>
             <div class="flex items-baseline">
@@ -65,6 +65,19 @@
         </div>
     </div>
     
+    @php
+        $fakultasLabels = $charts['fakultas']['labels'] ?? ['', '', '', ''];
+        $fakultasValues = $charts['fakultas']['data'] ?? [0, 0, 0, 0];
+        $tahunMasukLabels = $charts['tahun_masuk']['labels'] ?? ['', '', '', ''];
+        $tahunMasukValues = $charts['tahun_masuk']['data'] ?? [0, 0, 0, 0];
+        $jenjangLabels = $charts['jenjang']['labels'] ?? ['S1', 'S2', 'S3'];
+        $jenjangValues = $charts['jenjang']['data'] ?? [0, 0, 0];
+        
+        $fakultasColors = ['#3b82f6', '#10b981', '#eab308', '#ef4444'];
+        $tahunMasukColors = ['#10b981', '#3b82f6', '#ef4444', '#eab308'];
+        $jenjangColors = ['#a855f7', '#ec4899', '#eab308'];
+    @endphp
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div class="bg-white rounded-lg shadow p-4 md:p-6 border border-gray-200">
             <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Wisudawan Berdasarkan Fakultas</h3>
@@ -72,22 +85,17 @@
                 <canvas id="fakultasChart"></canvas>
             </div>
             <div class="mt-3 md:mt-4 space-y-1 md:space-y-2">
-                <div class="flex items-center gap-2 text-xs md:text-sm">
-                    <div class="w-3 h-3 md:w-4 md:h-4 bg-blue-500 rounded flex-shrink-0"></div>
-                    <span>Fakultas Teknik</span>
-                </div>
-                <div class="flex items-center gap-2 text-xs md:text-sm">
-                    <div class="w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded flex-shrink-0"></div>
-                    <span>Fakultas Hukum</span>
-                </div>
-                <div class="flex items-center gap-2 text-xs md:text-sm">
-                    <div class="w-3 h-3 md:w-4 md:h-4 bg-yellow-500 rounded flex-shrink-0"></div>
-                    <span>Fakultas Ekonomi</span>
-                </div>
-                <div class="flex items-center gap-2 text-xs md:text-sm">
-                    <div class="w-3 h-3 md:w-4 md:h-4 bg-red-500 rounded flex-shrink-0"></div>
-                    <span>Fakultas Kedokteran</span>
-                </div>
+                @foreach($fakultasLabels as $index => $label)
+                    @if($label)
+                        <div class="flex items-center gap-2 text-xs md:text-sm">
+                            <div class="w-3 h-3 md:w-4 md:h-4 rounded flex-shrink-0" style="background-color: {{ $fakultasColors[$index] ?? '#3b82f6' }}"></div>
+                            <span>{{ $label }}</span>
+                        </div>
+                    @endif
+                @endforeach
+                @if(empty(array_filter($fakultasLabels)))
+                    <p class="text-xs md:text-sm text-gray-500">Belum ada data</p>
+                @endif
             </div>
         </div>
         
@@ -97,22 +105,17 @@
                 <canvas id="tahunMasukChart"></canvas>
             </div>
             <div class="mt-3 md:mt-4 space-y-1 md:space-y-2">
-                <div class="flex items-center gap-2 text-xs md:text-sm">
-                    <div class="w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded flex-shrink-0"></div>
-                    <span>2021</span>
-                </div>
-                <div class="flex items-center gap-2 text-xs md:text-sm">
-                    <div class="w-3 h-3 md:w-4 md:h-4 bg-blue-500 rounded flex-shrink-0"></div>
-                    <span>2020</span>
-                </div>
-                <div class="flex items-center gap-2 text-xs md:text-sm">
-                    <div class="w-3 h-3 md:w-4 md:h-4 bg-red-500 rounded flex-shrink-0"></div>
-                    <span>2019</span>
-                </div>
-                <div class="flex items-center gap-2 text-xs md:text-sm">
-                    <div class="w-3 h-3 md:w-4 md:h-4 bg-yellow-500 rounded flex-shrink-0"></div>
-                    <span>2018</span>
-                </div>
+                @foreach($tahunMasukLabels as $index => $label)
+                    @if($label)
+                        <div class="flex items-center gap-2 text-xs md:text-sm">
+                            <div class="w-3 h-3 md:w-4 md:h-4 rounded flex-shrink-0" style="background-color: {{ $tahunMasukColors[$index] ?? '#10b981' }}"></div>
+                            <span>{{ $label }}</span>
+                        </div>
+                    @endif
+                @endforeach
+                @if(empty(array_filter($tahunMasukLabels)))
+                    <p class="text-xs md:text-sm text-gray-500">Belum ada data</p>
+                @endif
             </div>
         </div>
         
@@ -139,36 +142,31 @@
     </div>
 </div>
 
-@php
-    $fakultasData = $charts['fakultas'] ?? [35, 30, 25, 10];
-    $tahunMasukData = $charts['tahun_masuk'] ?? [45, 25, 20, 10];
-    $jenjangData = $charts['jenjang'] ?? [70, 20, 10];
-@endphp
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
     const fakultasData = {
-        labels: ['Fakultas Teknik', 'Fakultas Hukum', 'Fakultas Ekonomi', 'Fakultas Kedokteran'],
+        labels: @json($fakultasLabels),
         datasets: [{
-            data: @json($fakultasData),
-            backgroundColor: ['#3b82f6', '#10b981', '#eab308', '#ef4444']
+            data: @json($fakultasValues),
+            backgroundColor: @json($fakultasColors)
         }]
     };
 
     const tahunMasukData = {
-        labels: ['2021', '2020', '2019', '2018'],
+        labels: @json($tahunMasukLabels),
         datasets: [{
-            data: @json($tahunMasukData),
-            backgroundColor: ['#10b981', '#3b82f6', '#ef4444', '#eab308']
+            data: @json($tahunMasukValues),
+            backgroundColor: @json($tahunMasukColors)
         }]
     };
 
     const jenjangData = {
-        labels: ['S1', 'S2', 'S3'],
+        labels: @json($jenjangLabels),
         datasets: [{
-            data: @json($jenjangData),
-            backgroundColor: ['#a855f7', '#ec4899', '#eab308']
+            data: @json($jenjangValues),
+            backgroundColor: @json($jenjangColors)
         }]
     };
 

@@ -155,16 +155,10 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
         return redirect()->route('mahasiswa.dashboard');
     });
 
-    Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran');
-    Route::post('/pembayaran/check-status', [PembayaranController::class, 'checkStatus'])->name('pembayaran.check-status');
-
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('biodata')->name('biodata.')->group(function () {
-        // Ini mendaftarkan nama: 'mahasiswa.biodata.edit' (untuk GET)
         Route::get('/', [BiodataController::class, 'edit'])->name('edit');
-
-        // Ini mendaftarkan nama: 'mahasiswa.biodata.update' (untuk POST)
         Route::post('/', [BiodataController::class, 'update'])->name('update');
     });
 
@@ -195,5 +189,12 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
     Route::get('/download-formulir', function () {
         return view('mahasiswa.download-formulir.index');
     })->name('download-formulir');
+
+    Route::prefix('pembayaran')->name('pembayaran.')->group(function () {
+        Route::get('/', [PembayaranController::class, 'index'])->name('index');
+        Route::post('/create', [PembayaranController::class, 'createPayment'])->name('create');
+        Route::post('/check-status', [PembayaranController::class, 'checkStatus'])->name('check-status');
+        Route::post('/verify', [PembayaranController::class, 'verifyPayment'])->name('verify');
+    });
 
 });

@@ -6,193 +6,61 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class DataWisudawanSeeder extends Seeder
 {
     public function run(): void
     {
-        $wisudawan = [
-            [
-                'user' => [
-                    'name_lengkap' => 'Hairudin Farid Sunanda',
-                    'email' => '21103041039@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '21103041039',
-                    'tahun_masuk' => '2021',
-                    'fakultas' => 'Teknik',
-                    'program_studi' => 'Teknik Informatika',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '2000-05-15',
-                    'jenis_kelamin' => 'Laki-laki',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Farid Sunanda',
-                    'email' => '21103041009@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '21103041009',
-                    'tahun_masuk' => '2021',
-                    'fakultas' => 'Teknik',
-                    'program_studi' => 'Teknik Informatika',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '2001-03-20',
-                    'jenis_kelamin' => 'Laki-laki',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Ahmad Rizki Pratama',
-                    'email' => '21103041010@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '21103041010',
-                    'tahun_masuk' => '2021',
-                    'fakultas' => 'Teknik',
-                    'program_studi' => 'Sistem Informasi',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '2000-07-10',
-                    'jenis_kelamin' => 'Laki-laki',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Siti Nurhaliza',
-                    'email' => '20103041001@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '20103041001',
-                    'tahun_masuk' => '2020',
-                    'fakultas' => 'Hukum',
-                    'program_studi' => 'Hukum',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '1999-11-25',
-                    'jenis_kelamin' => 'Perempuan',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Budi Santoso',
-                    'email' => '20103041002@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '20103041002',
-                    'tahun_masuk' => '2020',
-                    'fakultas' => 'Ekonomi',
-                    'program_studi' => 'Manajemen',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '1999-09-12',
-                    'jenis_kelamin' => 'Laki-laki',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Dewi Sartika',
-                    'email' => '19103041001@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '19103041001',
-                    'tahun_masuk' => '2019',
-                    'fakultas' => 'Kedokteran',
-                    'program_studi' => 'Kedokteran',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '1998-04-08',
-                    'jenis_kelamin' => 'Perempuan',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Muhammad Fajar',
-                    'email' => '21103041011@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '21103041011',
-                    'tahun_masuk' => '2021',
-                    'fakultas' => 'Teknik',
-                    'program_studi' => 'Teknik Komputer',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '2000-12-30',
-                    'jenis_kelamin' => 'Laki-laki',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Rina Wati',
-                    'email' => '20103041003@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '20103041003',
-                    'tahun_masuk' => '2020',
-                    'fakultas' => 'Hukum',
-                    'program_studi' => 'Hukum',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '1999-08-15',
-                    'jenis_kelamin' => 'Perempuan',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Andi Wijaya',
-                    'email' => '18103041001@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '18103041001',
-                    'tahun_masuk' => '2018',
-                    'fakultas' => 'Ekonomi',
-                    'program_studi' => 'Akuntansi',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '1997-06-22',
-                    'jenis_kelamin' => 'Laki-laki',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ],
-            [
-                'user' => [
-                    'name_lengkap' => 'Putri Indah',
-                    'email' => '21103041012@unwahas.ac.id',
-                    'role' => 'mahasiswa'
-                ],
-                'biodata' => [
-                    'nim' => '21103041012',
-                    'tahun_masuk' => '2021',
-                    'fakultas' => 'Teknik',
-                    'program_studi' => 'Teknik Informatika',
-                    'tempat_lahir' => 'Semarang',
-                    'tanggal_lahir' => '2001-01-18',
-                    'jenis_kelamin' => 'Perempuan',
-                    'status_mahasiswa' => 'Aktif'
-                ]
-            ]
+        $faker = Faker::create('id_ID');
+        
+        $fakultas = [
+            'Teknik' => ['Teknik Informatika', 'Sistem Informasi', 'Teknik Komputer', 'Teknik Elektro'],
+            'Hukum' => ['Hukum', 'Hukum Pidana', 'Hukum Perdata'],
+            'Ekonomi' => ['Manajemen', 'Akuntansi', 'Ekonomi Pembangunan'],
+            'Kedokteran' => ['Kedokteran', 'Kedokteran Gigi', 'Farmasi']
         ];
 
-        foreach ($wisudawan as $data) {
+        $tempatLahir = ['Semarang', 'Jakarta', 'Surabaya', 'Yogyakarta', 'Bandung', 'Malang', 'Solo', 'Medan', 'Makassar', 'Palembang'];
+        
+        $tahunMasuk = ['2018', '2019', '2020', '2021'];
+        $jenisKelamin = ['Laki-laki', 'Perempuan'];
+        $statusMahasiswa = ['Baru', 'Transfer'];
+
+        $usedNims = [];
+        
+        for ($i = 1; $i <= 100; $i++) {
+            $tahun = $faker->randomElement($tahunMasuk);
+            $fakultasKey = $faker->randomElement(array_keys($fakultas));
+            $programStudi = $faker->randomElement($fakultas[$fakultasKey]);
+            $jenisKelaminValue = $faker->randomElement($jenisKelamin);
+            
+            $nimPrefix = substr($tahun, -2);
+            $nimSuffix = str_pad($i, 5, '0', STR_PAD_LEFT);
+            $nim = $nimPrefix . '1030' . $nimSuffix;
+            
+            while (in_array($nim, $usedNims)) {
+                $nimSuffix = str_pad(rand(10000, 99999), 5, '0', STR_PAD_LEFT);
+                $nim = $nimPrefix . '1030' . $nimSuffix;
+            }
+            $usedNims[] = $nim;
+            
+            $nameLengkap = $faker->name();
+            
+            $email = $nim . '@unwahas.ac.id';
+            
+            $tahunLahir = (int)$tahun - 18 - rand(0, 2);
+            $tanggalLahir = $faker->dateTimeBetween("{$tahunLahir}-01-01", "{$tahunLahir}-12-31")->format('Y-m-d');
+            
             $userId = Str::uuid();
             
             DB::table('users')->insert([
                 'id' => $userId,
-                'name_lengkap' => $data['user']['name_lengkap'],
-                'email' => $data['user']['email'],
-                'role' => $data['user']['role'],
+                'name_lengkap' => $nameLengkap,
+                'email' => $email,
+                'role' => 'mahasiswa',
                 'password' => Hash::make('password123'),
+                'is_admin' => false,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -200,14 +68,16 @@ class DataWisudawanSeeder extends Seeder
             DB::table('biodatas')->insert([
                 'id' => Str::uuid(),
                 'user_id' => $userId,
-                'nim' => $data['biodata']['nim'],
-                'tahun_masuk' => $data['biodata']['tahun_masuk'],
-                'fakultas' => $data['biodata']['fakultas'],
-                'program_studi' => $data['biodata']['program_studi'],
-                'tempat_lahir' => $data['biodata']['tempat_lahir'],
-                'tanggal_lahir' => $data['biodata']['tanggal_lahir'],
-                'jenis_kelamin' => $data['biodata']['jenis_kelamin'],
-                'status_mahasiswa' => $data['biodata']['status_mahasiswa'],
+                'nim' => $nim,
+                'tahun_masuk' => $tahun,
+                'fakultas' => $fakultasKey,
+                'program_studi' => $programStudi,
+                'tempat_lahir' => $faker->randomElement($tempatLahir),
+                'tanggal_lahir' => $tanggalLahir,
+                'jenis_kelamin' => $jenisKelaminValue,
+                'status_mahasiswa' => $faker->randomElement($statusMahasiswa),
+                'alamat_rumah' => $faker->address(),
+                'no_telepon' => $faker->phoneNumber(),
                 'created_at' => now(),
                 'updated_at' => now()
             ]);

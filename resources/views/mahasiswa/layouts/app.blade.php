@@ -12,13 +12,12 @@
 <body class="bg-gray-50">
 
     <div x-data="{ sidebarOpen: false, showFooter: true }" class="flex h-screen overflow-hidden">
-        
+        <!-- Backdrop for Mobile -->
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
             class="fixed inset-0 z-40 bg-gray-500/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
             x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
-            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-            style="display: none;">
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         </div>
 
         @include('mahasiswa.components.sidebar')

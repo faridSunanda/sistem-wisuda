@@ -70,3 +70,6 @@
     </div>
 </header>
 
+@push('scripts')
+@vite('resources/js/mahasiswa/components/header.js')
+@endpush
