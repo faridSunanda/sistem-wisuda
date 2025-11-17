@@ -26,6 +26,9 @@
             <span class="font-medium">Dashboard</span>
         </a>
 
+        <!-- Menu Label -->
+        <p class="px-3 md:px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-4">MENU</p>
+
         <!-- Data Wisudawan -->
         <a href="{{ route('admin.data-wisudawan.index') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.data-wisudawan*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
@@ -33,8 +36,6 @@
             <span>Data Wisudawan</span>
         </a>
 
-        <!-- Separator -->
-        <div class="border-t border-gray-100 my-2"></div>
 
         <!-- Setting - Dropdown -->
         <div x-data="{ settingOpen: {{ request()->routeIs('admin.setting*') ? 'true' : 'false' }} }">

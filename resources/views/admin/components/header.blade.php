@@ -37,6 +37,13 @@
                 </div>
             @endauth
 
+            <!-- Ganti Role -->
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe] transition-colors duration-200">
+                <i class="fas fa-user-friends w-5 text-center text-slate-400"></i>
+                <span>Ganti Role</span>
+            </a>
+
             <!-- Back to SSO -->
             <a href="#"
                 class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe] transition-colors duration-200">
