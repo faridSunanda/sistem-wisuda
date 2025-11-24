@@ -14,8 +14,8 @@ class BerandaController extends Controller
     public function index()
     {
         $alurPendaftaran = AlurPendaftaran::orderBy('no_urut', 'asc')->get();
-        $dokumenPersyaratan = DokumenPersyaratan::where('tipe_dokumen', 'Dokumen Persyaratan')->first();
-        $dokumenTandaTerima = DokumenPersyaratan::where('tipe_dokumen', 'Tanda Terima')->first();
+
+        $dokumenPersyaratan = DokumenPersyaratan::latest()->get();
 
         $now = now();
         $jadwal = JadwalPendaftaran::where('waktu_tutup_pendaftaran', '>', $now)
@@ -35,8 +35,6 @@ class BerandaController extends Controller
         return view('portal.index', [
             'alurPendaftaran' => $alurPendaftaran,
             'dokumenPersyaratan' => $dokumenPersyaratan,
-            'dokumenTandaTerima' => $dokumenTandaTerima,
-
             'statusInfo' => $statusInfo
         ]);
     }

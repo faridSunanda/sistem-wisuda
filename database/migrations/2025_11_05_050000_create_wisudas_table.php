@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dokumen_persyaratans', function (Blueprint $table) {
+        Schema::create('wisudas', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama_dokumen', 255);
-            $table->text('keterangan');
-            $table->string('berkas', 255);
+            $table->string('angkatan', 255);
+            $table->datetime('tanggal_pendaftaran');
+            $table->datetime('tanggal_penutupan');
+            $table->unsignedInteger('kuota_wisudawan');
+            $table->string('status', 255);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dokumen_persyaratans');
+        Schema::dropIfExists('wisudas');
     }
 };

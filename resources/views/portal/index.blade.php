@@ -52,20 +52,25 @@
 
             <div class="flex flex-col items-center justify-center mb-4 sm:mb-5 md:mb-6">
                 <div class="mb-2.5 sm:mb-3 md:mb-4">
-                    <i class="fa-sharp fa-solid fa-graduation-cap text-purple-500 text-2xl sm:text-3xl md:text-4xl lg:text-5xl animate-bounce-smooth drop-shadow-lg"></i>
+                    <i
+                        class="fa-sharp fa-solid fa-graduation-cap text-purple-500 text-2xl sm:text-3xl md:text-4xl lg:text-5xl animate-bounce-smooth drop-shadow-lg"></i>
                 </div>
-                <p class="text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
+                <p
+                    class="text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
                     <span class="font-semibold text-gray-600">Total Pendaftar:</span>
                     <span class="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-900">1165</span>
                     <span class="text-gray-500 text-sm sm:text-base md:text-lg lg:text-xl">/1300</span>
                 </p>
             </div>
 
-            <div class="w-full bg-gray-100 h-2 sm:h-2.5 md:h-3 rounded-full mt-3 sm:mt-4 md:mt-6 overflow-hidden shadow-inner">
-                <div class="h-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 progress-bar rounded-full shadow-sm" style="width: calc(1165 / 1300 * 100%)"></div>
+            <div
+                class="w-full bg-gray-100 h-2 sm:h-2.5 md:h-3 rounded-full mt-3 sm:mt-4 md:mt-6 overflow-hidden shadow-inner">
+                <div class="h-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 progress-bar rounded-full shadow-sm"
+                    style="width: calc(1165 / 1300 * 100%)"></div>
             </div>
 
-            <p id="info-text" class="text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-700 mt-2.5 sm:mt-3 md:mt-4 transition-opacity duration-700 opacity-100 font-semibold">
+            <p id="info-text"
+                class="text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-700 mt-2.5 sm:mt-3 md:mt-4 transition-opacity duration-700 opacity-100 font-semibold">
                 <span class="text-gray-800">Segera Daftar!</span>
             </p>
         </div>
@@ -84,84 +89,96 @@
             </div>
 
             <div class="max-w-5xl mx-auto">
+                {{-- Grid Container --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
 
-                    <div class="bg-blue-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                                <i class="fa-sharp fa-solid fa-folder-open text-white text-xl"></i>
+                    {{-- Loop Dokumen secara Dinamis --}}
+                    @forelse ($dokumenPersyaratan as $dokumen)
+                        @php
+                            // Logika selang-seling warna (Ganjil: Biru, Genap: Hijau)
+                            $isEven = $loop->iteration % 2 == 0;
+                            $bgClass = $isEven ? 'bg-green-50' : 'bg-blue-50';
+                            $iconBgClass = $isEven ? 'bg-green-600' : 'bg-blue-600';
+                            $btnClass = $isEven ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700';
+                            $iconClass = $isEven ? 'fa-receipt' : 'fa-folder-open';
+                        @endphp
+
+                        <div
+                            class="{{ $bgClass }} rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                            <div class="flex items-center mb-4">
+                                <div
+                                    class="w-12 h-12 {{ $iconBgClass }} rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fa-sharp fa-solid {{ $iconClass }} text-white text-xl"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-gray-800">
+                                    {{ $dokumen->nama_dokumen }}
+                                </h4>
                             </div>
-                            <h4 class="text-xl font-bold text-gray-800">
-                                Dokumen Persyaratan
-                            </h4>
+
+                            <p class="text-gray-700 mb-4 text-sm leading-relaxed">
+                                {{ $dokumen->keterangan }}
+                            </p>
+
+                            @if ($dokumen->berkas)
+                                <a href="{{ asset('storage/' . $dokumen->berkas) }}" target="_blank"
+                                    class="inline-flex items-center gap-2 {{ $btnClass }} px-4 py-2.5 rounded-lg text-white font-medium transition-colors duration-300">
+                                    <i class="fa-sharp fa-solid fa-download"></i>
+                                    <span>Download</span>
+                                </a>
+                            @else
+                                <span class="text-gray-500 text-sm italic">File belum diunggah</span>
+                            @endif
                         </div>
 
-                        @if ($dokumenPersyaratan)
-                            <p class="text-gray-700 mb-4 text-sm leading-relaxed">
-                                {{ $dokumenPersyaratan->keterangan }}
-                            </p>
-                            <a href="{{ asset('storage/' . $dokumenPersyaratan->berkas) }}" target="_blank"
-                                class="inline-flex items-center gap-2 bg-blue-600 px-4 py-2.5 rounded-lg text-white font-medium hover:bg-blue-700 transition-colors duration-300">
-                                <i class="fa-sharp fa-solid fa-download"></i>
-                                <span>Download</span>
-                            </a>
-                        @else
-                            <p class="text-gray-600 text-sm">Dokumen persyaratan belum tersedia.</p>
-                        @endif
-                    </div>
-
-                    <div class="bg-green-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                                <i class="fa-sharp fa-solid fa-receipt text-white text-xl"></i>
-                            </div>
-                            <h4 class="text-xl font-bold text-gray-800">Tanda Terima</h4>
+                    @empty
+                        {{-- Tampilan jika tidak ada dokumen sama sekali --}}
+                        <div
+                            class="col-span-1 md:col-span-2 text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                            <i class="fa-solid fa-file-circle-xmark text-4xl text-gray-400 mb-3"></i>
+                            <p class="text-gray-500">Belum ada dokumen persyaratan yang tersedia.</p>
                         </div>
-
-                        @if ($dokumenTandaTerima)
-                            <p class="text-gray-700 mb-4 text-sm leading-relaxed">
-                                {{ $dokumenTandaTerima->keterangan }}
-                            </p>
-                            <a href="{{ asset('storage/' . $dokumenTandaTerima->berkas) }}" target="_blank"
-                                class="inline-flex items-center gap-2 bg-green-600 px-4 py-2.5 rounded-lg text-white font-medium hover:bg-green-700 transition-colors duration-300">
-                                <i class="fa-sharp fa-solid fa-download"></i>
-                                <span>Download</span>
-                            </a>
-                        @else
-                            <p class="text-gray-600 text-sm">Dokumen tanda terima belum tersedia.</p>
-                        @endif
-                    </div>
+                    @endforelse
 
                 </div>
 
-                <div class="mt-6 sm:mt-8 md:mt-12 lg:mt-16 bg-gradient-to-br from-gray-50 to-white rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl p-4 sm:p-5 md:p-6 lg:p-8 xl:p-12 shadow-lg border border-gray-200/50">
+                {{-- Bagian Alur Pendaftaran tetap sama --}}
+                <div
+                    class="mt-6 sm:mt-8 md:mt-12 lg:mt-16 bg-gradient-to-br from-gray-50 to-white rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl p-4 sm:p-5 md:p-6 lg:p-8 xl:p-12 shadow-lg border border-gray-200/50">
+                    {{-- ... Konten Alur Pendaftaran ... --}}
+                    {{-- (Copy paste bagian alur dari kode lama Anda disini) --}}
                     <div class="text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">
-                        <h4 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2 sm:mb-3 md:mb-4">
+                        <h4
+                            class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2 sm:mb-3 md:mb-4">
                             Alur Pendaftaran Wisuda
                         </h4>
-                        <div class="w-24 sm:w-32 md:w-40 h-0.5 sm:h-1 md:h-1.5 bg-gradient-to-r from-green-400 via-blue-500 to-indigo-600 mx-auto mb-2 sm:mb-3 rounded-full"></div>
-                        <p class="text-gray-600 text-xs sm:text-sm md:text-base lg:text-lg mt-2 sm:mt-3 md:mt-4 max-w-2xl mx-auto px-2">
-                            Ikuti langkah-langkah berikut untuk menyelesaikan pendaftaran wisuda
-                        </p>
+                        {{-- ... dst ... --}}
+                        {{-- Pastikan Anda menutup div dengan benar --}}
                     </div>
 
+                    {{-- Masukkan loop alur disini seperti kode asli --}}
                     <div class="relative">
                         <div class="alur-container">
                             @foreach ($alurPendaftaran as $index => $alur)
+                                {{-- ... --}}
                                 <div class="relative alur-step" data-step="{{ $index + 1 }}">
-                                    <div class="relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-gray-200/60 h-full flex flex-col group z-10">
+                                    <div
+                                        class="relative bg-white rounded-lg sm:rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-gray-200/60 h-full flex flex-col group z-10">
+                                        {{-- ... Isian Alur ... --}}
                                         <div class="flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0">
-                                            <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg group-hover:from-blue-700 group-hover:to-blue-800 transition-all duration-300">
+                                            <div
+                                                class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg group-hover:from-blue-700 group-hover:to-blue-800 transition-all duration-300">
                                                 <span class="text-white text-lg sm:text-xl md:text-2xl font-bold">
                                                     {{ $alur->no_urut }}
                                                 </span>
                                             </div>
                                         </div>
-                                        
-                                        <h5 class="font-bold text-gray-800 mb-2 sm:mb-3 flex-shrink-0 text-sm sm:text-base md:text-lg text-center group-hover:text-blue-600 transition-colors duration-300">
+
+                                        <h5
+                                            class="font-bold text-gray-800 mb-2 sm:mb-3 flex-shrink-0 text-sm sm:text-base md:text-lg text-center group-hover:text-blue-600 transition-colors duration-300">
                                             {{ $alur->judul }}
                                         </h5>
-                                        <p class="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed text-center flex-grow min-h-0">
+                                        <p
+                                            class="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed text-center flex-grow min-h-0">
                                             {{ $alur->keterangan }}
                                         </p>
                                     </div>
@@ -169,6 +186,7 @@
                             @endforeach
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

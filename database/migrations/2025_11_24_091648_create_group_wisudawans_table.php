@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pelaksanaan_wisudas', function (Blueprint $table) {
+        Schema::create('group_wisudawans', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('wisuda_id')->constrained('wisudas')->cascadeOnDelete();
-            $table->string('nama_kegiatan', 255);
-            $table->string('sesi_id', 255);
-            $table->dateTime('waktu_pelaksanaan');
-            $table->string('tempat_pelaksanaan', 255);
-            $table->text('keterangan');
+            $table->foreignUuid('biodata_id')->constrained('biodatas')->cascadeOnDelete();
+            $table->foreignUuid('group_id')->constrained('groups')->cascadeOnDelete();
+            $table->foreignUuid('sesi_id')->constrained('sesi')->cascadeOnDelete();
+            $table->unsignedInteger('nomor_urut');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pelaksanaan_wisudas');
+        Schema::dropIfExists('group_wisudawans');
     }
 };

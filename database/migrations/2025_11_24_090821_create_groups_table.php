@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dokumen_persyaratans', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama_dokumen', 255);
-            $table->text('keterangan');
-            $table->string('berkas', 255);
+            $table->string('name', 255);
+            $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dokumen_persyaratans');
+        Schema::dropIfExists('groups');
     }
 };

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('biodatas', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete()->nullable();
+            $table->foreignUuid('wisuda_id')->constrained('wisudas')->cascadeOnDelete();
             $table->string('nik')->nullable();
             $table->string('nim')->nullable();
             $table->string('nirm')->nullable();
@@ -30,6 +31,8 @@ return new class extends Migration
             $table->string('no_telepon')->nullable();
             $table->string('judul_skripsi')->nullable();
             $table->text('kesan_pesan')->nullable();
+            $table->boolean('is_bayar')->default(false);
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

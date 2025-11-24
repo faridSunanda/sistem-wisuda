@@ -29,21 +29,55 @@
         <!-- Menu Label -->
         <p class="px-3 md:px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-4">MENU</p>
 
+        <!-- Master - Dropdown -->
+        <div x-data="{ masterOpen: {{ request()->routeIs('admin.setting*') || request()->routeIs('admin.master*') ? 'true' : 'false' }} }">
+            <button @click="masterOpen = !masterOpen"
+                class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.setting*') || request()->routeIs('admin.master*') ? 'text-[#435ebe] bg-[#435ebe]/10 border border-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                <span class="flex items-center gap-3">
+                    <i class="fas fa-layer-group text-lg w-5 text-center"></i>
+                    <span class="font-medium">Master Data</span>
+                </span>
+                <i class="fas fa-chevron-down text-xs transition-transform duration-200"
+                    :class="{ 'rotate-180': masterOpen, 'text-[#435ebe]': masterOpen }"></i>
+            </button>
+
+            <div x-show="masterOpen" x-collapse class="mt-1 space-y-1 pl-11 border-l-2 border-[#435ebe]/20 ml-4">
+
+                <a href="{{ route('admin.setting.alur-pendaftaran.index') }}"
+                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.alur-pendaftaran*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                    Alur Pendaftaran
+                </a>
+
+                <a href="{{ route('admin.setting.dokumen-persyaratan.index') }}"
+                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.dokumen-persyaratan*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                    Dokumen Syarat
+                </a>
+
+                <a href="#"
+                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.master.group*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                    Group
+                </a>
+
+                <a href="#"
+                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.master.sesi*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                    Sesi
+                </a>
+            </div>
+        </div>
+
         <!-- Data Wisudawan -->
         <a href="{{ route('admin.data-wisudawan.index') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.data-wisudawan*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
-            <i class="fas fa-users text-lg w-5 text-center"></i>
-            <span>Data Wisudawan</span>
+            class="mt-1 flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.data-wisudawan*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+            <i class="fas fa-user-graduate text-lg w-5 text-center"></i>
+            <span class="font-medium">Data Wisudawan</span>
         </a>
 
-
-        <!-- Setting - Dropdown -->
         <div x-data="{ settingOpen: {{ request()->routeIs('admin.setting*') ? 'true' : 'false' }} }">
             <button @click="settingOpen = !settingOpen"
                 class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.setting*') ? 'text-[#435ebe] bg-[#435ebe]/10 border border-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                 <span class="flex items-center gap-3">
                     <i class="fas fa-gear text-lg w-5 text-center"></i>
-                    <span>Setting</span>
+                    <span>Wisuda</span>
                 </span>
                 <i class="fas fa-chevron-down text-xs transition-transform duration-200"
                     :class="{ 'rotate-180': settingOpen, 'text-[#435ebe]': settingOpen }"></i>
@@ -52,35 +86,25 @@
             <!-- Submenu Setting -->
             <div x-show="settingOpen" x-collapse class="mt-1 space-y-1 pl-11 border-l-2 border-[#435ebe]/20 ml-4">
                 <!-- Alur Pendaftaran -->
-                <a href="{{ route('admin.setting.alur-pendaftaran.index') }}"
+                <a href="#"
                     class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.alur-pendaftaran*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Alur Pendaftaran
+                    Wisuda
                 </a>
 
-                <!-- Dokumen Persyaratan -->
-                <a href="{{ route('admin.setting.dokumen-persyaratan.index') }}"
+                <a href="#"
                     class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.dokumen-persyaratan*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Dokumen Persyaratan
+                    Jadwal Pelaksanaan
                 </a>
 
-                <!-- Jadwal Pendaftaran -->
-                <a href="{{ route('admin.setting.jadwal-pendaftaran.index') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.jadwal-pendaftaran*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Jadwal Pendaftaran
-                </a>
-
-                <!-- Jadwal Wisuda -->
-                <a href="{{ route('admin.setting.jadwal-wisuda.index') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.jadwal-wisuda*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Jadwal Wisuda
-                </a>
-
-                <!-- Kuota Wisudawan -->
-                <a href="{{ route('admin.setting.kuota-wisuda.index') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.kuota-wisuda*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
-                    Kuota Wisudawan
-                </a>
             </div>
         </div>
+
+        <!-- Download -->
+        <a href="#"
+            class="mt-1 flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.download-ppt*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+            <i class="fas fa-file-powerpoint text-lg w-5 text-center"></i>
+            <span class="font-medium">Download PPT</span>
+        </a>
+
     </nav>
 </aside>
