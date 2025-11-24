@@ -43,22 +43,22 @@
 
             <div x-show="masterOpen" x-collapse class="mt-1 space-y-1 pl-11 border-l-2 border-[#435ebe]/20 ml-4">
 
-                <a href="{{ route('admin.setting.alur-pendaftaran.index') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.alur-pendaftaran*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                <a href="{{ route('admin.master.alur-pendaftaran.index') }}"
+                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.master.alur-pendaftaran*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
                     Alur Pendaftaran
                 </a>
 
-                <a href="{{ route('admin.setting.dokumen-persyaratan.index') }}"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.dokumen-persyaratan*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                <a href="{{ route('admin.master.dokumen-persyaratan.index') }}"
+                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.master.dokumen-persyaratan*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
                     Dokumen Syarat
                 </a>
 
-                <a href="#"
+                <a href="{{ route('admin.master.group.index') }}"
                     class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.master.group*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
                     Group
                 </a>
 
-                <a href="#"
+                <a href="{{ route('admin.master.sesi.index') }}"
                     class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.master.sesi*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
                     Sesi
                 </a>

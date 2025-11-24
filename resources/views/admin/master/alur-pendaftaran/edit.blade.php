@@ -7,7 +7,8 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
-            <form action="{{ route('admin.setting.alur-pendaftaran.update', $alur->id) }}" method="POST">
+            {{-- PERBAIKAN 1: Update route action ke admin.master --}}
+            <form action="{{ route('admin.master.alur-pendaftaran.update', $alur->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -68,7 +69,8 @@
                         <i class="fas fa-save"></i>
                         <span>Update Data</span>
                     </button>
-                    <a href="{{ route('admin.setting.alur-pendaftaran.index') }}"
+                    {{-- PERBAIKAN 2: Update route batal ke admin.master --}}
+                    <a href="{{ route('admin.master.alur-pendaftaran.index') }}"
                         class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white border border-[#435ebe] text-[#435ebe] hover:bg-[#435ebe] hover:text-white rounded-lg transition-all">
                         <span>Batal</span>
                     </a>

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Setting;
+namespace App\Http\Controllers\Admin\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\DokumenPersyaratan;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\DokumenPersyaratanExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,7 +16,7 @@ class DokumenPersyaratanController extends Controller
 {
     public function index()
     {
-        return view('admin.setting.dokumen-persyaratan.index');
+        return view('admin.master.dokumen-persyaratan.index');
     }
 
     public function getData(Request $request)
@@ -55,8 +54,8 @@ class DokumenPersyaratanController extends Controller
     {
         try {
             $data = DokumenPersyaratan::query()
-                ->select('tipe_dokumen', 'nama_dokumen', 'keterangan', 'berkas')
-                ->orderBy('tipe_dokumen', 'asc')
+                ->select('nama_dokumen', 'keterangan', 'berkas')
+                ->orderBy('nama_dokumen', 'asc')
                 ->get();
 
             if ($data->isEmpty()) {
@@ -74,13 +73,12 @@ class DokumenPersyaratanController extends Controller
 
     public function create()
     {
-        return view('admin.setting.dokumen-persyaratan.create');
+        return view('admin.master.dokumen-persyaratan.create');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'tipe_dokumen' => 'required|string|max:100',
             'nama_dokumen' => 'required|string|max:255',
             'keterangan' => 'required|string',
             'berkas' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
@@ -95,7 +93,7 @@ class DokumenPersyaratanController extends Controller
 
         DokumenPersyaratan::create($validated);
 
-        return redirect()->route('admin.setting.dokumen-persyaratan.index')
+        return redirect()->route('admin.master.dokumen-persyaratan.index')
             ->with('success', 'Dokumen persyaratan baru berhasil ditambahkan.');
     }
 
@@ -103,7 +101,7 @@ class DokumenPersyaratanController extends Controller
     {
         $dokumen = DokumenPersyaratan::findOrFail($id);
 
-        return view('admin.setting.dokumen-persyaratan.show', [
+        return view('admin.master.dokumen-persyaratan.show', [
             'dokumen' => $dokumen
         ]);
     }
@@ -112,7 +110,7 @@ class DokumenPersyaratanController extends Controller
     {
         $dokumen = DokumenPersyaratan::findOrFail($id);
 
-        return view('admin.setting.dokumen-persyaratan.edit', [
+        return view('admin.master.dokumen-persyaratan.edit', [
             'dokumen' => $dokumen
         ]);
     }
@@ -122,7 +120,6 @@ class DokumenPersyaratanController extends Controller
         $dokumen = DokumenPersyaratan::findOrFail($id);
 
         $validated = $request->validate([
-            'tipe_dokumen' => 'required|string|max:100',
             'nama_dokumen' => 'required|string|max:255',
             'keterangan' => 'required|string',
             'berkas' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
@@ -143,7 +140,7 @@ class DokumenPersyaratanController extends Controller
 
         $dokumen->update($validated);
 
-        return redirect()->route('admin.setting.dokumen-persyaratan.index')
+        return redirect()->route('admin.master.dokumen-persyaratan.index')
             ->with('success', 'Dokumen persyaratan berhasil diperbarui.');
     }
 
@@ -174,7 +171,7 @@ class DokumenPersyaratanController extends Controller
     {
         try {
             $data = DokumenPersyaratan::query()
-                ->orderBy('tipe_dokumen', 'asc')
+                ->orderBy('nama_dokumen', 'asc')
                 ->get();
 
             $fileName = 'Dokumen_Persyaratan_' . date('Y-m-d') . '.xlsx';
@@ -189,12 +186,12 @@ class DokumenPersyaratanController extends Controller
     {
         try {
             $data = DokumenPersyaratan::query()
-                ->orderBy('tipe_dokumen', 'asc')
+                ->orderBy('nama_dokumen', 'asc')
                 ->get();
 
             $fileName = 'Dokumen_Persyaratan_' . date('Y-m-d') . '.pdf';
 
-            $html = view('admin.setting.dokumen-persyaratan.pdf', [
+            $html = view('admin.master.dokumen-persyaratan.pdf', [
                 'data' => $data,
                 'title' => 'Dokumen Persyaratan'
             ])->render();

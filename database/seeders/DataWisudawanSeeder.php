@@ -14,11 +14,8 @@ class DataWisudawanSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        // 1. SIAPKAN DATA WISUDA (Orang tua/Induk)
-        // Ambil ID wisuda yang ada di database (jika ada)
         $wisudaId = DB::table('wisudas')->value('id');
 
-        // Jika tabel wisudas masih kosong, buat 1 data dummy wisuda agar tidak error
         if (!$wisudaId) {
             $wisudaId = Str::uuid();
             DB::table('wisudas')->insert([
@@ -87,7 +84,6 @@ class DataWisudawanSeeder extends Seeder
             DB::table('biodatas')->insert([
                 'id' => Str::uuid(),
                 'user_id' => $userId,
-                // PERBAIKAN: Masukkan wisuda_id disini
                 'wisuda_id' => $wisudaId,
                 'nim' => $nim,
                 'tahun_masuk' => $tahun,
