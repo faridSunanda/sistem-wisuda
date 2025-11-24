@@ -48,8 +48,6 @@ Route::post('/logout', [AuthController::class, 'destroy'])->name('logout'); // <
 //
 //          ADMIN ROUTES
 //
-
-
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/', function () {
@@ -57,7 +55,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // --- GROUP 1: MASTER DATA (admin.master.*) ---
     Route::prefix('master')->name('master.')->group(function () {
 
         // 1. Alur Pendaftaran
@@ -65,22 +62,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             ->prefix('alur-pendaftaran')
             ->name('alur-pendaftaran.')
             ->group(function () {
-                // Route Statis (Tanpa Parameter) DULUAN
                 Route::get('/', 'index')->name('index');
                 Route::get('/create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
 
-                // AJAX / Export Statis
                 Route::get('/data/get-data', 'getData')->name('get-data');
                 Route::get('/data/export', 'exportData')->name('export');
-                Route::get('/export-excel', 'exportExcel')->name('export-excel'); // Pindah ke atas
-                Route::get('/export-pdf', 'exportPdf')->name('export-pdf');     // Pindah ke atas
+                Route::get('/export-excel', 'exportExcel')->name('export-excel');
+                Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
 
-                // Route Dinamis (Pakai Parameter {id}) BELAKANGAN
                 Route::get('/{id}/edit', 'edit')->name('edit');
                 Route::put('/{id}', 'update')->name('update');
                 Route::delete('/{id}', 'destroy')->name('destroy');
-                Route::get('/{id}', 'show')->name('show'); // Wildcard terakhir
+                Route::get('/{id}', 'show')->name('show');
             });
 
         // 2. Dokumen Persyaratan
@@ -88,22 +82,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             ->prefix('dokumen-persyaratan')
             ->name('dokumen-persyaratan.')
             ->group(function () {
-                // Route Statis DULUAN
                 Route::get('/', 'index')->name('index');
                 Route::get('/create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
 
-                // AJAX / Export (WAJIB DI ATAS /{id})
                 Route::get('/data/get-data', 'getData')->name('get-data');
                 Route::get('/export', 'exportData')->name('export');
                 Route::get('/export-excel', 'exportExcel')->name('export-excel');
                 Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
 
-                // Route Dinamis BELAKANGAN
                 Route::get('/{id}/edit', 'edit')->name('edit');
                 Route::put('/{id}', 'update')->name('update');
                 Route::delete('/{id}', 'destroy')->name('destroy');
-                Route::get('/{id}', 'show')->name('show'); // Wildcard menangkap segalanya, taruh paling bawah
+                Route::get('/{id}', 'show')->name('show');
             });
 
         Route::controller(GroupController::class)
@@ -147,10 +138,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             });
     });
 
-    // --- GROUP 2: PELAKSANAAN / WISUDA (admin.wisuda.*) ---
     Route::prefix('wisuda')->name('wisuda.')->group(function () {
 
-        // 1. Jadwal Pendaftaran
         Route::controller(JadwalPendaftaranController::class)
             ->prefix('jadwal-pendaftaran')
             ->name('jadwal-pendaftaran.')
@@ -159,13 +148,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
                 Route::get('/create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
 
-                // Statis
                 Route::get('/data/get-data', 'getData')->name('get-data');
                 Route::get('/export', 'exportData')->name('export');
                 Route::get('/export-excel', 'exportExcel')->name('export-excel');
                 Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
 
-                // Dinamis
                 Route::get('/{id}/edit', 'edit')->name('edit');
                 Route::put('/{id}', 'update')->name('update');
                 Route::delete('/{id}', 'destroy')->name('destroy');
@@ -173,7 +160,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
                 Route::get('/{id}', 'show')->name('show');
             });
 
-        // 2. Jadwal Wisuda (Acara)
         Route::controller(JadwalWisudaController::class)
             ->prefix('jadwal-wisuda')
             ->name('jadwal-wisuda.')
@@ -182,23 +168,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
                 Route::get('/create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
 
-                // Statis
                 Route::get('/get-data', 'getData')->name('get-data');
                 Route::get('/export', 'exportData')->name('export');
                 Route::get('/export-excel', 'exportExcel')->name('export-excel');
                 Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
 
-                // Semi-statis (lebih spesifik dari {id} biasa)
                 Route::get('/pendaftaran/{pendaftaranId}', 'getByPendaftaran')->name('by-pendaftaran');
 
-                // Dinamis
                 Route::get('/{id}/edit', 'edit')->name('edit');
                 Route::put('/{id}', 'update')->name('update');
                 Route::delete('/{id}', 'destroy')->name('destroy');
                 Route::get('/{id}', 'show')->name('show');
             });
 
-        // 3. Kuota Wisuda
         Route::controller(KuotaWisudaController::class)
             ->prefix('kuota-wisuda')
             ->name('kuota-wisuda.')
@@ -207,14 +189,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
                 Route::get('/create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
 
-                // Statis
                 Route::get('/get-data', 'getData')->name('get-data');
                 Route::get('/export', 'exportData')->name('export');
                 Route::get('/export-excel', 'exportExcel')->name('export-excel');
                 Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
                 Route::get('/pendaftaran/{pendaftaranId}', 'getByPendaftaran')->name('by-pendaftaran');
 
-                // Dinamis
                 Route::get('/{id}/edit', 'edit')->name('edit');
                 Route::put('/{id}', 'update')->name('update');
                 Route::delete('/{id}', 'destroy')->name('destroy');
@@ -222,20 +202,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             });
     });
 
-    // --- GROUP 3: DATA WISUDAWAN (admin.data-wisudawan.*) ---
     Route::controller(DataWisudawanController::class)
         ->prefix('data-wisudawan')
         ->name('data-wisudawan.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
 
-            // Statis
             Route::get('/get-data', 'getData')->name('get-data');
             Route::get('/export', 'exportData')->name('export');
             Route::get('/export-excel', 'exportExcel')->name('export-excel');
             Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
 
-            // Dinamis
             Route::get('/{id}/edit', 'edit')->name('edit');
             Route::put('/{id}', 'update')->name('update');
             Route::delete('/{id}', 'destroy')->name('destroy');
@@ -243,103 +220,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         });
 
 });
-
-// Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-//     Route::get('/', function () {
-//         return redirect()->route('dashboard');
-//     });
-
-//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-//     Route::prefix('data-wisudawan')->name('data-wisudawan.')->group(function () {
-//         Route::get('/', [DataWisudawanController::class, 'index'])->name('index');
-//         Route::get('/get-data', [DataWisudawanController::class, 'getData'])->name('get-data');
-//         Route::get('/export', [DataWisudawanController::class, 'exportData'])->name('export');
-//         Route::get('/export-excel', [DataWisudawanController::class, 'exportExcel'])->name('export-excel');
-//         Route::get('/export-pdf', [DataWisudawanController::class, 'exportPdf'])->name('export-pdf');
-//         Route::get('/{id}/edit', [DataWisudawanController::class, 'edit'])->name('edit');
-//         Route::put('/{id}', [DataWisudawanController::class, 'update'])->name('update');
-//         Route::delete('/{id}', [DataWisudawanController::class, 'destroy'])->name('destroy');
-//         Route::get('/{id}', [DataWisudawanController::class, 'show'])->name('show');
-//     });
-
-//     Route::prefix('setting')->name('setting.')->group(function () {
-
-//         Route::prefix('alur-pendaftaran')->name('alur-pendaftaran.')->group(function () {
-//             Route::get('/data/get-data', [AlurPendaftaranController::class, 'getData'])->name('get-data');
-//             Route::get('/data/export', [AlurPendaftaranController::class, 'exportData'])->name('export');
-//             Route::get('/export-excel', [AlurPendaftaranController::class, 'exportExcel'])->name('export-excel');
-//             Route::get('/export-pdf', [AlurPendaftaranController::class, 'exportPdf'])->name('export-pdf');
-//             Route::get('/', [AlurPendaftaranController::class, 'index'])->name('index');
-//             Route::get('/create', [AlurPendaftaranController::class, 'create'])->name('create');
-//             Route::post('/', [AlurPendaftaranController::class, 'store'])->name('store');
-//             Route::get('/{alur_pendaftaran}/edit', [AlurPendaftaranController::class, 'edit'])->name('edit');
-//             Route::put('/{alur_pendaftaran}', [AlurPendaftaranController::class, 'update'])->name('update');
-//             Route::delete('/{alur_pendaftaran}', [AlurPendaftaranController::class, 'destroy'])->name('destroy');
-//             Route::get('/{alur_pendaftaran}', [AlurPendaftaranController::class, 'show'])->name('show');
-//         });
-
-//         Route::prefix('dokumen-persyaratan')->name('dokumen-persyaratan.')->group(function () {
-//             Route::get('/data/get-data', [DokumenPersyaratanController::class, 'getData'])->name('get-data');
-//             Route::get('/export', [DokumenPersyaratanController::class, 'exportData'])->name('export');
-//             Route::get('/export-excel', [DokumenPersyaratanController::class, 'exportExcel'])->name('export-excel');
-//             Route::get('/export-pdf', [DokumenPersyaratanController::class, 'exportPdf'])->name('export-pdf');
-//             Route::get('/', [DokumenPersyaratanController::class, 'index'])->name('index');
-//             Route::get('/create', [DokumenPersyaratanController::class, 'create'])->name('create');
-//             Route::post('/', [DokumenPersyaratanController::class, 'store'])->name('store');
-//             Route::get('/{id}/edit', [DokumenPersyaratanController::class, 'edit'])->name('edit');
-//             Route::put('/{id}', [DokumenPersyaratanController::class, 'update'])->name('update');
-//             Route::delete('/{id}', [DokumenPersyaratanController::class, 'destroy'])->name('destroy');
-//             Route::get('/{id}', [DokumenPersyaratanController::class, 'show'])->name('show');
-//         });
-
-//         Route::prefix('jadwal-pendaftaran')->name('jadwal-pendaftaran.')->group(function () {
-//             Route::get('/data/get-data', [JadwalPendaftaranController::class, 'getData'])->name('get-data');
-//             Route::get('/export', [JadwalPendaftaranController::class, 'exportData'])->name('export');
-//             Route::get('/export-excel', [JadwalPendaftaranController::class, 'exportExcel'])->name('export-excel');
-//             Route::get('/export-pdf', [JadwalPendaftaranController::class, 'exportPdf'])->name('export-pdf');
-//             Route::get('/', [JadwalPendaftaranController::class, 'index'])->name('index');
-//             Route::get('/create', [JadwalPendaftaranController::class, 'create'])->name('create');
-//             Route::post('/', [JadwalPendaftaranController::class, 'store'])->name('store');
-//             Route::get('/{id}/edit', [JadwalPendaftaranController::class, 'edit'])->name('edit');
-//             Route::put('/{id}', [JadwalPendaftaranController::class, 'update'])->name('update');
-//             Route::delete('/{id}', [JadwalPendaftaranController::class, 'destroy'])->name('destroy');
-//             Route::get('/{id}', [JadwalPendaftaranController::class, 'show'])->name('show');
-//             Route::post('/{id}/activate', [JadwalPendaftaranController::class, 'activate'])->name('activate');
-//         });
-
-//          Route::prefix('jadwal-wisuda')->name('jadwal-wisuda.')->group(function () {
-//             Route::get('/', [JadwalWisudaController::class, 'index'])->name('index');
-//             Route::get('/get-data', [JadwalWisudaController::class, 'getData'])->name('get-data');
-//             Route::get('/export', [JadwalWisudaController::class, 'exportData'])->name('export');
-//             Route::get('/export-excel', [JadwalWisudaController::class, 'exportExcel'])->name('export-excel');
-//             Route::get('/export-pdf', [JadwalWisudaController::class, 'exportPdf'])->name('export-pdf');
-//             Route::get('/create', [JadwalWisudaController::class, 'create'])->name('create');
-//             Route::post('/', [JadwalWisudaController::class, 'store'])->name('store');
-//             Route::get('/{id}', [JadwalWisudaController::class, 'show'])->name('show');
-//             Route::get('/{id}/edit', [JadwalWisudaController::class, 'edit'])->name('edit');
-//             Route::put('/{id}', [JadwalWisudaController::class, 'update'])->name('update');
-//             Route::delete('/{id}', [JadwalWisudaController::class, 'destroy'])->name('destroy');
-//             Route::get('/pendaftaran/{pendaftaranId}', [JadwalWisudaController::class, 'getByPendaftaran'])->name('by-pendaftaran');
-//         });
-
-//         Route::prefix('kuota-wisuda')->name('kuota-wisuda.')->group(function () {
-//             Route::get('/', [KuotaWisudaController::class, 'index'])->name('index');
-//             Route::get('/get-data', [KuotaWisudaController::class, 'getData'])->name('get-data');
-//             Route::get('/export', [KuotaWisudaController::class, 'exportData'])->name('export');
-//             Route::get('/export-excel', [KuotaWisudaController::class, 'exportExcel'])->name('export-excel');
-//             Route::get('/export-pdf', [KuotaWisudaController::class, 'exportPdf'])->name('export-pdf');
-//             Route::get('/create', [KuotaWisudaController::class, 'create'])->name('create');
-//             Route::post('/', [KuotaWisudaController::class, 'store'])->name('store');
-//             Route::get('/{id}', [KuotaWisudaController::class, 'show'])->name('show');
-//             Route::get('/{id}/edit', [KuotaWisudaController::class, 'edit'])->name('edit');
-//             Route::put('/{id}', [KuotaWisudaController::class, 'update'])->name('update');
-//             Route::delete('/{id}', [KuotaWisudaController::class, 'destroy'])->name('destroy');
-//             Route::get('/pendaftaran/{pendaftaranId}', [KuotaWisudaController::class, 'getByPendaftaran'])->name('by-pendaftaran');
-//         });
-//     });
-// });
-
 
 //
 //          MAHASISWA ROUTES

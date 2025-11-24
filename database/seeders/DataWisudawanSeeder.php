@@ -45,7 +45,7 @@ class DataWisudawanSeeder extends Seeder
 
         $usedNims = [];
 
-        for ($i = 1; $i <= 100; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
             $tahun = $faker->randomElement($tahunMasuk);
             $fakultasKey = $faker->randomElement(array_keys($fakultas));
             $programStudi = $faker->randomElement($fakultas[$fakultasKey]);
