@@ -18,7 +18,7 @@ class PelaksanaanWisuda extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'pendaftaran_wisuda_id',
+        'wisuda_id',
         'nama_kegiatan',
         'sesi_id',
         'waktu_pelaksanaan',
@@ -31,9 +31,9 @@ class PelaksanaanWisuda extends Model
         'waktu_pelaksanaan' => 'datetime'
     ];
 
-    public function jadwalPendaftaran(): BelongsTo
+    public function wisuda(): BelongsTo
     {
-        return $this->belongsTo(JadwalPendaftaran::class, 'pendaftaran_wisuda_id');
+        return $this->belongsTo(Wisuda::class, 'wisuda_id');
     }
 
     public function sesi(): BelongsTo
@@ -46,8 +46,8 @@ class PelaksanaanWisuda extends Model
         return $this->waktu_pelaksanaan->format('d F Y H:i');
     }
 
-    public function getTahunWisudaAttribute(): ?string
+    public function getAngkatanAttribute(): ?string
     {
-        return $this->jadwalPendaftaran->tahun_wisuda ?? null;
+        return $this->wisuda->angkatan ?? null;
     }
 }

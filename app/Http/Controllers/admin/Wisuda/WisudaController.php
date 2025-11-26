@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Admin\Wisuda;
 
 use App\Http\Controllers\Controller;
-use App\Models\JadwalPendaftaran;
-use App\Models\KuotaWisudawan;
+use App\Models\Wisuda; // Pastikan Model ini benar
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
@@ -28,36 +27,28 @@ class WisudaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'tahun_wisuda' => 'required|integer|min:2000|max:2100',
-            'status' => 'required|in:Dibuka,Ditutup',
-            'waktu_buka_pendaftaran' => 'required|date',
-            'waktu_tutup_pendaftaran' => 'required|date|after:waktu_buka_pendaftaran',
-            'jumlah_kuota' => 'nullable|integer|min:1',
+            'angkatan'            => 'required|string|max:255',
+            'status'              => 'required|in:dibuka,ditutup,selesai',
+            'tanggal_pendaftaran' => 'required|date',
+            'tanggal_penutupan'   => 'required|date|after:tanggal_pendaftaran',
+            'kuota_wisudawan'     => 'required|integer|min:1',
         ]);
 
-        // Cek apakah tahun wisuda sudah ada
-        $existing = JadwalPendaftaran::where('tahun_wisuda', $validated['tahun_wisuda'])->exists();
+        $existing = Wisuda::where('angkatan', $validated['angkatan'])->exists();
         if ($existing) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Jadwal untuk tahun wisuda ' . $validated['tahun_wisuda'] . ' sudah ada.');
+                ->with('error', 'Data wisuda dengan angkatan ' . $validated['angkatan'] . ' sudah ada.');
         }
 
         try {
-            $jadwalPendaftaran = JadwalPendaftaran::create([
-                'tahun_wisuda' => $validated['tahun_wisuda'],
-                'status' => $validated['status'],
-                'waktu_buka_pendaftaran' => $validated['waktu_buka_pendaftaran'],
-                'waktu_tutup_pendaftaran' => $validated['waktu_tutup_pendaftaran'],
+            Wisuda::create([
+                'angkatan'            => $validated['angkatan'],
+                'status'              => $validated['status'],
+                'tanggal_pendaftaran' => $validated['tanggal_pendaftaran'],
+                'tanggal_penutupan'   => $validated['tanggal_penutupan'],
+                'kuota_wisudawan'     => $validated['kuota_wisudawan'],
             ]);
-
-            // Jika ada kuota, buat juga kuota wisudawan
-            if (isset($validated['jumlah_kuota']) && $validated['jumlah_kuota'] > 0) {
-                KuotaWisudawan::create([
-                    'pendaftaran_wisuda_id' => $jadwalPendaftaran->id,
-                    'jumlah_kuota' => $validated['jumlah_kuota'],
-                ]);
-            }
 
             return redirect()->route('admin.wisuda.wisuda.index')
                 ->with('success', 'Data wisuda berhasil ditambahkan.');
@@ -72,23 +63,21 @@ class WisudaController extends Controller
     public function getData(Request $request)
     {
         try {
-            $data = JadwalPendaftaran::query()
-                ->with('kuotaWisudawan')
-                ->orderBy('tahun_wisuda', 'desc');
+            $data = Wisuda::query()->orderBy('created_at', 'desc');
 
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('angkatan', function($row) {
-                    return $row->tahun_wisuda;
+                    return $row->angkatan;
                 })
                 ->addColumn('tanggal_pendaftaran', function($row) {
-                    return Carbon::parse($row->waktu_buka_pendaftaran)->format('d F Y H:i') . ' WIB';
+                    return Carbon::parse($row->tanggal_pendaftaran)->format('d F Y H:i') . ' WIB';
                 })
                 ->addColumn('tanggal_penutupan', function($row) {
-                    return Carbon::parse($row->waktu_tutup_pendaftaran)->format('d F Y H:i') . ' WIB';
+                    return Carbon::parse($row->tanggal_penutupan)->format('d F Y H:i') . ' WIB';
                 })
                 ->addColumn('kuota_wisudawan', function($row) {
-                    return $row->kuotaWisudawan ? number_format($row->kuotaWisudawan->jumlah_kuota, 0, ',', '.') : '-';
+                    return number_format($row->kuota_wisudawan, 0, ',', '.');
                 })
                 ->addColumn('status_badge', function($row) {
                     return $this->getStatusBadge($row->status);
@@ -105,17 +94,26 @@ class WisudaController extends Controller
                 'recordsTotal' => 0,
                 'recordsFiltered' => 0,
                 'data' => [],
-                'error' => 'Terjadi kesalahan saat memuat data'
+                'error' => 'Terjadi kesalahan saat memuat data: ' . $e->getMessage()
             ], 500);
         }
     }
 
     private function getStatusBadge($status)
     {
-        $statusText = $status === 'Dibuka' ? 'Dibuka' : 'Ditutup';
-        $badgeClass = $status === 'Dibuka' ? 'badge badge-success' : 'badge badge-secondary';
+        $status = strtolower($status);
+        $badgeClass = 'badge-secondary';
+        $statusText = ucfirst($status);
 
-        return '<span class="' . $badgeClass . '">' . $statusText . '</span>';
+        if ($status === 'dibuka') {
+            $badgeClass = 'badge-success';
+        } elseif ($status === 'ditutup') {
+            $badgeClass = 'badge-danger';
+        } elseif ($status === 'selesai') {
+            $badgeClass = 'badge-info';
+        }
+
+        return '<span class="badge ' . $badgeClass . '">' . $statusText . '</span>';
     }
 
     private function getActionButtons($id)
@@ -133,96 +131,38 @@ class WisudaController extends Controller
             '</div>';
     }
 
-    public function exportData(Request $request)
-    {
-        try {
-            $data = JadwalPendaftaran::query()
-                ->with('kuotaWisudawan')
-                ->orderBy('tahun_wisuda', 'desc')
-                ->get()
-                ->map(function($item) {
-                    return [
-                        'angkatan' => $item->tahun_wisuda,
-                        'tanggal_pendaftaran' => Carbon::parse($item->waktu_buka_pendaftaran)->format('d F Y H:i') . ' WIB',
-                        'tanggal_penutupan' => Carbon::parse($item->waktu_tutup_pendaftaran)->format('d F Y H:i') . ' WIB',
-                        'kuota_wisudawan' => $item->kuotaWisudawan ? number_format($item->kuotaWisudawan->jumlah_kuota, 0, ',', '.') : '-',
-                        'status' => $item->status === 'Dibuka' ? 'Dibuka' : 'Ditutup',
-                    ];
-                });
-
-            if ($data->isEmpty()) {
-                return response()->json([]);
-            }
-
-            return response()->json($data->toArray());
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Terjadi kesalahan server: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
     public function show(string $id)
     {
-        $wisuda = JadwalPendaftaran::with('kuotaWisudawan')->findOrFail($id);
-
-        return view('admin.wisuda.wisuda.show', [
-            'wisuda' => $wisuda
-        ]);
+        $wisuda = Wisuda::findOrFail($id);
+        return view('admin.wisuda.wisuda.show', compact('wisuda'));
     }
 
     public function edit(string $id)
     {
-        $wisuda = JadwalPendaftaran::with('kuotaWisudawan')->findOrFail($id);
-
-        return view('admin.wisuda.wisuda.edit', [
-            'wisuda' => $wisuda
-        ]);
+        $wisuda = Wisuda::findOrFail($id);
+        return view('admin.wisuda.wisuda.edit', compact('wisuda'));
     }
 
     public function update(Request $request, string $id)
     {
-        $wisuda = JadwalPendaftaran::findOrFail($id);
+        $wisuda = Wisuda::findOrFail($id);
 
         $validated = $request->validate([
-            'tahun_wisuda' => 'required|integer|min:2000|max:2100',
-            'status' => 'required|in:Dibuka,Ditutup',
-            'waktu_buka_pendaftaran' => 'required|date',
-            'waktu_tutup_pendaftaran' => 'required|date|after:waktu_buka_pendaftaran',
-            'jumlah_kuota' => 'nullable|integer|min:1',
+            'angkatan'            => 'required|string|max:255',
+            'status'              => 'required|in:dibuka,ditutup,selesai',
+            'tanggal_pendaftaran' => 'required|date',
+            'tanggal_penutupan'   => 'required|date|after:tanggal_pendaftaran',
+            'kuota_wisudawan'     => 'required|integer|min:1',
         ]);
-
-        // Cek apakah tahun wisuda sudah ada (kecuali untuk record yang sedang diedit)
-        $existing = JadwalPendaftaran::where('tahun_wisuda', $validated['tahun_wisuda'])
-                                    ->where('id', '!=', $id)
-                                    ->exists();
-        if ($existing) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Jadwal untuk tahun wisuda ' . $validated['tahun_wisuda'] . ' sudah ada.');
-        }
 
         try {
             $wisuda->update([
-                'tahun_wisuda' => $validated['tahun_wisuda'],
-                'status' => $validated['status'],
-                'waktu_buka_pendaftaran' => $validated['waktu_buka_pendaftaran'],
-                'waktu_tutup_pendaftaran' => $validated['waktu_tutup_pendaftaran'],
+                'angkatan'            => $validated['angkatan'],
+                'status'              => $validated['status'],
+                'tanggal_pendaftaran' => $validated['tanggal_pendaftaran'],
+                'tanggal_penutupan'   => $validated['tanggal_penutupan'],
+                'kuota_wisudawan'     => $validated['kuota_wisudawan'],
             ]);
-
-            // Update atau create kuota
-            if (isset($validated['jumlah_kuota']) && $validated['jumlah_kuota'] > 0) {
-                if ($wisuda->kuotaWisudawan) {
-                    $wisuda->kuotaWisudawan->update(['jumlah_kuota' => $validated['jumlah_kuota']]);
-                    // Refresh relasi untuk memastikan data terbaru
-                    $wisuda->load('kuotaWisudawan');
-                } else {
-                    $wisuda->kuotaWisudawan()->create(['jumlah_kuota' => $validated['jumlah_kuota']]);
-                    // Refresh relasi setelah create
-                    $wisuda->load('kuotaWisudawan');
-                }
-            }
 
             return redirect()->route('admin.wisuda.wisuda.index')
                 ->with('success', 'Data wisuda berhasil diperbarui.');
@@ -236,7 +176,7 @@ class WisudaController extends Controller
     public function destroy(string $id)
     {
         try {
-            $wisuda = JadwalPendaftaran::findOrFail($id);
+            $wisuda = Wisuda::findOrFail($id);
             $wisuda->delete();
 
             return response()->json([
@@ -251,28 +191,40 @@ class WisudaController extends Controller
         }
     }
 
-    public function exportExcel(Request $request)
+    public function exportData(Request $request)
     {
         try {
-            $data = JadwalPendaftaran::query()
-                ->with('kuotaWisudawan')
-                ->orderBy('tahun_wisuda', 'desc')
-                ->get();
+            $data = Wisuda::query()
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function($item) {
+                    return [
+                        'angkatan'            => $item->angkatan,
+                        'tanggal_pendaftaran' => Carbon::parse($item->tanggal_pendaftaran)->format('d F Y H:i'),
+                        'tanggal_penutupan'   => Carbon::parse($item->tanggal_penutupan)->format('d F Y H:i'),
+                        'kuota_wisudawan'     => $item->kuota_wisudawan,
+                        'status'              => ucfirst($item->status),
+                    ];
+                });
 
-            $fileName = 'Data_Wisuda_' . date('Y-m-d') . '.xlsx';
+            return response()->json($data->toArray());
 
-            return Excel::download(new WisudaExport($data), $fileName);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat export Excel: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $data = Wisuda::all();
+        return Excel::download(new WisudaExport($data), 'Data_Wisuda.xlsx');
     }
 
     public function exportPdf(Request $request)
     {
         try {
-            $data = JadwalPendaftaran::query()
-                ->with('kuotaWisudawan')
-                ->orderBy('tahun_wisuda', 'desc')
+            $data = Wisuda::query()
+                ->orderBy('created_at', 'desc')
                 ->get();
 
             $fileName = 'Data_Wisuda_' . date('Y-m-d') . '.pdf';
@@ -301,4 +253,3 @@ class WisudaController extends Controller
         }
     }
 }
-

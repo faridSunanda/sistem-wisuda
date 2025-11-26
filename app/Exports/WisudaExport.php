@@ -28,7 +28,7 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
     public function collection()
     {
         $collection = collect($this->data);
-        
+
         return $collection->values()->map(function ($row, $index) {
             if (is_object($row)) {
                 $row->export_index = $index + 1;
@@ -54,48 +54,26 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
     public function map($row): array
     {
         $no = is_object($row) ? ($row->export_index ?? 0) : ($row['export_index'] ?? 0);
-        $angkatan = is_object($row) ? ($row->tahun_wisuda ?? '') : ($row['tahun_wisuda'] ?? '');
-        
+        $angkatan = is_object($row) ? ($row->angkatan ?? '-') : ($row['angkatan'] ?? '-');
+
         $tanggal_pendaftaran = '';
-        if (is_object($row)) {
-            if (isset($row->waktu_buka_pendaftaran)) {
-                $tanggal_pendaftaran = $row->waktu_buka_pendaftaran instanceof \DateTime 
-                    ? Carbon::parse($row->waktu_buka_pendaftaran)->format('d F Y H:i') . ' WIB'
-                    : Carbon::parse($row->waktu_buka_pendaftaran)->format('d F Y H:i') . ' WIB';
-            }
-        } else {
-            $tanggal_pendaftaran = isset($row['waktu_buka_pendaftaran']) 
-                ? Carbon::parse($row['waktu_buka_pendaftaran'])->format('d F Y H:i') . ' WIB'
-                : '';
+        $rawTglDaftar = is_object($row) ? ($row->tanggal_pendaftaran ?? null) : ($row['tanggal_pendaftaran'] ?? null);
+        if ($rawTglDaftar) {
+            $tanggal_pendaftaran = Carbon::parse($rawTglDaftar)->format('d F Y H:i') . ' WIB';
         }
-        
+
         $tanggal_penutupan = '';
-        if (is_object($row)) {
-            if (isset($row->waktu_tutup_pendaftaran)) {
-                $tanggal_penutupan = $row->waktu_tutup_pendaftaran instanceof \DateTime 
-                    ? Carbon::parse($row->waktu_tutup_pendaftaran)->format('d F Y H:i') . ' WIB'
-                    : Carbon::parse($row->waktu_tutup_pendaftaran)->format('d F Y H:i') . ' WIB';
-            }
-        } else {
-            $tanggal_penutupan = isset($row['waktu_tutup_pendaftaran']) 
-                ? Carbon::parse($row['waktu_tutup_pendaftaran'])->format('d F Y H:i') . ' WIB'
-                : '';
+        $rawTglTutup = is_object($row) ? ($row->tanggal_penutupan ?? null) : ($row['tanggal_penutupan'] ?? null);
+        if ($rawTglTutup) {
+            $tanggal_penutupan = Carbon::parse($rawTglTutup)->format('d F Y H:i') . ' WIB';
         }
 
-        $kuota_wisudawan = '';
-        if (is_object($row)) {
-            if (isset($row->kuotaWisudawan) && $row->kuotaWisudawan) {
-                $kuota_wisudawan = number_format($row->kuotaWisudawan->jumlah_kuota, 0, ',', '.');
-            } else {
-                $kuota_wisudawan = '-';
-            }
-        } else {
-            $kuota_wisudawan = isset($row['kuota_wisudawan']) ? $row['kuota_wisudawan'] : '-';
-        }
+        $kuota_val = is_object($row) ? ($row->kuota_wisudawan ?? 0) : ($row['kuota_wisudawan'] ?? 0);
+        $kuota_wisudawan = number_format((float)$kuota_val, 0, ',', '.');
 
-        $status = is_object($row) ? ($row->status ?? '') : ($row['status'] ?? '');
-        $statusText = $status === 'Aktif' ? 'Aktif' : 'Tidak Aktif';
-        
+        $rawStatus = is_object($row) ? ($row->status ?? '') : ($row['status'] ?? '');
+        $statusText = ucfirst($rawStatus);
+
         return [
             $no,
             $angkatan,
@@ -109,12 +87,12 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
     public function columnWidths(): array
     {
         return [
-            'A' => 8,
-            'B' => 15,
-            'C' => 30,
-            'D' => 30,
-            'E' => 20,
-            'F' => 15,
+            'A' => 8,  // No
+            'B' => 20, // Angkatan
+            'C' => 30, // Tanggal Pendaftaran
+            'D' => 30, // Tanggal Penutupan
+            'E' => 20, // Kuota Wisudawan
+            'F' => 15, // Status
         ];
     }
 
@@ -129,7 +107,7 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
                 ],
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
-                    'startColor' => ['rgb' => '3B82F6'],
+                    'startColor' => ['rgb' => '3B82F6'], // Biru
                 ],
                 'alignment' => [
                     'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -144,7 +122,7 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
         return [
             AfterSheet::class => function(AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
-                
+
                 $this->addTitleAndDate($sheet);
                 $this->applyBorders($sheet);
                 $this->applyAlignment($sheet);
@@ -156,10 +134,10 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
     protected function addTitleAndDate(Worksheet $sheet): void
     {
         $sheet->insertNewRowBefore(1, 2);
-        
+
         $sheet->mergeCells('A1:F1');
         $sheet->setCellValue('A1', 'Laporan Data Wisuda');
-        
+
         $sheet->mergeCells('A2:F2');
         $sheet->setCellValue('A2', 'Tanggal: ' . $this->getFormattedDate());
 
@@ -181,23 +159,23 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
 
         $sheet->getStyle('A1')->applyFromArray($titleStyle);
         $sheet->getStyle('A2')->applyFromArray($dateStyle);
-        
+
         $sheet->getRowDimension(1)->setRowHeight(25);
         $sheet->getRowDimension(2)->setRowHeight(20);
     }
 
     protected function getFormattedDate(): string
     {
-        $bulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+        $bulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        
+
         return date('d') . ' ' . $bulan[(int)date('n')] . ' ' . date('Y');
     }
 
     protected function applyBorders(Worksheet $sheet): void
     {
         $highestRow = $sheet->getHighestRow();
-        $highestColumn = $sheet->getHighestColumn();
+        $highestColumn = 'F';
 
         $headerBorder = [
             'borders' => [
@@ -236,7 +214,7 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
     protected function applyAlignment(Worksheet $sheet): void
     {
         $highestRow = $sheet->getHighestRow();
-        
+
         if ($highestRow <= 3) {
             return;
         }
@@ -267,20 +245,19 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
             ],
         ];
 
-        $dataRange = 'A4:' . $sheet->getHighestColumn() . $highestRow;
+        $dataRange = 'A4:F' . $highestRow;
         $sheet->getStyle($dataRange)->applyFromArray($dataStyle);
 
         $sheet->getStyle('A4:A' . $highestRow)->applyFromArray($centerAlignment);
-        $sheet->getStyle('B4:B' . $highestRow)->applyFromArray($centerAlignment);
-        $sheet->getStyle('C4:D' . $highestRow)->applyFromArray($leftAlignment);
-        $sheet->getStyle('E4:E' . $highestRow)->applyFromArray($centerAlignment);
-        $sheet->getStyle('F4:F' . $highestRow)->applyFromArray($centerAlignment);
+        $sheet->getStyle('E4:F' . $highestRow)->applyFromArray($centerAlignment);
+
+        $sheet->getStyle('B4:D' . $highestRow)->applyFromArray($leftAlignment);
     }
 
     protected function applySheetSettings(Worksheet $sheet): void
     {
-        $highestColumn = $sheet->getHighestColumn();
-        
+        $highestColumn = 'F';
+
         $sheet->getRowDimension(3)->setRowHeight(25);
         $sheet->freezePane('A4');
         $sheet->setAutoFilter('A3:' . $highestColumn . '3');
@@ -291,4 +268,3 @@ class WisudaExport implements FromCollection, WithHeadings, WithMapping, WithSty
         return 'Data Wisuda';
     }
 }
-

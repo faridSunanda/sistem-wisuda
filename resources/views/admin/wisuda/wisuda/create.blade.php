@@ -10,6 +10,7 @@
             <form action="{{ route('admin.wisuda.wisuda.store') }}" method="POST">
                 @csrf
 
+                {{-- Alert Success --}}
                 @if (session('success'))
                     <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-lg">
                         <div class="flex items-center">
@@ -19,6 +20,7 @@
                     </div>
                 @endif
 
+                {{-- Alert Error --}}
                 @if (session('error'))
                     <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
                         <div class="flex items-start">
@@ -30,6 +32,7 @@
                     </div>
                 @endif
 
+                {{-- Validation Errors --}}
                 @if ($errors->any())
                     <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
                         <div class="flex items-start">
@@ -47,20 +50,15 @@
                 @endif
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+
                     <div>
-                        <label for="tahun_wisuda" class="block text-sm font-normal text-gray-600 mb-1.5">
-                            Angkatan (Tahun Wisuda) <span class="text-red-500">*</span>
+                        <label for="angkatan" class="block text-sm font-normal text-gray-600 mb-1.5">
+                            Nama Angkatan / Wisuda <span class="text-red-500">*</span>
                         </label>
-                        <select id="tahun_wisuda" name="tahun_wisuda" required
+                        <input type="text" id="angkatan" name="angkatan" value="{{ old('angkatan') }}" required
+                            placeholder="Contoh: Wisuda Periode I Tahun 2024"
                             class="w-full px-4 py-2.5 text-sm bg-gray-50 border-0 rounded-lg text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:bg-white transition-all">
-                            <option value="">Pilih Tahun Wisuda</option>
-                            @for ($year = date('Y'); $year <= date('Y') + 5; $year++)
-                                <option value="{{ $year }}" {{ old('tahun_wisuda') == $year ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endfor
-                        </select>
-                        @error('tahun_wisuda')
+                        @error('angkatan')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -72,8 +70,9 @@
                         <select id="status" name="status" required
                             class="w-full px-4 py-2.5 text-sm bg-gray-50 border-0 rounded-lg text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:bg-white transition-all">
                             <option value="">Pilih Status</option>
-                            <option value="Dibuka" {{ old('status') == 'Dibuka' ? 'selected' : '' }}>Dibuka</option>
-                            <option value="Ditutup" {{ old('status') == 'Ditutup' ? 'selected' : '' }}>Ditutup</option>
+                            <option value="dibuka" {{ old('status') == 'dibuka' ? 'selected' : '' }}>Dibuka</option>
+                            <option value="ditutup" {{ old('status') == 'ditutup' ? 'selected' : '' }}>Ditutup</option>
+                            <option value="selesai" {{ old('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                         </select>
                         @error('status')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -81,41 +80,40 @@
                     </div>
 
                     <div>
-                        <label for="waktu_buka_pendaftaran" class="block text-sm font-normal text-gray-600 mb-1.5">
+                        <label for="tanggal_pendaftaran" class="block text-sm font-normal text-gray-600 mb-1.5">
                             Tanggal Pendaftaran <span class="text-red-500">*</span>
                         </label>
-                        <input type="datetime-local" id="waktu_buka_pendaftaran" name="waktu_buka_pendaftaran"
-                            value="{{ old('waktu_buka_pendaftaran') }}" required
+                        <input type="datetime-local" id="tanggal_pendaftaran" name="tanggal_pendaftaran"
+                            value="{{ old('tanggal_pendaftaran') }}" required
                             class="w-full px-4 py-2.5 text-sm bg-gray-50 border-0 rounded-lg text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:bg-white transition-all">
-                        @error('waktu_buka_pendaftaran')
+                        @error('tanggal_pendaftaran')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="waktu_tutup_pendaftaran" class="block text-sm font-normal text-gray-600 mb-1.5">
+                        <label for="tanggal_penutupan" class="block text-sm font-normal text-gray-600 mb-1.5">
                             Tanggal Penutupan <span class="text-red-500">*</span>
                         </label>
-                        <input type="datetime-local" id="waktu_tutup_pendaftaran" name="waktu_tutup_pendaftaran"
-                            value="{{ old('waktu_tutup_pendaftaran') }}" required
+                        <input type="datetime-local" id="tanggal_penutupan" name="tanggal_penutupan"
+                            value="{{ old('tanggal_penutupan') }}" required
                             class="w-full px-4 py-2.5 text-sm bg-gray-50 border-0 rounded-lg text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:bg-white transition-all">
-                        @error('waktu_tutup_pendaftaran')
+                        @error('tanggal_penutupan')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="jumlah_kuota" class="block text-sm font-normal text-gray-600 mb-1.5">
-                            Kuota Wisudawan
+                        <label for="kuota_wisudawan" class="block text-sm font-normal text-gray-600 mb-1.5">
+                            Kuota Wisudawan <span class="text-red-500">*</span>
                         </label>
-                        <input type="number" id="jumlah_kuota" name="jumlah_kuota" value="{{ old('jumlah_kuota') }}"
-                            min="1" step="1"
+                        <input type="number" id="kuota_wisudawan" name="kuota_wisudawan"
+                            value="{{ old('kuota_wisudawan') }}" min="1" step="1" required
                             class="w-full px-4 py-2.5 text-sm bg-gray-50 border-0 rounded-lg text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:bg-white transition-all"
-                            placeholder="Masukkan jumlah kuota (opsional)">
-                        @error('jumlah_kuota')
+                            placeholder="Masukkan jumlah kuota">
+                        @error('kuota_wisudawan')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin menambahkan kuota sekarang</p>
                     </div>
                 </div>
 
@@ -137,8 +135,8 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const waktuBuka = document.getElementById('waktu_buka_pendaftaran');
-                const waktuTutup = document.getElementById('waktu_tutup_pendaftaran');
+                const waktuBuka = document.getElementById('tanggal_pendaftaran');
+                const waktuTutup = document.getElementById('tanggal_penutupan');
 
                 function validateDates() {
                     if (waktuBuka.value && waktuTutup.value) {
@@ -159,4 +157,3 @@
         </script>
     @endpush
 @endsection
-

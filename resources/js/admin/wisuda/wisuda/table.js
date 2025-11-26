@@ -15,7 +15,7 @@ export function initDataTable(config) {
         columns: [
             {
                 data: 'DT_RowIndex',
-                name: 'DT_RowIndex',
+                name: 'DT_RowIndex', // Ini tetap
                 orderable: false,
                 searchable: false,
                 className: 'text-center',
@@ -23,29 +23,29 @@ export function initDataTable(config) {
             },
             {
                 data: 'angkatan',
-                name: 'tahun_wisuda',
+                name: 'angkatan', // <--- GANTI INI (Dulu: tahun_wisuda)
                 className: 'text-center',
                 width: '100px'
             },
             {
                 data: 'tanggal_pendaftaran',
-                name: 'waktu_buka_pendaftaran',
+                name: 'tanggal_pendaftaran', // <--- GANTI INI (Dulu: waktu_buka_pendaftaran)
                 width: '200px'
             },
             {
                 data: 'tanggal_penutupan',
-                name: 'waktu_tutup_pendaftaran',
+                name: 'tanggal_penutupan', // <--- GANTI INI (Dulu: waktu_tutup_pendaftaran)
                 width: '200px'
             },
             {
                 data: 'kuota_wisudawan',
-                name: 'kuota_wisudawan',
+                name: 'kuota_wisudawan', // Ini sudah benar
                 className: 'text-center',
                 width: '150px'
             },
             {
-                data: 'status_badge',
-                name: 'status',
+                data: 'status_badge', // Ini custom column dari Controller (addColumn)
+                name: 'status',       // Ini kolom asli di DB
                 orderable: true,
                 searchable: true,
                 width: '120px'
