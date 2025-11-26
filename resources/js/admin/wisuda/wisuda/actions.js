@@ -1,4 +1,3 @@
-// Action Handlers for Data Wisudawan
 export function initActions(config) {
     const { detailUrl, editUrl, deleteUrl } = config;
 
@@ -6,7 +5,7 @@ export function initActions(config) {
         if (detailUrl) {
             window.location.href = detailUrl.replace(':id', id);
         } else {
-            window.location.href = `/admin/data-wisudawan/${id}`;
+            window.location.href = `/admin/wisuda/wisuda/${id}`;
         }
     };
 
@@ -14,7 +13,7 @@ export function initActions(config) {
         if (editUrl) {
             window.location.href = editUrl.replace(':id', id);
         } else {
-            window.location.href = `/admin/data-wisudawan/${id}/edit`;
+            window.location.href = `/admin/wisuda/wisuda/${id}/edit`;
         }
     };
 
@@ -30,7 +29,7 @@ export function initActions(config) {
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                const url = deleteUrl ? deleteUrl.replace(':id', id) : `/admin/data-wisudawan/${id}`;
+                const url = deleteUrl ? deleteUrl.replace(':id', id) : `/admin/wisuda/wisuda/${id}`;
                 const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
                 const button = buttonEl;
@@ -56,12 +55,8 @@ export function initActions(config) {
                         if (data.success) {
                             showToast(data.message || 'Data berhasil dihapus.', 'success')
                                 .then(() => {
-                                    if (typeof window.dataWisudawanTable !== 'undefined') {
-                                        window.dataWisudawanTable.draw();
-                                    } else if (typeof window.jadwalWisudaTable !== 'undefined') {
-                                        window.jadwalWisudaTable.draw();
-                                    } else if (typeof window.alurPendaftaranTable !== 'undefined') {
-                                        window.alurPendaftaranTable.draw();
+                                    if (typeof window.wisudaTable !== 'undefined') {
+                                        window.wisudaTable.draw();
                                     } else {
                                         location.reload();
                                     }

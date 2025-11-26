@@ -72,27 +72,28 @@
             <span class="font-medium">Data Wisudawan</span>
         </a>
 
-        <div x-data="{ settingOpen: {{ request()->routeIs('admin.setting*') ? 'true' : 'false' }} }">
+        <div x-data="{ settingOpen: {{ request()->routeIs('admin.wisuda*') ? 'true' : 'false' }} }">
             <button @click="settingOpen = !settingOpen"
-                class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.setting*') ? 'text-[#435ebe] bg-[#435ebe]/10 border border-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.wisuda*') ? 'text-[#435ebe] bg-[#435ebe]/10 border border-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                 <span class="flex items-center gap-3">
-                    <i class="fas fa-gear text-lg w-5 text-center"></i>
+                    <i class="fas fa-graduation-cap text-lg w-5 text-center"></i>
                     <span>Wisuda</span>
                 </span>
                 <i class="fas fa-chevron-down text-xs transition-transform duration-200"
                     :class="{ 'rotate-180': settingOpen, 'text-[#435ebe]': settingOpen }"></i>
             </button>
 
-            <!-- Submenu Setting -->
+            <!-- Submenu Wisuda -->
             <div x-show="settingOpen" x-collapse class="mt-1 space-y-1 pl-11 border-l-2 border-[#435ebe]/20 ml-4">
-                <!-- Alur Pendaftaran -->
-                <a href="#"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.alur-pendaftaran*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                <!-- Wisuda -->
+                <a href="{{ route('admin.wisuda.wisuda.index') }}"
+                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.wisuda.wisuda*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
                     Wisuda
                 </a>
 
-                <a href="#"
-                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.setting.dokumen-persyaratan*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
+                <!-- Jadwal Pelaksanaan -->
+                <a href="{{ route('admin.wisuda.jadwal-pelaksanaan.index') }}"
+                    class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('admin.wisuda.jadwal-pelaksanaan*') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
                     Jadwal Pelaksanaan
                 </a>
 
@@ -100,7 +101,7 @@
         </div>
 
         <!-- Download -->
-        <a href="#"
+        <a href="{{ route('admin.download-ppt.index') }}"
             class="mt-1 flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.download-ppt*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
             <i class="fas fa-file-powerpoint text-lg w-5 text-center"></i>
             <span class="font-medium">Download PPT</span>

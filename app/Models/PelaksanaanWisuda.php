@@ -20,6 +20,7 @@ class PelaksanaanWisuda extends Model
     protected $fillable = [
         'pendaftaran_wisuda_id',
         'nama_kegiatan',
+        'sesi_id',
         'waktu_pelaksanaan',
         'tempat_pelaksanaan',
         'keterangan'
@@ -33,6 +34,11 @@ class PelaksanaanWisuda extends Model
     public function jadwalPendaftaran(): BelongsTo
     {
         return $this->belongsTo(JadwalPendaftaran::class, 'pendaftaran_wisuda_id');
+    }
+
+    public function sesi(): BelongsTo
+    {
+        return $this->belongsTo(Sesi::class, 'sesi_id', 'id');
     }
 
     public function getWaktuPelaksanaanFormattedAttribute(): string

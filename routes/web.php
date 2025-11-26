@@ -8,15 +8,15 @@ use App\Http\Controllers\BerandaController;
 // Admin
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DataWisudawanController;
+use App\Http\Controllers\Admin\DownloadPptController;
 
 use App\Http\Controllers\Admin\Master\DokumenPersyaratanController;
 use App\Http\Controllers\Admin\Master\AlurPendaftaranController;
 use App\Http\Controllers\Admin\Master\SesiController;
 use App\Http\Controllers\Admin\Master\GroupController;
 
-use App\Http\Controllers\Admin\Setting\JadwalPendaftaranController;
-use App\Http\Controllers\Admin\Setting\JadwalWisudaController;
-use App\Http\Controllers\Admin\Setting\KuotaWisudaController;
+use App\Http\Controllers\Admin\Wisuda\WisudaController;
+use App\Http\Controllers\Admin\Wisuda\JadwalPelaksanaanController;
 
 // Mahasiswa
 use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboardController;
@@ -140,29 +140,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::prefix('wisuda')->name('wisuda.')->group(function () {
 
-        Route::controller(JadwalPendaftaranController::class)
-            ->prefix('jadwal-pendaftaran')
-            ->name('jadwal-pendaftaran.')
+        Route::controller(WisudaController::class)
+            ->prefix('wisuda')
+            ->name('wisuda.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/create', 'create')->name('create');
                 Route::post('/', 'store')->name('store');
-
-                Route::get('/data/get-data', 'getData')->name('get-data');
+                Route::get('/get-data', 'getData')->name('get-data');
                 Route::get('/export', 'exportData')->name('export');
                 Route::get('/export-excel', 'exportExcel')->name('export-excel');
                 Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
-
                 Route::get('/{id}/edit', 'edit')->name('edit');
                 Route::put('/{id}', 'update')->name('update');
                 Route::delete('/{id}', 'destroy')->name('destroy');
-                Route::post('/{id}/activate', 'activate')->name('activate'); // Khusus
                 Route::get('/{id}', 'show')->name('show');
             });
 
-        Route::controller(JadwalWisudaController::class)
-            ->prefix('jadwal-wisuda')
-            ->name('jadwal-wisuda.')
+        Route::controller(JadwalPelaksanaanController::class)
+            ->prefix('jadwal-pelaksanaan')
+            ->name('jadwal-pelaksanaan.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/create', 'create')->name('create');
@@ -173,33 +170,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
                 Route::get('/export-excel', 'exportExcel')->name('export-excel');
                 Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
 
-                Route::get('/pendaftaran/{pendaftaranId}', 'getByPendaftaran')->name('by-pendaftaran');
-
                 Route::get('/{id}/edit', 'edit')->name('edit');
                 Route::put('/{id}', 'update')->name('update');
                 Route::delete('/{id}', 'destroy')->name('destroy');
                 Route::get('/{id}', 'show')->name('show');
             });
 
-        Route::controller(KuotaWisudaController::class)
-            ->prefix('kuota-wisuda')
-            ->name('kuota-wisuda.')
-            ->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/create', 'create')->name('create');
-                Route::post('/', 'store')->name('store');
-
-                Route::get('/get-data', 'getData')->name('get-data');
-                Route::get('/export', 'exportData')->name('export');
-                Route::get('/export-excel', 'exportExcel')->name('export-excel');
-                Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
-                Route::get('/pendaftaran/{pendaftaranId}', 'getByPendaftaran')->name('by-pendaftaran');
-
-                Route::get('/{id}/edit', 'edit')->name('edit');
-                Route::put('/{id}', 'update')->name('update');
-                Route::delete('/{id}', 'destroy')->name('destroy');
-                Route::get('/{id}', 'show')->name('show');
-            });
     });
 
     Route::controller(DataWisudawanController::class)
@@ -213,6 +189,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             Route::get('/export-excel', 'exportExcel')->name('export-excel');
             Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
 
+            Route::get('/{id}/edit', 'edit')->name('edit');
+            Route::put('/{id}', 'update')->name('update');
+            Route::delete('/{id}', 'destroy')->name('destroy');
+            Route::get('/{id}', 'show')->name('show');
+        });
+
+    Route::controller(DownloadPptController::class)
+        ->prefix('download-ppt')
+        ->name('download-ppt.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/get-data', 'getData')->name('get-data');
+            Route::post('/preview', 'previewPpt')->name('preview');
+            Route::post('/download', 'downloadPpt')->name('download');
+            Route::post('/pindahkan-ke', 'pindahkanKe')->name('pindahkan-ke');
             Route::get('/{id}/edit', 'edit')->name('edit');
             Route::put('/{id}', 'update')->name('update');
             Route::delete('/{id}', 'destroy')->name('destroy');

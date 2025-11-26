@@ -32,6 +32,8 @@ class Biodata extends Model
         'no_telepon',
         'judul_skripsi',
         'kesan_pesan',
+        'is_bayar',
+        'is_verified',
     ];
 
      protected $casts = [

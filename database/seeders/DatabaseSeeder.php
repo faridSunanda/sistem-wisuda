@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             AlurPendaftaranSeeder::class,
             GroupSeeder::class,
             SesiSeeder::class,
+            WisudaSeeder::class,
         ]);
     }
 }

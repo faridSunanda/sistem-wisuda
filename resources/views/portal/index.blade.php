@@ -58,21 +58,38 @@
                 <p
                     class="text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 flex flex-wrap justify-center items-center gap-1 sm:gap-1.5 md:gap-2">
                     <span class="font-semibold text-gray-600">Total Pendaftar:</span>
-                    <span class="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-900">1165</span>
-                    <span class="text-gray-500 text-sm sm:text-base md:text-lg lg:text-xl">/1300</span>
+                    <span class="font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-900">{{ number_format($totalPendaftar) }}</span>
+                    @if($totalKuota > 0)
+                        <span class="text-gray-500 text-sm sm:text-base md:text-lg lg:text-xl">/{{ number_format($totalKuota) }}</span>
+                    @endif
                 </p>
             </div>
 
+            @if($totalKuota > 0)
             <div
                 class="w-full bg-gray-100 h-2 sm:h-2.5 md:h-3 rounded-full mt-3 sm:mt-4 md:mt-6 overflow-hidden shadow-inner">
-                <div class="h-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 progress-bar rounded-full shadow-sm"
-                    style="width: calc(1165 / 1300 * 100%)"></div>
+                <div class="h-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 progress-bar rounded-full shadow-sm transition-all duration-500"
+                    style="width: {{ $persentase }}%"></div>
             </div>
 
             <p id="info-text"
                 class="text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-700 mt-2.5 sm:mt-3 md:mt-4 transition-opacity duration-700 opacity-100 font-semibold">
-                <span class="text-gray-800">Segera Daftar!</span>
+                @if($persentase >= 100)
+                    <span class="text-red-600 font-bold">Kuota Penuh!</span>
+                @elseif($persentase >= 80)
+                    <span class="text-orange-600 font-bold">Kuota Hampir Penuh!</span>
+                @else
+                    <span class="text-gray-800">Segera Daftar!</span>
+                @endif
             </p>
+            @else
+            <div class="w-full bg-gray-100 h-2 sm:h-2.5 md:h-3 rounded-full mt-3 sm:mt-4 md:mt-6 overflow-hidden shadow-inner">
+                <div class="h-full bg-gray-300 rounded-full"></div>
+            </div>
+            <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-500 mt-2.5 sm:mt-3 md:mt-4 font-semibold">
+                Kuota belum ditentukan
+            </p>
+            @endif
         </div>
     </section>
 
@@ -192,27 +209,51 @@
         </div>
     </section>
 
+    @if($totalKuota > 0)
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const infoText = document.getElementById('info-text');
             if (infoText) {
-                const messages = [
-                    '<span class="font-semibold text-gray-800">89.6%</span> kuota telah terpenuhi',
-                    '<span class="font-semibold text-gray-800">Lengkapi syarat pendaftaran</span>',
-                    '<span class="font-semibold text-gray-800">Segera Daftar!</span>'
-                ];
+                const persentase = {{ $persentase }};
+                const totalPendaftar = {{ $totalPendaftar }};
+                const totalKuota = {{ $totalKuota }};wd
+                
+                let messages = [];
+                
+                if (persentase >= 100) {
+                    messages = [
+                        '<span class="text-red-600 font-bold">Kuota Penuh!</span>',
+                        '<span class="text-red-600 font-bold">Pendaftaran Ditutup</span>'
+                    ];
+                } else if (persentase >= 80) {
+                    messages = [
+                        '<span class="text-orange-600 font-bold">' + persentase.toFixed(1) + '% kuota telah terpenuhi</span>',
+                        '<span class="text-orange-600 font-bold">Kuota Hampir Penuh!</span>',
+                        '<span class="text-orange-600 font-bold">Segera Daftar!</span>'
+                    ];
+                } else {
+                    messages = [
+                        '<span class="font-semibold text-gray-800">' + persentase.toFixed(1) + '% kuota telah terpenuhi</span>',
+                        '<span class="font-semibold text-gray-800">Lengkapi syarat pendaftaran</span>',
+                        '<span class="font-semibold text-gray-800">Segera Daftar!</span>'
+                    ];
+                }
+                
                 let index = 0;
 
                 setInterval(() => {
-                    infoText.classList.add('fade-out');
-                    setTimeout(() => {
-                        index = (index + 1) % messages.length;
-                        infoText.innerHTML = messages[index];
-                        infoText.classList.remove('fade-out');
-                        infoText.classList.add('fade-in');
-                    }, 500);
+                    if (messages.length > 1) {
+                        infoText.classList.add('fade-out');
+                        setTimeout(() => {
+                            index = (index + 1) % messages.length;
+                            infoText.innerHTML = messages[index];
+                            infoText.classList.remove('fade-out');
+                            infoText.classList.add('fade-in');
+                        }, 500);
+                    }
                 }, 3000);
             }
         });
     </script>
+    @endif
 @endsection
