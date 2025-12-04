@@ -13,20 +13,11 @@ window.initDownloadPpt = function(config) {
     }
 };
 
-/**
- * Initialize dropdown toggle functionality for Group and Sesi selects
- */
 function initDropdownToggles() {
     initDropdownToggle('toggleGroupDropdown', 'targetGroupId', 'groupChevron');
     initDropdownToggle('toggleSesiDropdown', 'targetSesiId', 'sesiChevron');
 }
 
-/**
- * Initialize dropdown toggle for a specific select element
- * @param {string} toggleBtnId - ID of the toggle button
- * @param {string} selectId - ID of the select element
- * @param {string} chevronId - ID of the chevron icon
- */
 function initDropdownToggle(toggleBtnId, selectId, chevronId) {
     const toggleBtn = document.getElementById(toggleBtnId);
     const select = document.getElementById(selectId);
@@ -54,7 +45,6 @@ function initDropdownToggle(toggleBtnId, selectId, chevronId) {
         }, 10);
     };
 
-    // Toggle button click handler
     toggleBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -62,7 +52,6 @@ function initDropdownToggle(toggleBtnId, selectId, chevronId) {
         openDropdown();
     });
 
-    // Select element event handlers
     select.addEventListener('mousedown', () => updateChevron(true));
     select.addEventListener('click', () => updateChevron(true));
     select.addEventListener('focus', () => {
@@ -73,7 +62,6 @@ function initDropdownToggle(toggleBtnId, selectId, chevronId) {
         setTimeout(() => updateChevron(false), 200);
     });
 
-    // Click outside handler
     document.addEventListener('click', (e) => {
         if (!select.contains(e.target) && !toggleBtn.contains(e.target)) {
             updateChevron(false);
@@ -81,7 +69,6 @@ function initDropdownToggle(toggleBtnId, selectId, chevronId) {
     });
 }
 
-// Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initialize);
 } else {

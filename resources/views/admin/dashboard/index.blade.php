@@ -66,7 +66,18 @@
     </div>
     
     @php
-        $fakultasLabels = $charts['fakultas']['labels'] ?? ['', '', '', ''];
+        $fakultasLabelsRaw = $charts['fakultas']['labels'] ?? ['', '', '', ''];
+        // Tambahkan prefix "Fakultas" pada setiap label jika belum ada
+        $fakultasLabels = array_map(function($label) {
+            if (empty($label)) {
+                return '';
+            }
+            // Jika belum ada prefix "Fakultas", tambahkan
+            if (stripos($label, 'Fakultas') === false) {
+                return 'Fakultas ' . $label;
+            }
+            return $label;
+        }, $fakultasLabelsRaw);
         $fakultasValues = $charts['fakultas']['data'] ?? [0, 0, 0, 0];
         $tahunMasukLabels = $charts['tahun_masuk']['labels'] ?? ['', '', '', ''];
         $tahunMasukValues = $charts['tahun_masuk']['data'] ?? [0, 0, 0, 0];

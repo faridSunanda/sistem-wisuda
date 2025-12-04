@@ -1,35 +1,92 @@
-/* Dokumen Persyaratan Table Styles */
+/* Data Wisudawan Table Styles */
 #dataWisudawanTable {
     border-collapse: separate;
     border-spacing: 0;
     width: 100% !important;
     margin: 0;
+    table-layout: fixed;
 }
 
 #dataWisudawanTable_wrapper {
     width: 100%;
+    position: relative;
+}
+
+#dataWisudawanTable_wrapper .dataTables_scroll {
+    position: relative;
+    clear: both;
 }
 
 #dataWisudawanTable_wrapper .dataTables_scrollHead {
     border: none;
+    overflow: hidden !important;
+    position: relative;
+    margin-bottom: 0;
 }
 
 #dataWisudawanTable_wrapper .dataTables_scrollHeadInner {
     width: 100% !important;
+    overflow: hidden !important;
+    position: relative;
 }
 
 #dataWisudawanTable_wrapper .dataTables_scrollHeadInner table {
     width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
+#dataWisudawanTable_wrapper .dataTables_scrollBody {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    position: relative;
+}
+
+#dataWisudawanTable_wrapper .dataTables_scrollBody table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Header Styles */
 #dataWisudawanTable thead th {
     position: relative;
-    background-color: #ffffff !important;
+    background-color: #f9fafb !important;
     border: 1px solid #d1d5db;
     font-weight: bold;
+    font-size: 0.875rem;
     color: #111827;
     text-transform: none;
     letter-spacing: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    text-align: center !important;
+}
+
+#dataWisudawanTable_wrapper .dataTables_scrollHead thead th {
+    position: relative;
+    background-color: #f9fafb !important;
+    border: 1px solid #d1d5db;
+    font-weight: bold;
+    font-size: 0.875rem;
+    color: #111827;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    text-align: center !important;
 }
 
 #dataWisudawanTable thead th:first-child {
@@ -40,10 +97,7 @@
     border-right: 1px solid #d1d5db;
 }
 
-#dataWisudawanTable thead th.sorting {
-    padding-right: 30px;
-}
-
+#dataWisudawanTable thead th.sorting,
 #dataWisudawanTable thead th.sorting_asc,
 #dataWisudawanTable thead th.sorting_desc {
     padding-right: 30px;
@@ -96,6 +150,27 @@
 #dataWisudawanTable tbody td {
     border: 1px solid #e5e7eb;
     padding: 0.75rem 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+#dataWisudawanTable_wrapper .dataTables_scrollBody tbody td {
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* Sinkronisasi kolom */
+#dataWisudawanTable_wrapper .dataTables_scrollHead thead th,
+#dataWisudawanTable_wrapper .dataTables_scrollBody tbody td {
+    box-sizing: border-box;
 }
 
 #dataWisudawanTable tbody tr {
@@ -122,8 +197,7 @@
 #dataWisudawanTable_wrapper .dataTables_length select:focus,
 #dataWisudawanTable_wrapper .dataTables_filter input:focus {
     outline: none;
-    ring: 2px;
-    ring-color: #435ebe;
+    box-shadow: 0 0 0 2px rgba(67, 94, 190, 0.2);
     border-color: #435ebe;
 }
 
@@ -243,9 +317,43 @@
     transform: translateY(-1px);
 }
 
+/* Filter Styles */
+#filterFakultas,
+#filterProdi,
+#filterTahunMasuk,
+#filterJenjang {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+#filterFakultas option,
+#filterProdi option,
+#filterTahunMasuk option,
+#filterJenjang option {
+    padding: 0.5rem;
+    white-space: normal;
+    font-weight: normal;
+}
+
+#resetFiltersBtn {
+    transition: all 0.2s ease;
+}
+
+#resetFiltersBtn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#resetFiltersBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-
     #dataWisudawanTable_wrapper .dataTables_length,
     #dataWisudawanTable_wrapper .dataTables_filter {
         text-align: left;

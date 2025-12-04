@@ -1,4 +1,3 @@
-// Filter Management
 export function initFilters(config, table) {
     const { resetFiltersBtn, filterSelectors } = config;
 
@@ -23,7 +22,5 @@ export function initFilters(config, table) {
         updateResetState();
     });
 
-    // Initialize reset button state
     updateResetState();
 }
-

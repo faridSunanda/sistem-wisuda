@@ -1,3 +1,4 @@
+// Sync column widths
 function syncColumnWidths(api) {
     api.columns().every(function() {
         const columnIndex = this.index();
@@ -31,9 +32,10 @@ function syncColumnWidths(api) {
         }
     });
     
-    $('#dokumenPersyaratanTable_wrapper')[0]?.offsetHeight;
+    $('#downloadPptTable_wrapper')[0]?.offsetHeight;
 }
 
+// Setup scroll sync
 function setupScrollSync() {
     const $scrollBody = $('.dataTables_scrollBody');
     const $scrollHead = $('.dataTables_scrollHead');
@@ -55,10 +57,11 @@ function setupScrollSync() {
     });
 }
 
+// Initialize DataTable
 export function initDataTable(config) {
     const { getDataUrl } = config;
 
-    const table = $('#dokumenPersyaratanTable').DataTable({
+    const table = $('#downloadPptTable').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
@@ -80,30 +83,63 @@ export function initDataTable(config) {
         },
         columns: [
             {
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex',
+                data: 'checkbox',
+                name: 'checkbox',
                 orderable: false,
                 searchable: false,
                 className: 'text-center',
                 width: '80px'
             },
             {
-                data: 'nama_dokumen',
-                name: 'nama_dokumen',
-                width: '250px'
+                data: 'no_urut',
+                name: 'nomor_urut',
+                className: 'text-center',
+                width: '105px'
             },
             {
-                data: 'keterangan',
-                name: 'keterangan',
-                width: '350px'
+                data: 'nama_lengkap',
+                name: 'name_lengkap',
+                width: '300px'
             },
             {
-                data: 'berkas_link',
-                name: 'berkas',
-                orderable: false,
-                searchable: false,
+                data: 'nim',
+                name: 'nim',
+                className: 'text-center',
+                width: '200px'
+            },
+            {
+                data: 'angkatan',
+                name: 'angkatan',
                 className: 'text-center',
                 width: '150px'
+            },
+            {
+                data: 'group',
+                name: 'group',
+                className: 'text-center',
+                width: '150px'
+            },
+            {
+                data: 'sesi',
+                name: 'sesi',
+                className: 'text-center',
+                width: '150px'
+            },
+            {
+                data: 'jenjang',
+                name: 'jenjang',
+                className: 'text-center',
+                width: '150px'
+            },
+            {
+                data: 'fakultas',
+                name: 'fakultas',
+                width: '150px'
+            },
+            {
+                data: 'prodi',
+                name: 'prodi',
+                width: '200px'
             },
             {
                 data: 'aksi',

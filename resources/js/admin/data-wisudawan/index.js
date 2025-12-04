@@ -1,35 +1,29 @@
-// Main Data Wisudawan Initialization
 import { initDataTable } from './table.js';
 import { initFilters } from './filter.js';
 import { initExports } from './export.js';
 import { initActions } from './actions.js';
 
 window.initDataWisudawan = function(config) {
-    // Initialize DataTable
-    const table = initDataTable(config);
-    window.dataWisudawanTable = table;
-    
-    // Initialize Filters
-    initFilters(config, table);
-    
-    // Initialize Exports
-    initExports(config);
-    
-    // Initialize Actions
-    initActions(config);
+    try {
+        const table = initDataTable(config);
+        window.dataWisudawanTable = table;
+
+        initFilters(config, table);
+        initExports(config);
+        initActions(config);
+    } catch (error) {
+        console.error('Error initializing Data Wisudawan:', error);
+    }
 };
 
-// Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof window.dataWisudawanConfig !== 'undefined' && typeof window.initDataWisudawan === 'function') {
-            window.initDataWisudawan(window.dataWisudawanConfig);
-        }
-    });
+    document.addEventListener('DOMContentLoaded', initialize);
 } else {
-    // DOM already loaded
+    initialize();
+}
+
+function initialize() {
     if (typeof window.dataWisudawanConfig !== 'undefined' && typeof window.initDataWisudawan === 'function') {
         window.initDataWisudawan(window.dataWisudawanConfig);
     }
 }
-

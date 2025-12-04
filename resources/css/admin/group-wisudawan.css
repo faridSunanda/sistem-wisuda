@@ -4,32 +4,90 @@
     border-spacing: 0;
     width: 100% !important;
     margin: 0;
+    table-layout: fixed;
 }
 
 #downloadPptTable_wrapper {
     width: 100%;
+    position: relative;
+}
+
+#downloadPptTable_wrapper .dataTables_scroll {
+    position: relative;
+    clear: both;
 }
 
 #downloadPptTable_wrapper .dataTables_scrollHead {
     border: none;
+    overflow: hidden !important;
+    position: relative;
+    margin-bottom: 0;
 }
 
 #downloadPptTable_wrapper .dataTables_scrollHeadInner {
     width: 100% !important;
+    overflow: hidden !important;
+    position: relative;
 }
 
 #downloadPptTable_wrapper .dataTables_scrollHeadInner table {
     width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
+#downloadPptTable_wrapper .dataTables_scrollBody {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    position: relative;
+}
+
+#downloadPptTable_wrapper .dataTables_scrollBody table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    margin: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Header Styles */
 #downloadPptTable thead th {
     position: relative;
-    background-color: #ffffff !important;
+    background-color: #f9fafb !important;
     border: 1px solid #d1d5db;
     font-weight: bold;
+    font-size: 0.875rem;
     color: #111827;
     text-transform: none;
     letter-spacing: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    text-align: center !important;
+}
+
+/* Pastikan header di scrollHead memiliki style yang sama */
+#downloadPptTable_wrapper .dataTables_scrollHead thead th {
+    position: relative;
+    background-color: #f9fafb !important;
+    border: 1px solid #d1d5db;
+    font-weight: bold;
+    font-size: 0.875rem;
+    color: #111827;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    text-align: center !important;
 }
 
 #downloadPptTable thead th:first-child {
@@ -40,10 +98,7 @@
     border-right: 1px solid #d1d5db;
 }
 
-#downloadPptTable thead th.sorting {
-    padding-right: 30px;
-}
-
+#downloadPptTable thead th.sorting,
 #downloadPptTable thead th.sorting_asc,
 #downloadPptTable thead th.sorting_desc {
     padding-right: 30px;
@@ -96,6 +151,28 @@
 #downloadPptTable tbody td {
     border: 1px solid #e5e7eb;
     padding: 0.75rem 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* Pastikan body di scrollBody memiliki style yang sama */
+#downloadPptTable_wrapper .dataTables_scrollBody tbody td {
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* Sinkronisasi kolom - pastikan padding dan border sama */
+#downloadPptTable_wrapper .dataTables_scrollHead thead th,
+#downloadPptTable_wrapper .dataTables_scrollBody tbody td {
+    box-sizing: border-box;
 }
 
 #downloadPptTable tbody tr {
@@ -184,14 +261,8 @@
 }
 
 /* Button Styles */
-#previewPptBtn,
 #downloadPptBtn {
     transition: all 0.2s ease;
-}
-
-#previewPptBtn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 #downloadPptBtn:hover {
@@ -303,6 +374,32 @@
     color: #435ebe;
 }
 
+/* Modal Styles */
+#downloadPptModal {
+    display: flex;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+#downloadPptModal.hidden {
+    display: none;
+}
+
+#downloadPptModal .bg-white {
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #downloadPptTable_wrapper .dataTables_length,
@@ -314,6 +411,11 @@
     #downloadPptTable_wrapper .dataTables_paginate {
         text-align: center;
         margin-top: 1rem;
+    }
+
+    #downloadPptModal .bg-white {
+        max-width: 100%;
+        margin: 1rem;
     }
 }
 

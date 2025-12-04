@@ -37,16 +37,14 @@
             <div class="p-6">
                 <table id="sesiTable" class="w-full">
                     <thead>
-                        <tr class="bg-gray-50 text-left">
-                            <th
-                                class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider w-16">
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                 No</th>
-                            <th class="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                 Nama Sesi</th>
-                            <th class="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                 Keterangan</th>
-                            <th
-                                class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider w-32">
+                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                 Aksi</th>
                         </tr>
                     </thead>

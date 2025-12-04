@@ -5,12 +5,12 @@
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Detail Wisudawan</h1>
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.download-ppt.edit', $user->id) }}"
+                <a href="{{ route('admin.group-wisudawan.edit', $user->id) }}"
                     class="flex items-center gap-2 px-4 py-2 text-sm bg-[#f59e0b] text-white hover:bg-[#d97706] rounded-lg transition-all">
                     <i class="fas fa-pencil-alt"></i>
                     <span>Edit</span>
                 </a>
-                <a href="{{ route('admin.download-ppt.index') }}"
+                <a href="{{ route('admin.group-wisudawan.index') }}"
                     class="flex items-center gap-2 px-4 py-2 text-sm bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg transition-all">
                     <span>Kembali</span>
                 </a>
