@@ -33,7 +33,7 @@
                     <span class="font-medium">Pembayaran</span>
                 </a>
                 
-                <a href="{{ route('mahasiswa.biodata.edit') }}"
+                <a href="{{ route('mahasiswa.biodata.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.biodata.*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                     <i class="fas fa-id-card text-lg w-5 text-center"></i>
                     <span class="font-medium">Data Diri</span>
@@ -77,8 +77,8 @@
                         </a>
                     </div>
                 
-                <a href="{{ route('mahasiswa.download-formulir') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                <a href="{{ route('mahasiswa.download-formulir.index') }}" 
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                     <i class="fas fa-file-arrow-down text-lg w-5 text-center"></i>
                     <span class="font-medium">Download Formulir</span>
                 </a>

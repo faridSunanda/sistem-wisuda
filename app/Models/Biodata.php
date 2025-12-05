@@ -16,6 +16,7 @@ class Biodata extends Model
 
     protected $fillable = [
         'user_id',
+        'wisuda_id',
         'nim',
         'nik',
         'nirm',
@@ -36,7 +37,7 @@ class Biodata extends Model
         'is_verified',
     ];
 
-     protected $casts = [
+    protected $casts = [
         'tanggal_lahir' => 'date',
     ];
 
@@ -45,39 +46,43 @@ class Biodata extends Model
         return $this->belongsTo(User::class);
     }
 
-public function dosenPembimbings()
+    public function wisuda()
     {
-        // Satu Biodata 'hasMany' (memiliki banyak) DosenPembimbing
+        return $this->belongsTo(Wisuda::class);
+    }
+
+    public function dosenPembimbings()
+    {
         return $this->hasMany(DosenPembimbing::class, 'biodata_id');
     }
 
     public function sertifikatKompetensi()
     {
-        return $this->hasMany(SertifikatKompetensi::class);
+        return $this->hasMany(SertifikatKompetensi::class, 'biodata_id');
     }
 
     public function sertifikatBahasaInternasional()
     {
-        return $this->hasMany(SertifikatBahasaInternasional::class);
+        return $this->hasMany(SertifikatBahasaInternasional::class, 'biodata_id');
     }
 
     public function sertifikatMagang()
     {
-        return $this->hasMany(SertifikatMagang::class);
+        return $this->hasMany(SertifikatMagang::class, 'biodata_id');
     }
 
     public function sertifikatPendidikanKarakter()
     {
-        return $this->hasMany(SertifikatPendidikanKarakter::class);
+        return $this->hasMany(SertifikatPendidikanKarakter::class, 'biodata_id');
     }
 
     public function sertifikatOrganisasi()
     {
-        return $this->hasMany(SertifikatOrganisasi::class);
+        return $this->hasMany(SertifikatOrganisasi::class, 'biodata_id');
     }
 
     public function sertifikatPenghargaan()
     {
-        return $this->hasMany(SertifikatPenghargaan::class);
+        return $this->hasMany(SertifikatPenghargaan::class, 'biodata_id');
     }
 }

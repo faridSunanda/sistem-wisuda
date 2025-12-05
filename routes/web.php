@@ -30,6 +30,7 @@ use App\Http\Controllers\Mahasiswa\BiodataController;
 use App\Http\Controllers\Mahasiswa\SertifikatKompetensiController;
 use App\Http\Controllers\Mahasiswa\SertifikatBahasaInternasionalController;
 use App\Http\Controllers\Mahasiswa\SertifikatMagangController;
+use App\Http\Controllers\Mahasiswa\DownloadFormulirController;
 
 
 /*
@@ -223,10 +224,13 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
 
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
 
-    Route::prefix('biodata')->name('biodata.')->group(function () {
-        Route::get('/', [BiodataController::class, 'edit'])->name('edit');
-        Route::post('/', [BiodataController::class, 'update'])->name('update');
-    });
+    Route::get('/data-diri', [BiodataController::class, 'index'])->name('biodata.index');
+    Route::put('/biodata/update', [BiodataController::class, 'update'])->name('biodata.update');
+    Route::post('/biodata/sync', [BiodataController::class, 'syncFromApi'])->name('biodata.sync');
+
+    Route::get('/download-formulir', [DownloadFormulirController::class, 'index'])->name('download-formulir.index');
+    Route::get('/download-formulir/download', [DownloadFormulirController::class, 'downloadFormulirWisuda'])->name('download-formulir.download');
+    Route::get('/download-formulir/preview', [DownloadFormulirController::class, 'previewFormulirWisuda'])->name('download-formulir.preview');
 
     Route::prefix('sertifikat')->name('sertifikat.')->group(function () {
         Route::get('/kompetensi', [SertifikatKompetensiController::class, 'index'])->name('kompetensi');
@@ -252,9 +256,6 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
         Route::post('/organisasi', [SertifikatOrganisasiController::class, 'store'])->name('organisasi.store');
     });
 
-    Route::get('/download-formulir', function () {
-        return view('mahasiswa.download-formulir.index');
-    })->name('download-formulir');
 
     Route::prefix('pembayaran')->name('pembayaran.')->group(function () {
         Route::get('/', [PembayaranController::class, 'index'])->name('index');
