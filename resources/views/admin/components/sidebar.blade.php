@@ -100,11 +100,11 @@
             </div>
         </div>
 
-        <!-- Download -->
-        <a href="{{ route('admin.download-ppt.index') }}"
-            class="mt-1 flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.download-ppt*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
-            <i class="fas fa-file-powerpoint text-lg w-5 text-center"></i>
-            <span class="font-medium">Download PPT</span>
+        <!-- Group Wisudawan -->
+        <a href="{{ route('admin.group-wisudawan.index') }}"
+            class="mt-1 flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.group-wisudawan*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+            <i class="fas fa-users text-lg w-5 text-center"></i>
+            <span class="font-medium">Group Wisudawan</span>
         </a>
 
     </nav>

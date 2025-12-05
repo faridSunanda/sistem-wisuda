@@ -1,53 +1,122 @@
+function syncColumnWidths(api) {
+    api.columns().every(function() {
+        const columnIndex = this.index();
+        const $headerCell = $(this.header());
+        const $bodyCells = $(api.cells(null, columnIndex).nodes());
+        
+        if ($bodyCells.length === 0) return;
+
+        const bodyCellWidth = $bodyCells.first().outerWidth();
+        const width = `${bodyCellWidth}px`;
+        
+        $headerCell.css({
+            'width': width,
+            'min-width': width,
+            'max-width': width
+        });
+        
+        const $headerTable = $headerCell.closest('table');
+        const $bodyTable = $bodyCells.first().closest('table');
+        
+        if ($headerTable.length && $bodyTable.length) {
+            const $headerCol = $headerTable.find('colgroup col').eq(columnIndex);
+            const $bodyCol = $bodyTable.find('colgroup col').eq(columnIndex);
+            
+            if ($headerCol.length) {
+                $headerCol.css('width', width);
+            }
+            if ($bodyCol.length) {
+                $bodyCol.css('width', width);
+            }
+        }
+    });
+    
+    $('#wisudaTable_wrapper')[0]?.offsetHeight;
+}
+
+function setupScrollSync() {
+    const $scrollBody = $('.dataTables_scrollBody');
+    const $scrollHead = $('.dataTables_scrollHead');
+    const $scrollHeadInner = $('.dataTables_scrollHeadInner');
+    
+    if (!$scrollBody.length || !$scrollHead.length) return;
+
+    $scrollBody.off('scroll.sync');
+    
+    $scrollBody.on('scroll.sync', function() {
+        const scrollLeft = $(this).scrollLeft();
+        $scrollHead.scrollLeft(scrollLeft);
+        $scrollHeadInner.scrollLeft(scrollLeft);
+    });
+    
+    $scrollHead.on('scroll.sync', function() {
+        const scrollLeft = $(this).scrollLeft();
+        $scrollBody.scrollLeft(scrollLeft);
+    });
+}
+
 export function initDataTable(config) {
     const { getDataUrl } = config;
 
-    return $('#wisudaTable').DataTable({
+    const table = $('#wisudaTable').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
             url: getDataUrl,
             type: 'GET',
-            error: function(xhr, error, thrown) {
+            error: function(xhr) {
                 console.error('AJAX Error:', xhr.responseText);
-                alert('Terjadi kesalahan saat memuat data. Silakan refresh halaman.');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat memuat data. Silakan refresh halaman.',
+                        confirmButtonColor: '#435ebe'
+                    });
+                } else {
+                    alert('Terjadi kesalahan saat memuat data. Silakan refresh halaman.');
+                }
             }
         },
         columns: [
             {
                 data: 'DT_RowIndex',
-                name: 'DT_RowIndex', // Ini tetap
+                name: 'DT_RowIndex',
                 orderable: false,
                 searchable: false,
                 className: 'text-center',
-                width: '50px'
+                width: '80px'
             },
             {
                 data: 'angkatan',
-                name: 'angkatan', // <--- GANTI INI (Dulu: tahun_wisuda)
                 className: 'text-center',
-                width: '100px'
-            },
-            {
-                data: 'tanggal_pendaftaran',
-                name: 'tanggal_pendaftaran', // <--- GANTI INI (Dulu: waktu_buka_pendaftaran)
-                width: '200px'
-            },
-            {
-                data: 'tanggal_penutupan',
-                name: 'tanggal_penutupan', // <--- GANTI INI (Dulu: waktu_tutup_pendaftaran)
-                width: '200px'
-            },
-            {
-                data: 'kuota_wisudawan',
-                name: 'kuota_wisudawan', // Ini sudah benar
-                className: 'text-center',
+                name: 'angkatan',
                 width: '150px'
             },
             {
-                data: 'status_badge', // Ini custom column dari Controller (addColumn)
-                name: 'status',       // Ini kolom asli di DB
+                data: 'tanggal_pendaftaran',
+                className: 'text-center',
+                name: 'tanggal_pendaftaran',
+                width: '270px'
+            },
+            {
+                data: 'tanggal_penutupan',
+                className: 'text-center',
+                name: 'tanggal_penutupan',
+                width: '270px'
+            },
+            {
+                data: 'kuota_wisudawan',
+                name: 'kuota_wisudawan',
+                className: 'text-center',
+                width: '200px'
+            },
+            {
+                data: 'status_badge',
+                name: 'status',
                 orderable: true,
                 searchable: true,
+                className: 'text-center',
                 width: '120px'
             },
             {
@@ -56,20 +125,41 @@ export function initDataTable(config) {
                 orderable: false,
                 searchable: false,
                 className: 'text-center',
-                width: '120px'
+                width: '150px'
             }
         ],
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
         },
         scrollX: true,
+        scrollCollapse: true,
+        autoWidth: false,
         pageLength: 10,
         lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
         order: [[1, 'desc']],
         dom: '<"flex flex-col md:flex-row justify-between items-center mb-4"<"mb-2 md:mb-0"l><"mb-2 md:mb-0"f>>rt<"flex flex-col md:flex-row justify-between items-center mt-4"<"mb-2 md:mb-0"i><"mb-2 md:mb-0"p>>',
         drawCallback: function() {
+            const api = this.api();
             $('.dataTables_wrapper').addClass('w-full');
+            
+            setTimeout(() => {
+                syncColumnWidths(api);
+                setupScrollSync();
+            }, 50);
+        },
+        initComplete: function() {
+            const api = this.api();
+            
+            setTimeout(() => {
+                syncColumnWidths(api);
+                setupScrollSync();
+                
+                setTimeout(() => {
+                    syncColumnWidths(api);
+                }, 200);
+            }, 100);
         }
     });
-}
 
+    return table;
+}

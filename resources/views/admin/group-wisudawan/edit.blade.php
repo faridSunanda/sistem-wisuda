@@ -7,7 +7,7 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
-            <form action="{{ route('admin.download-ppt.update', $user->id) }}" method="POST">
+            <form action="{{ route('admin.group-wisudawan.update', $user->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -131,7 +131,7 @@
                         <i class="fas fa-save"></i>
                         <span>Simpan Perubahan</span>
                     </button>
-                    <a href="{{ route('admin.download-ppt.index') }}"
+                    <a href="{{ route('admin.group-wisudawan.index') }}"
                         class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white border border-[#435ebe] text-[#435ebe] hover:bg-[#435ebe] hover:text-white rounded-lg transition-all">
                         <span>Batal</span>
                     </a>

@@ -8,7 +8,7 @@ use App\Http\Controllers\BerandaController;
 // Admin
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DataWisudawanController;
-use App\Http\Controllers\Admin\DownloadPptController;
+use App\Http\Controllers\Admin\GroupWisudawanController;
 
 use App\Http\Controllers\Admin\Master\DokumenPersyaratanController;
 use App\Http\Controllers\Admin\Master\AlurPendaftaranController;
@@ -196,13 +196,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             Route::get('/{id}', 'show')->name('show');
         });
 
-    Route::controller(DownloadPptController::class)
-        ->prefix('download-ppt')
-        ->name('download-ppt.')
+    Route::controller(GroupWisudawanController::class)
+        ->prefix('group-wisudawan')
+        ->name('group-wisudawan.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/get-data', 'getData')->name('get-data');
-            Route::post('/preview', 'previewPpt')->name('preview');
             Route::post('/download', 'downloadPpt')->name('download');
             Route::post('/pindahkan-ke', 'pindahkanKe')->name('pindahkan-ke');
             Route::get('/{id}/edit', 'edit')->name('edit');

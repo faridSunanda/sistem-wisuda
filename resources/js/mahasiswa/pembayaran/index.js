@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Get data from data attributes
     const paymentData = document.getElementById('payment-data');
     if (!paymentData) return;
 
@@ -7,20 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const checkStatusUrl = paymentData.dataset.checkStatusUrl;
     const csrfToken = paymentData.dataset.csrfToken;
 
-    // DOM elements
     const checkStatusBtn = document.getElementById('check-status-btn');
     const toastContainer = document.getElementById('toast-container');
-    
+    const copyBrivaBtn = document.getElementById('copy-briva-btn');
+    const copySuccess = document.getElementById('copy-success');
     const tutorialTitle = document.getElementById('tutorial-title');
     const tutorialSteps = document.getElementById('tutorial-steps');
     const tutorialNotes = document.getElementById('tutorial-notes');
     const notesList = document.getElementById('notes-list');
 
-    // Copy BRIVA elements
-    const copyBrivaBtn = document.getElementById('copy-briva-btn');
-    const copySuccess = document.getElementById('copy-success');
+    const COMMON_NOTES = [
+        'Periksa nama merchant dan jumlah sebelum konfirmasi.',
+        'Simpan bukti pembayaran / screenshot sampai status di merchant terupdate.',
+        'Nomor BRIVA bersifat unik — masukkan tanpa spasi.',
+        'Jika gagal, cek kembali nomor dan saldo; hubungi bank atau merchant jika perlu.'
+    ];
 
-    // Tutorial data for each payment method
     const tutorialData = {
         'brimo': {
             title: 'BRImo (m-banking BRI)',
@@ -32,12 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Simpan screenshot atau unduh bukti pembayaran.',
                 '<em>Catatan: Beberapa versi BRImo menampilkan menu "Virtual Account" atau "BRIVA" di halaman utama.</em>'
             ],
-            notes: [
-                'Periksa nama merchant dan jumlah sebelum konfirmasi.',
-                'Simpan bukti pembayaran / screenshot sampai status di merchant terupdate.',
-                'Nomor BRIVA bersifat unik — masukkan tanpa spasi.',
-                'Jika gagal, cek kembali nomor dan saldo; hubungi bank atau merchant jika perlu.'
-            ]
+            notes: COMMON_NOTES
         },
         'atm': {
             title: 'ATM BRI',
@@ -47,12 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 `Masukkan nomor BRIVA (<strong class="font-mono bg-yellow-100 px-1 rounded">${brivaNumber}</strong>), tekan Benar.`,
                 'Periksa detail (merchant & jumlah). Lanjutkan dan ambil struk sebagai bukti.'
             ],
-            notes: [
-                'Periksa nama merchant dan jumlah sebelum konfirmasi.',
-                'Simpan bukti pembayaran / screenshot sampai status di merchant terupdate.',
-                'Nomor BRIVA bersifat unik — masukkan tanpa spasi.',
-                'Jika gagal, cek kembali nomor dan saldo; hubungi bank atau merchant jika perlu.'
-            ]
+            notes: COMMON_NOTES
         },
         'ibanking': {
             title: 'Internet Banking BRI',
@@ -62,12 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 `Masukkan kode BRIVA (<strong class="font-mono bg-yellow-100 px-1 rounded">${brivaNumber}</strong>), lalu ikuti instruksi konfirmasi.`,
                 'Download/print bukti pembayaran jika perlu.'
             ],
-            notes: [
-                'Periksa nama merchant dan jumlah sebelum konfirmasi.',
-                'Simpan bukti pembayaran / screenshot sampai status di merchant terupdate.',
-                'Nomor BRIVA bersifat unik — masukkan tanpa spasi.',
-                'Jika gagal, cek kembali nomor dan saldo; hubungi bank atau merchant jika perlu.'
-            ]
+            notes: COMMON_NOTES
         },
         'bank-lain': {
             title: 'm-banking / ATM Bank Lain',
@@ -78,12 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Periksa nama merchant dan jumlah, konfirmasi. Simpan bukti pembayaran.',
                 '<em>Tip: Jika metode pembayaran tidak ada kata "BRIVA", pilih "Virtual Account" atau pilih transfer antar bank lalu masukkan BRIVA sebagai nomor rekening.</em>'
             ],
-            notes: [
-                'Periksa nama merchant dan jumlah sebelum konfirmasi.',
-                'Simpan bukti pembayaran / screenshot sampai status di merchant terupdate.',
-                'Nomor BRIVA bersifat unik — masukkan tanpa spasi.',
-                'Jika gagal, cek kembali nomor dan saldo; hubungi bank atau merchant jika perlu.'
-            ]
+            notes: COMMON_NOTES
         },
         'teller': {
             title: 'Via Teller / Bank (Bayar langsung ke bank)',
@@ -92,16 +73,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 `Berikan kode BRIVA (<strong class="font-mono bg-yellow-100 px-1 rounded">${brivaNumber}</strong>) dan jumlah kepada petugas.`,
                 'Petugas akan memproses dan memberi struk; simpan sebagai bukti.'
             ],
-            notes: [
-                'Periksa nama merchant dan jumlah sebelum konfirmasi.',
-                'Simpan bukti pembayaran / screenshot sampai status di merchant terupdate.',
-                'Nomor BRIVA bersifat unik — masukkan tanpa spasi.',
-                'Jika gagal, cek kembali nomor dan saldo; hubungi bank atau merchant jika perlu.'
-            ]
+            notes: COMMON_NOTES
         }
     };
 
-    // Copy BRIVA number to clipboard
+    const TOAST_CONFIG = {
+        'success': { 
+            bgColor: 'bg-green-50', 
+            borderColor: 'border-green-500', 
+            iconColor: 'text-green-600', 
+            textColor: 'text-green-800',
+            icon: 'fa-check-circle'
+        },
+        'error': { 
+            bgColor: 'bg-red-50', 
+            borderColor: 'border-red-500', 
+            iconColor: 'text-red-600', 
+            textColor: 'text-red-800',
+            icon: 'fa-exclamation-triangle'
+        },
+        'warning': { 
+            bgColor: 'bg-orange-50', 
+            borderColor: 'border-orange-500', 
+            iconColor: 'text-orange-600', 
+            textColor: 'text-orange-800',
+            icon: 'fa-clock'
+        },
+        'info': { 
+            bgColor: 'bg-blue-50', 
+            borderColor: 'border-blue-500', 
+            iconColor: 'text-blue-600', 
+            textColor: 'text-blue-800',
+            icon: 'fa-info-circle'
+        }
+    };
+
+    const STATUS_CONFIG = {
+        'paid': { type: 'success', title: 'Pembayaran Lunas' },
+        'pending': { type: 'warning', title: 'Menunggu Verifikasi' },
+        'unpaid': { type: 'info', title: 'Belum Bayar' },
+        'expired': { type: 'error', title: 'Kedaluwarsa' },
+        'failed': { type: 'error', title: 'Gagal' }
+    };
+
     copyBrivaBtn.addEventListener('click', function() {
         const originalHtml = copyBrivaBtn.innerHTML;
         
@@ -122,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
         navigator.clipboard.writeText(brivaNumber)
             .then(showSuccess)
             .catch(() => {
-                // Fallback for older browsers
                 const textArea = document.createElement('textarea');
                 textArea.value = brivaNumber;
                 textArea.style.position = 'fixed';
@@ -135,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 
-    // Payment method selection
     const metodePembayaran = document.querySelectorAll('.metode-pembayaran');
     
     metodePembayaran.forEach(metode => {
@@ -152,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         tutorialTitle.innerHTML = `<i class="fas fa-info-circle text-blue-600"></i><span>${data.title}</span>`;
 
-        // Render steps
         tutorialSteps.innerHTML = data.steps.map((step, index) => `
             <div class="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
                 <span class="flex-shrink-0 w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm">${index + 1}</span>
@@ -160,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `).join('');
 
-        // Render notes
         if (data.notes?.length > 0) {
             notesList.innerHTML = data.notes.map(note => `<li>${note}</li>`).join('');
             tutorialNotes.classList.remove('hidden');
@@ -169,46 +179,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Toast notification function
     function showToast(type, title, message, paidAt = null) {
-        const toastId = 'toast-' + Date.now();
-        const toastConfig = {
-            'success': { 
-                bgColor: 'bg-green-50', 
-                borderColor: 'border-green-500', 
-                iconColor: 'text-green-600', 
-                textColor: 'text-green-800',
-                icon: 'fa-check-circle'
-            },
-            'error': { 
-                bgColor: 'bg-red-50', 
-                borderColor: 'border-red-500', 
-                iconColor: 'text-red-600', 
-                textColor: 'text-red-800',
-                icon: 'fa-exclamation-triangle'
-            },
-            'warning': { 
-                bgColor: 'bg-orange-50', 
-                borderColor: 'border-orange-500', 
-                iconColor: 'text-orange-600', 
-                textColor: 'text-orange-800',
-                icon: 'fa-clock'
-            },
-            'info': { 
-                bgColor: 'bg-blue-50', 
-                borderColor: 'border-blue-500', 
-                iconColor: 'text-blue-600', 
-                textColor: 'text-blue-800',
-                icon: 'fa-info-circle'
-            }
-        };
-
-        const config = toastConfig[type] || toastConfig['info'];
-        
+        const config = TOAST_CONFIG[type] || TOAST_CONFIG['info'];
         const paidAtHtml = paidAt ? `<p class="text-xs ${config.textColor} mt-1">Dibayar pada: ${new Date(paidAt).toLocaleString('id-ID')}</p>` : '';
         
         const toast = document.createElement('div');
-        toast.id = toastId;
+        toast.id = 'toast-' + Date.now();
         toast.className = `${config.bgColor} border-l-4 ${config.borderColor} rounded-lg shadow-lg p-3 md:p-4 mb-2 w-full transform transition-all duration-300 translate-x-full opacity-0`;
         
         const closeBtn = document.createElement('button');
@@ -235,12 +211,10 @@ document.addEventListener('DOMContentLoaded', function() {
         toast.querySelector('.flex.items-start').appendChild(closeBtn);
         toastContainer.appendChild(toast);
         
-        // Animate in
         setTimeout(() => {
             toast.classList.remove('translate-x-full', 'opacity-0');
         }, 10);
         
-        // Auto remove after 5 seconds
         setTimeout(() => {
             toast.classList.add('translate-x-full', 'opacity-0');
             setTimeout(() => toast.remove(), 300);
@@ -278,19 +252,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function showStatusToast(status, message, paidAt) {
-        const statusConfig = {
-            'paid': { type: 'success', title: 'Pembayaran Lunas', icon: 'fa-check-circle' },
-            'pending': { type: 'warning', title: 'Menunggu Verifikasi', icon: 'fa-clock' },
-            'unpaid': { type: 'info', title: 'Belum Bayar', icon: 'fa-times' },
-            'expired': { type: 'error', title: 'Kedaluwarsa', icon: 'fa-exclamation-triangle' },
-            'failed': { type: 'error', title: 'Gagal', icon: 'fa-times-circle' }
-        };
-
-        const config = statusConfig[status] || statusConfig['unpaid'];
+        const config = STATUS_CONFIG[status] || STATUS_CONFIG['unpaid'];
         showToast(config.type, config.title, message, paidAt);
     }
 
-    // Select first payment method by default
     metodePembayaran[0]?.click();
 });
-

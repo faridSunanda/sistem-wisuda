@@ -129,8 +129,10 @@ class AlurPendaftaranController extends Controller
     public function destroy(string $id)
     {
         try {
-            $alur_pendaftaran = AlurPendaftaran::findOrFail($id);
-            $alur_pendaftaran->delete();
+            // Menggunakan withTrashed() untuk memastikan bisa menghapus data yang sudah di-soft delete
+            // dan forceDelete() untuk benar-benar menghapus dari database
+            $alur_pendaftaran = AlurPendaftaran::withTrashed()->findOrFail($id);
+            $alur_pendaftaran->forceDelete();
 
             return response()->json([
                 'success' => true,

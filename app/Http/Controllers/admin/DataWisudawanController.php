@@ -22,115 +22,40 @@ class DataWisudawanController extends Controller
 
     public function getData(Request $request)
     {
-        $query = DB::table('users')
-            ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
-            ->select(
-                'users.id',
-                'users.name_lengkap as nama',
-                DB::raw('COALESCE(biodatas.nim, "") as nim'),
-                DB::raw('COALESCE(biodatas.tahun_masuk, "") as tahun_masuk'),
-                DB::raw('COALESCE("", "") as jenjang'),
-                DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
-                DB::raw('COALESCE(biodatas.program_studi, "") as prodi')
-            )
-            ->where('users.role', 'mahasiswa');
+        try {
+            $query = $this->buildBaseQuery();
+            $this->applyFilters($query, $request);
 
-        if ($request->filled('fakultas')) {
-            $query->where('biodatas.fakultas', $request->fakultas);
+            return DataTables::of($query)
+                ->addIndexColumn()
+                ->filterColumn('nama', fn($q, $keyword) => $q->whereRaw('users.name_lengkap LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('nim', fn($q, $keyword) => $q->whereRaw('biodatas.nim LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('tahun_masuk', fn($q, $keyword) => $q->whereRaw('biodatas.tahun_masuk LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('fakultas', fn($q, $keyword) => $q->whereRaw('biodatas.fakultas LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('prodi', fn($q, $keyword) => $q->whereRaw('biodatas.program_studi LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('jenjang', fn($q, $keyword) => $q->whereRaw('(' . $this->getJenjangCaseStatement() . ') LIKE ?', ["%{$keyword}%"]))
+                ->addColumn('aksi', fn($row) => $this->getActionButtons($row->id))
+                ->rawColumns(['aksi'])
+                ->make(true);
+        } catch (\Exception $e) {
+            return $this->datatableErrorResponse($request, $e);
         }
-
-        if ($request->filled('prodi')) {
-            $query->where('biodatas.program_studi', $request->prodi);
-        }
-
-        if ($request->filled('tahun_masuk')) {
-            $query->where('biodatas.tahun_masuk', $request->tahun_masuk);
-        }
-
-        return DataTables::of($query)
-            ->addIndexColumn()
-            ->addColumn('aksi', function($row) {
-                $btn = '<div class="flex items-center justify-center gap-2">';
-                $btn .= '<button class="btn-action btn-view" onclick="lihatData(\''.$row->id.'\')" title="Lihat">';
-                $btn .= '<i class="fas fa-eye"></i>';
-                $btn .= '</button>';
-                $btn .= '<button class="btn-action btn-edit" onclick="editData(\''.$row->id.'\')" title="Edit">';
-                $btn .= '<i class="fas fa-pencil-alt"></i>';
-                $btn .= '</button>';
-                $btn .= '<button class="btn-action btn-delete" onclick="hapusData(\''.$row->id.'\', this)" title="Hapus">';
-                $btn .= '<i class="fas fa-trash"></i>';
-                $btn .= '</button>';
-                $btn .= '</div>';
-                return $btn;
-            })
-            ->rawColumns(['aksi'])
-            ->make(true);
     }
 
     public function exportData(Request $request)
     {
-        $query = DB::table('users')
-            ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
-            ->select(
-                'users.name_lengkap as nama',
-                DB::raw('COALESCE(biodatas.nim, "") as nim'),
-                DB::raw('COALESCE(biodatas.tahun_masuk, "") as tahun_masuk'),
-                DB::raw('COALESCE("", "") as jenjang'),
-                DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
-                DB::raw('COALESCE(biodatas.program_studi, "") as prodi')
-            )
-            ->where('users.role', 'mahasiswa');
-
-        if ($request->filled('fakultas')) {
-            $query->where('biodatas.fakultas', $request->fakultas);
-        }
-
-        if ($request->filled('prodi')) {
-            $query->where('biodatas.program_studi', $request->prodi);
-        }
-
-        if ($request->filled('tahun_masuk')) {
-            $query->where('biodatas.tahun_masuk', $request->tahun_masuk);
-        }
-
-        if ($request->filled('jenjang')) {
-            // Filter jenjang jika ada di database nanti
-        }
-
+        $query = $this->buildBaseQuery();
+        $this->applyFilters($query, $request);
+        
         return response()->json($query->get());
     }
 
     public function exportExcel(Request $request)
     {
         try {
-            $query = DB::table('users')
-                ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
-                ->select(
-                    'users.name_lengkap as nama',
-                    DB::raw('COALESCE(biodatas.nim, "") as nim'),
-                    DB::raw('COALESCE(biodatas.tahun_masuk, "") as tahun_masuk'),
-                    DB::raw('COALESCE("", "") as jenjang'),
-                    DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
-                    DB::raw('COALESCE(biodatas.program_studi, "") as prodi')
-                )
-                ->where('users.role', 'mahasiswa');
-
-            if ($request->filled('fakultas')) {
-                $query->where('biodatas.fakultas', $request->fakultas);
-            }
-
-            if ($request->filled('prodi')) {
-                $query->where('biodatas.program_studi', $request->prodi);
-            }
-
-            if ($request->filled('tahun_masuk')) {
-                $query->where('biodatas.tahun_masuk', $request->tahun_masuk);
-            }
-
-            if ($request->filled('jenjang')) {
-                // Filter jenjang jika ada di database nanti
-            }
-
+            $query = $this->buildBaseQuery();
+            $this->applyFilters($query, $request);
+            
             $data = $query->get();
             $fileName = 'Data_Wisudawan_' . date('Y-m-d') . '.xlsx';
 
@@ -143,34 +68,9 @@ class DataWisudawanController extends Controller
     public function exportPdf(Request $request)
     {
         try {
-            $query = DB::table('users')
-                ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
-                ->select(
-                    'users.name_lengkap as nama',
-                    DB::raw('COALESCE(biodatas.nim, "") as nim'),
-                    DB::raw('COALESCE(biodatas.tahun_masuk, "") as tahun_masuk'),
-                    DB::raw('COALESCE("", "") as jenjang'),
-                    DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
-                    DB::raw('COALESCE(biodatas.program_studi, "") as prodi')
-                )
-                ->where('users.role', 'mahasiswa');
-
-            if ($request->filled('fakultas')) {
-                $query->where('biodatas.fakultas', $request->fakultas);
-            }
-
-            if ($request->filled('prodi')) {
-                $query->where('biodatas.program_studi', $request->prodi);
-            }
-
-            if ($request->filled('tahun_masuk')) {
-                $query->where('biodatas.tahun_masuk', $request->tahun_masuk);
-            }
-
-            if ($request->filled('jenjang')) {
-                // Filter jenjang jika ada di database nanti
-            }
-
+            $query = $this->buildBaseQuery();
+            $this->applyFilters($query, $request);
+            
             $data = $query->get();
             $fileName = 'Data_Wisudawan_' . date('Y-m-d') . '.pdf';
 
@@ -200,13 +100,13 @@ class DataWisudawanController extends Controller
 
     public function show($id)
     {
-        $user = User::with('biodata')->where('id', $id)->where('role', 'mahasiswa')->firstOrFail();
+        $user = $this->getUserWithBiodata($id);
         return view('admin.data-wisudawan.detail', compact('user'));
     }
 
     public function edit($id)
     {
-        $user = User::with('biodata')->where('id', $id)->where('role', 'mahasiswa')->firstOrFail();
+        $user = $this->getUserWithBiodata($id);
         return view('admin.data-wisudawan.edit', compact('user'));
     }
 
@@ -214,7 +114,7 @@ class DataWisudawanController extends Controller
     {
         $user = User::where('id', $id)->where('role', 'mahasiswa')->firstOrFail();
 
-        $request->validate([
+        $validated = $request->validate([
             'name_lengkap' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'nim' => 'nullable|string|max:50',
@@ -226,49 +126,143 @@ class DataWisudawanController extends Controller
         DB::beginTransaction();
         try {
             $user->update([
-                'name_lengkap' => $request->name_lengkap,
-                'email' => $request->email,
+                'name_lengkap' => $validated['name_lengkap'],
+                'email' => $validated['email'],
             ]);
 
-            $biodata = Biodata::where('user_id', $id)->first();
-            if ($biodata) {
-                $biodata->update([
-                    'nim' => $request->nim,
-                    'tahun_masuk' => $request->tahun_masuk,
-                    'fakultas' => $request->fakultas,
-                    'program_studi' => $request->program_studi,
-                ]);
-            } else {
-                Biodata::create([
-                    'user_id' => $id,
-                    'nim' => $request->nim,
-                    'tahun_masuk' => $request->tahun_masuk,
-                    'fakultas' => $request->fakultas,
-                    'program_studi' => $request->program_studi,
-                ]);
-            }
+            $this->updateOrCreateBiodata($id, $validated);
 
             DB::commit();
-            return redirect()->route('admin.data-wisudawan.index')->with('success', 'Data wisudawan berhasil diperbarui.');
+            return redirect()->route('admin.data-wisudawan.index')
+                ->with('success', 'Data wisudawan berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data.');
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
         }
     }
 
     public function destroy($id)
     {
-        $user = User::where('id', $id)->where('role', 'mahasiswa')->firstOrFail();
-
-        DB::beginTransaction();
         try {
+            $user = User::where('id', $id)->where('role', 'mahasiswa')->firstOrFail();
+
+            DB::beginTransaction();
             $user->delete();
             DB::commit();
-            return response()->json(['success' => true, 'message' => 'Data wisudawan berhasil dihapus.']);
+
+            return $this->jsonResponse(true, 'Data wisudawan berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan saat menghapus data.'], 500);
+            return $this->jsonResponse(false, 'Terjadi kesalahan saat menghapus data.', 500);
         }
     }
-}
 
+    private function buildBaseQuery()
+    {
+        return DB::table('users')
+            ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
+            ->select(
+                'users.id',
+                'users.name_lengkap as nama',
+                DB::raw('COALESCE(biodatas.nim, "") as nim'),
+                DB::raw('COALESCE(biodatas.tahun_masuk, "") as tahun_masuk'),
+                DB::raw($this->getJenjangCaseStatement() . ' as jenjang'),
+                DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
+                DB::raw('COALESCE(biodatas.program_studi, "") as prodi')
+            )
+            ->where('users.role', 'mahasiswa');
+    }
+
+    private function applyFilters($query, Request $request)
+    {
+        $filters = [
+            'fakultas' => 'biodatas.fakultas',
+            'prodi' => 'biodatas.program_studi',
+            'tahun_masuk' => 'biodatas.tahun_masuk'
+        ];
+
+        foreach ($filters as $key => $column) {
+            if ($request->filled($key)) {
+                $query->where($column, $request->input($key));
+            }
+        }
+
+        if ($request->filled('jenjang')) {
+            $jenjang = $request->input('jenjang');
+            $query->whereRaw($this->getJenjangCaseStatement() . ' = ?', [$jenjang]);
+        }
+    }
+
+    private function getJenjangCaseStatement()
+    {
+        return "CASE 
+            WHEN biodatas.program_studi IS NULL OR biodatas.program_studi = '' THEN 'S1'
+            WHEN LOWER(biodatas.program_studi) LIKE '%s3%' OR LOWER(biodatas.program_studi) LIKE '%doktor%' THEN 'S3'
+            WHEN LOWER(biodatas.program_studi) LIKE '%s2%' OR LOWER(biodatas.program_studi) LIKE '%magister%' THEN 'S2'
+            WHEN LOWER(biodatas.program_studi) LIKE '%s1%' OR LOWER(biodatas.program_studi) LIKE '%sarjana%' THEN 'S1'
+            ELSE 'S1'
+        END";
+    }
+
+    private function getUserWithBiodata($id)
+    {
+        return User::with('biodata')
+            ->where('id', $id)
+            ->where('role', 'mahasiswa')
+            ->firstOrFail();
+    }
+
+    private function updateOrCreateBiodata($userId, array $validated)
+    {
+        $biodata = Biodata::where('user_id', $userId)->first();
+        
+        $biodataData = [
+            'nim' => $validated['nim'] ?? null,
+            'tahun_masuk' => $validated['tahun_masuk'] ?? null,
+            'fakultas' => $validated['fakultas'] ?? null,
+            'program_studi' => $validated['program_studi'] ?? null,
+        ];
+
+        if ($biodata) {
+            $biodata->update($biodataData);
+        } else {
+            Biodata::create(array_merge(['user_id' => $userId], $biodataData));
+        }
+    }
+
+    private function getActionButtons($id)
+    {
+        return '<div class="flex items-center justify-center gap-2">' .
+            '<button class="btn-action btn-view" onclick="lihatData(\'' . $id . '\')" title="Lihat">' .
+            '<i class="fas fa-eye"></i>' .
+            '</button>' .
+            '<button class="btn-action btn-edit" onclick="editData(\'' . $id . '\')" title="Edit">' .
+            '<i class="fas fa-pencil-alt"></i>' .
+            '</button>' .
+            '<button class="btn-action btn-delete" onclick="hapusData(\'' . $id . '\', this)" title="Hapus">' .
+            '<i class="fas fa-trash"></i>' .
+            '</button>' .
+            '</div>';
+    }
+
+    private function jsonResponse(bool $success, string $message, int $status = 200)
+    {
+        return response()->json([
+            'success' => $success,
+            'message' => $message
+        ], $status);
+    }
+
+    private function datatableErrorResponse(Request $request, \Exception $e)
+    {
+        return response()->json([
+            'draw' => intval($request->input('draw', 0)),
+            'recordsTotal' => 0,
+            'recordsFiltered' => 0,
+            'data' => [],
+            'error' => 'Terjadi kesalahan saat memuat data: ' . $e->getMessage()
+        ], 500);
+    }
+}
