@@ -88,12 +88,14 @@ export function initDataTable(config) {
             {
                 data: 'judul',
                 name: 'judul',
-                width: '300px'
+                width: '165px',
+                className: 'text-center',
             },
             {
                 data: 'keterangan',
                 name: 'keterangan',
-                width: '400px'
+                width: '500px',
+                className: 'text-center',
             },
             {
                 data: 'aksi',

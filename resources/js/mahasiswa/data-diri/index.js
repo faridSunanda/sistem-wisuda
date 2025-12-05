@@ -73,7 +73,6 @@
             "flex items-center justify-between p-3 bg-gray-50 rounded-lg";
         dosenItem.innerHTML = `
                 <span class="text-sm text-gray-700">${dosenNama}</span>
-                {{-- Input hidden ini mengirim NAMA, sesuai dengan migrasi Anda --}}
                 <input type="hidden" name="dosen_pembimbing[]" value="${dosenNama}">
                 <button type="button" class="text-red-600 hover:text-red-700 text-sm" onclick="this.parentElement.remove()">
                     Hapus

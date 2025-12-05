@@ -90,7 +90,8 @@ export function initDataTable(config) {
             {
                 data: 'nama_kegiatan',
                 name: 'nama_kegiatan',
-                width: '250px'
+                width: '250px',
+                className: 'text-center',
             },
             {
                 data: 'sesi',
@@ -107,17 +108,20 @@ export function initDataTable(config) {
             {
                 data: 'tanggal_pelaksanaan',
                 name: 'tanggal_pelaksanaan',
-                width: '230px'
+                width: '230px',
+                className: 'text-center',
             },
             {
                 data: 'tempat_pelaksanaan',
                 name: 'tempat_pelaksanaan',
-                width: '250px'
+                width: '250px',
+                className: 'text-center',
             },
             {
                 data: 'keterangan',
                 name: 'keterangan',
-                width: '250px'
+                width: '250px',
+                className: 'text-center',
             },
             {
                 data: 'aksi',

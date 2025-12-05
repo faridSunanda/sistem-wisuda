@@ -134,7 +134,7 @@ export function initDataTable(config) {
             {
                 data: 'fakultas',
                 name: 'fakultas',
-                width: '150px'
+                width: '150px',
             },
             {
                 data: 'prodi',

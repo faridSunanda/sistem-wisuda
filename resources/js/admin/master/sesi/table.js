@@ -90,12 +90,14 @@ export function initDataTable(config) {
             {
                 data: 'name',
                 name: 'name',
-                width: '300px'
+                width: '300px',
+                className: 'text-center',
             },
             {
                 data: 'keterangan',
                 name: 'keterangan',
-                width: '400px'
+                width: '400px',
+                className: 'text-center',
             },
             {
                 data: 'aksi',

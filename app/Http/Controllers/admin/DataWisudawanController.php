@@ -20,7 +20,6 @@ class DataWisudawanController extends Controller
         return view('admin.data-wisudawan.index');
     }
 
-    // Get data for DataTables
     public function getData(Request $request)
     {
         try {
@@ -29,12 +28,12 @@ class DataWisudawanController extends Controller
 
             return DataTables::of($query)
                 ->addIndexColumn()
-                ->filterColumn('nama', fn($q, $keyword) => $q->whereRaw('users.name_lengkap like ?', ["%{$keyword}%"]))
-                ->filterColumn('nim', fn($q, $keyword) => $q->whereRaw('biodatas.nim like ?', ["%{$keyword}%"]))
-                ->filterColumn('tahun_masuk', fn($q, $keyword) => $q->whereRaw('biodatas.tahun_masuk like ?', ["%{$keyword}%"]))
-                ->filterColumn('fakultas', fn($q, $keyword) => $q->whereRaw('biodatas.fakultas like ?', ["%{$keyword}%"]))
-                ->filterColumn('prodi', fn($q, $keyword) => $q->whereRaw('biodatas.program_studi like ?', ["%{$keyword}%"]))
-                ->filterColumn('jenjang', fn($q, $keyword) => $q->whereRaw('1 = 0'))
+                ->filterColumn('nama', fn($q, $keyword) => $q->whereRaw('users.name_lengkap LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('nim', fn($q, $keyword) => $q->whereRaw('biodatas.nim LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('tahun_masuk', fn($q, $keyword) => $q->whereRaw('biodatas.tahun_masuk LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('fakultas', fn($q, $keyword) => $q->whereRaw('biodatas.fakultas LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('prodi', fn($q, $keyword) => $q->whereRaw('biodatas.program_studi LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('jenjang', fn($q, $keyword) => $q->whereRaw('(' . $this->getJenjangCaseStatement() . ') LIKE ?', ["%{$keyword}%"]))
                 ->addColumn('aksi', fn($row) => $this->getActionButtons($row->id))
                 ->rawColumns(['aksi'])
                 ->make(true);
@@ -43,7 +42,6 @@ class DataWisudawanController extends Controller
         }
     }
 
-    // Export data
     public function exportData(Request $request)
     {
         $query = $this->buildBaseQuery();
@@ -52,7 +50,6 @@ class DataWisudawanController extends Controller
         return response()->json($query->get());
     }
 
-    // Export Excel
     public function exportExcel(Request $request)
     {
         try {
@@ -68,7 +65,6 @@ class DataWisudawanController extends Controller
         }
     }
 
-    // Export PDF
     public function exportPdf(Request $request)
     {
         try {
@@ -163,7 +159,6 @@ class DataWisudawanController extends Controller
         }
     }
 
-    // Private helper methods
     private function buildBaseQuery()
     {
         return DB::table('users')
@@ -173,7 +168,7 @@ class DataWisudawanController extends Controller
                 'users.name_lengkap as nama',
                 DB::raw('COALESCE(biodatas.nim, "") as nim'),
                 DB::raw('COALESCE(biodatas.tahun_masuk, "") as tahun_masuk'),
-                DB::raw('COALESCE("", "") as jenjang'),
+                DB::raw($this->getJenjangCaseStatement() . ' as jenjang'),
                 DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
                 DB::raw('COALESCE(biodatas.program_studi, "") as prodi')
             )
@@ -193,6 +188,22 @@ class DataWisudawanController extends Controller
                 $query->where($column, $request->input($key));
             }
         }
+
+        if ($request->filled('jenjang')) {
+            $jenjang = $request->input('jenjang');
+            $query->whereRaw($this->getJenjangCaseStatement() . ' = ?', [$jenjang]);
+        }
+    }
+
+    private function getJenjangCaseStatement()
+    {
+        return "CASE 
+            WHEN biodatas.program_studi IS NULL OR biodatas.program_studi = '' THEN 'S1'
+            WHEN LOWER(biodatas.program_studi) LIKE '%s3%' OR LOWER(biodatas.program_studi) LIKE '%doktor%' THEN 'S3'
+            WHEN LOWER(biodatas.program_studi) LIKE '%s2%' OR LOWER(biodatas.program_studi) LIKE '%magister%' THEN 'S2'
+            WHEN LOWER(biodatas.program_studi) LIKE '%s1%' OR LOWER(biodatas.program_studi) LIKE '%sarjana%' THEN 'S1'
+            ELSE 'S1'
+        END";
     }
 
     private function getUserWithBiodata($id)
@@ -208,10 +219,10 @@ class DataWisudawanController extends Controller
         $biodata = Biodata::where('user_id', $userId)->first();
         
         $biodataData = [
-            'nim' => $validated['nim'],
-            'tahun_masuk' => $validated['tahun_masuk'],
-            'fakultas' => $validated['fakultas'],
-            'program_studi' => $validated['program_studi'],
+            'nim' => $validated['nim'] ?? null,
+            'tahun_masuk' => $validated['tahun_masuk'] ?? null,
+            'fakultas' => $validated['fakultas'] ?? null,
+            'program_studi' => $validated['program_studi'] ?? null,
         ];
 
         if ($biodata) {

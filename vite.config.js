@@ -27,6 +27,7 @@ export default defineConfig({
                 "resources/js/mahasiswa/sertifikat-organisasi/index.js",
                 "resources/js/mahasiswa/sertifikat-pendidikan-karakter/index.js",
                 "resources/js/mahasiswa/sertifikat-penghargaan/index.js",
+                "resources/js/portal/index.js",
             ],
             refresh: true,
         }),

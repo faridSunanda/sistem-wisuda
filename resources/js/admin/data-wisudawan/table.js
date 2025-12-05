@@ -96,7 +96,8 @@ export function initDataTable(config) {
             {
                 data: 'nama',
                 name: 'nama',
-                width: '300px'
+                width: '300px',
+                className: 'text-center',
             },
             {
                 data: 'nim',
@@ -114,17 +115,19 @@ export function initDataTable(config) {
                 data: 'jenjang',
                 name: 'jenjang',
                 className: 'text-center',
-                width: '150px'
+                width: '130px',
             },
             {
                 data: 'fakultas',
                 name: 'fakultas',
-                width: '200px'
+                width: '200px',
+                className: 'text-center',
             },
             {
                 data: 'prodi',
                 name: 'prodi',
-                width: '200px'
+                width: '230px',
+                className: 'text-center',
             },
             {
                 data: 'aksi',

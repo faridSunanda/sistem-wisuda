@@ -1,14 +1,56 @@
+/* ============================================
+   Animations
+   ============================================ */
 @keyframes bounceSmooth {
-    0%,
-    100% {
+    0%, 100% {
         transform: translateY(0);
     }
-
     50% {
         transform: translateY(-5px);
     }
 }
 
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes growBar {
+    from {
+        width: 0;
+    }
+    to {
+        width: calc(1165 / 1300 * 100%);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes shimmerVertical {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
 .animate-bounce-smooth {
     animation: bounceSmooth 1.8s ease-in-out infinite;
 }
@@ -23,16 +65,9 @@
     transition: opacity 0.5s ease-in;
 }
 
-@keyframes growBar {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: calc(1165 / 1300 * 100%);
-    }
-}
-
+/* ============================================
+   Progress Bar
+   ============================================ */
 .progress-bar {
     animation: growBar 1.2s ease-out forwards;
     position: relative;
@@ -50,27 +85,31 @@
     animation: shimmer 2s infinite;
 }
 
-@keyframes shimmer {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
+/* ============================================
+   Alur Pendaftaran Styles
+   ============================================ */
+.alur-wrapper {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding: 2rem 0;
+    position: relative;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+
+.alur-container {
+    display: flex;
+    align-items: flex-start;
+    min-width: max-content;
+    padding: 0 2rem;
+    position: relative;
 }
 
 .alur-step {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
     animation: fadeInUp 0.6s ease-out forwards;
     opacity: 0;
 }
@@ -86,64 +125,380 @@
 .alur-step:nth-child(9) { animation-delay: 0.9s; }
 .alur-step:nth-child(10) { animation-delay: 1s; }
 
-.alur-container {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
-    align-items: stretch;
-}
-
-.alur-step {
-    display: flex;
+.alur-card {
+    background: white;
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
+    width: 420px;
+    min-height: 280px;
     height: 100%;
-    min-height: 0;
-}
-
-.alur-step > div {
-    width: 100%;
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    position: relative;
+    z-index: 10;
 }
 
+.alur-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: #3b82f6;
+}
+
+.alur-badge {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 5px solid white;
+    z-index: 20;
+    transition: all 0.3s ease;
+}
+
+.alur-card:hover .alur-badge {
+    transform: translateX(-50%) scale(1.1);
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.2);
+}
+
+.alur-number {
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.alur-content {
+    margin-top: 2rem;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.alur-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1.25rem;
+    transition: color 0.3s ease;
+}
+
+.alur-card:hover .alur-title {
+    color: #3b82f6;
+}
+
+.alur-description {
+    font-size: 1.125rem;
+    color: #6b7280;
+    line-height: 1.7;
+    flex: 1;
+}
+
+.alur-connector {
+    display: flex;
+    align-items: center;
+    margin: 0 1rem;
+    position: relative;
+    z-index: 5;
+    flex-shrink: 0;
+}
+
+.alur-line {
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    border-radius: 2px 0 0 2px;
+    position: relative;
+}
+
+.alur-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    animation: shimmer 2s infinite;
+}
+
+.alur-arrow {
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 20px;
+    background: #3b82f6;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
 @media (max-width: 1024px) {
     .alur-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .alur-card {
+        width: 360px;
+        padding: 2.25rem;
+        min-height: 260px;
+    }
+
+    .alur-badge {
+        width: 60px;
+        height: 60px;
+        top: -26px;
+    }
+
+    .alur-number {
+        font-size: 1.625rem;
+    }
+
+    .alur-title {
+        font-size: 1.375rem;
+    }
+
+    .alur-description {
+        font-size: 1.0625rem;
+    }
+
+    .alur-connector {
+        margin: 0 0.75rem;
+    }
+
+    .alur-line {
+        width: 90px;
+    }
+}
+
+@media (max-width: 768px) {
+    .alur-wrapper {
+        padding: 1.5rem 0;
+        overflow-x: auto;
+        overflow-y: visible;
+    }
+
+    .alur-container {
+        padding: 0 1rem;
+        min-width: max-content;
+    }
+
+    .alur-card {
+        width: 280px;
+        padding: 1.75rem;
+        min-height: 240px;
+    }
+
+    .alur-badge {
+        width: 50px;
+        height: 50px;
+        top: -20px;
+    }
+
+    .alur-number {
+        font-size: 1.375rem;
+    }
+
+    .alur-title {
+        font-size: 1.125rem;
+        margin-bottom: 0.875rem;
+    }
+
+    .alur-description {
+        font-size: 0.9375rem;
+    }
+
+    .alur-connector {
+        margin: 0 0.5rem;
+    }
+
+    .alur-line {
+        width: 50px;
+        height: 3px;
+    }
+
+    .alur-arrow {
+        right: -14px;
+        width: 14px;
+        height: 18px;
     }
 }
 
 @media (max-width: 640px) {
+    .alur-wrapper {
+        padding: 2rem 0;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        max-height: 70vh;
+        height: 70vh;
+        position: relative;
+    }
+
     .alur-container {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 1.5rem;
+        padding-bottom: calc(70vh - 2rem);
+        min-width: auto;
+        width: 100%;
+        gap: 0;
+        transition: transform 0.1s linear;
+        will-change: transform;
+    }
+
+    .alur-step {
+        width: 100%;
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .alur-step:last-child {
+        margin-bottom: 2.5rem;
+    }
+
+    .alur-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 2rem 1.5rem;
+        margin: 0 auto;
+        min-height: auto;
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .alur-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .alur-badge {
+        width: 50px;
+        height: 50px;
+        top: -22px;
+        border: 4px solid white;
+    }
+
+    .alur-number {
+        font-size: 1.375rem;
+    }
+
+    .alur-content {
+        margin-top: 1.5rem;
+    }
+    
+    .alur-title {
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+    }
+
+    .alur-description {
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+
+    .alur-connector {
+        margin: 0;
+        width: 100%;
+        height: 40px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .alur-line {
+        width: 3px;
+        height: 40px;
+        background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 100%);
+        border-radius: 2px;
+        position: relative;
+    }
+    
+    .alur-line::before {
+        background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+        animation: shimmerVertical 2s infinite;
+    }
+
+    .alur-arrow {
+        position: absolute;
+        bottom: -12px;
+        right: auto;
+        top: auto;
+        transform: translateX(-50%) rotate(90deg);
+        left: 50%;
+        width: 12px;
+        height: 16px;
     }
 }
 
-@media (min-width: 1024px) {
-    .alur-step:nth-child(6) {
-        grid-column: 1;
-        grid-row: 2;
+@media (max-width: 480px) {
+    .alur-wrapper {
+        padding: 1.5rem 0;
+    }
+
+    .alur-container {
+        padding: 0 1rem;
+    }
+
+    .alur-step {
+        margin-bottom: 2rem;
+    }
+
+    .alur-card {
+        padding: 1.75rem 1.25rem;
+        border-radius: 1rem;
+    }
+
+    .alur-badge {
+        width: 46px;
+        height: 46px;
+        top: -20px;
+        border: 3px solid white;
     }
     
-    .alur-step:nth-child(7) {
-        grid-column: 2;
-        grid-row: 2;
+    .alur-number {
+        font-size: 1.25rem;
     }
-    
-    .alur-step:nth-child(8) {
-        grid-column: 3;
-        grid-row: 2;
+
+    .alur-content {
+        margin-top: 1.25rem;
     }
-    
-    .alur-step:nth-child(9) {
-        grid-column: 4;
-        grid-row: 2;
+
+    .alur-title {
+        font-size: 1rem;
+        margin-bottom: 0.875rem;
     }
-    
-    .alur-step:nth-child(10) {
-        grid-column: 5;
-        grid-row: 2;
+
+    .alur-description {
+        font-size: 0.8125rem;
+        line-height: 1.5;
+    }
+
+    .alur-connector {
+        height: 36px;
+    }
+
+    .alur-line {
+        height: 36px;
+    }
+
+    .alur-arrow {
+        bottom: -10px;
+        width: 10px;
+        height: 14px;
     }
 }

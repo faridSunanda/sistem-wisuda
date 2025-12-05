@@ -2,13 +2,11 @@
 
 @section('content')
 <div class="space-y-4 md:space-y-6 pb-10">
-    <!-- Header -->
     <div class="mb-6">
         <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Pembayaran Wisuda</h1>
         <p class="text-sm md:text-base text-gray-600 mt-2">Lakukan pembayaran untuk melanjutkan proses pendaftaran wisuda</p>
     </div>
 
-    <!-- Info Box -->
     <div class="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-lg p-4 md:p-5 shadow-sm">
         <div class="flex items-start">
             <div class="flex-shrink-0">
@@ -21,15 +19,13 @@
                 <p class="text-sm text-orange-800">Lakukan pembayaran sebesar <strong class="text-lg">Rp{{ number_format($tagihan, 0, ',', '.') }}</strong> untuk melanjutkan tahap pendaftaran wisuda.</p>
             </div>
         </div>
-                    </div>
-                    
-    <!-- Payment Summary Card -->
+    </div>
+
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-4 md:px-6 py-4">
             <h2 class="text-lg md:text-xl font-semibold text-white">Ringkasan Pembayaran</h2>
-                    </div>
-                    
-        <!-- Data attributes for JavaScript -->
+        </div>
+
         <div id="payment-data" 
              data-briva-number="{{ $brivaNumber }}"
              data-check-status-url="{{ route('mahasiswa.pembayaran.check-status') }}"
@@ -65,18 +61,16 @@
                     </button>
                 </div>
             </div>
-                        </div>
-                    </div>
-                    
-    <!-- Tutorial Pembayaran BRIVA -->
+        </div>
+    </div>
+
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-4 md:px-6 py-4">
             <h2 class="text-lg md:text-xl font-semibold text-white">Tutorial Pembayaran BRIVA</h2>
             <p class="text-sm text-indigo-100 mt-1">Pilih metode pembayaran, lalu ikuti langkah-langkahnya. Simpan bukti/struk setelah bayar.</p>
-                        </div>
+        </div>
         
         <div class="p-4 md:p-6">
-            <!-- Metode Pembayaran -->
             <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-6">
                 <div class="metode-pembayaran border-2 border-gray-300 rounded-lg p-3 md:p-4 text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group" data-method="brimo">
                     <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 group-hover:bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors">
@@ -84,23 +78,23 @@
                     </div>
                     <p class="text-xs md:text-sm font-medium text-gray-700 group-hover:text-blue-700">BRImo</p>
                     <p class="text-xs text-gray-500 mt-1">m-banking BRI</p>
-                    </div>
-                    
+                </div>
+                
                 <div class="metode-pembayaran border-2 border-gray-300 rounded-lg p-3 md:p-4 text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group" data-method="atm">
                     <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 group-hover:bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors">
                         <i class="fas fa-credit-card text-blue-600 text-base md:text-lg"></i>
-                        </div>
-                    <p class="text-xs md:text-sm font-medium text-gray-700 group-hover:text-blue-700">ATM BRI</p>
                     </div>
-                    
+                    <p class="text-xs md:text-sm font-medium text-gray-700 group-hover:text-blue-700">ATM BRI</p>
+                </div>
+                
                 <div class="metode-pembayaran border-2 border-gray-300 rounded-lg p-3 md:p-4 text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group" data-method="ibanking">
                     <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 group-hover:bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors">
                         <i class="fas fa-globe text-blue-600 text-base md:text-lg"></i>
-                        </div>
+                    </div>
                     <p class="text-xs md:text-sm font-medium text-gray-700 group-hover:text-blue-700">Internet Banking</p>
                     <p class="text-xs text-gray-500 mt-1">BRI</p>
-                    </div>
-                    
+                </div>
+                
                 <div class="metode-pembayaran border-2 border-gray-300 rounded-lg p-3 md:p-4 text-center hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer group" data-method="bank-lain">
                     <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 group-hover:bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-2 transition-colors">
                         <i class="fas fa-university text-blue-600 text-base md:text-lg"></i>
@@ -118,7 +112,6 @@
                 </div>
             </div>
             
-            <!-- Deskripsi Tutorial -->
             <div id="tutorial-content" class="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-lg p-4 md:p-6">
                 <h3 id="tutorial-title" class="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <i class="fas fa-info-circle text-blue-600"></i>
@@ -131,18 +124,16 @@
                     <div class="flex items-start">
                         <i class="fas fa-exclamation-triangle text-yellow-600 mr-2 mt-0.5"></i>
                         <div class="flex-1">
-                        <h4 class="font-semibold text-yellow-800 mb-2">Catatan Penting:</h4>
-                        <ul id="notes-list" class="list-disc list-inside text-sm text-yellow-700 space-y-1">
-                        </ul>
+                            <h4 class="font-semibold text-yellow-800 mb-2">Catatan Penting:</h4>
+                            <ul id="notes-list" class="list-disc list-inside text-sm text-yellow-700 space-y-1"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
 
-<!-- Toast Notification Container -->
 <div id="toast-container" class="fixed top-4 right-2 md:right-4 z-50 space-y-2 max-w-sm w-full md:max-w-md"></div>
 @endsection
 

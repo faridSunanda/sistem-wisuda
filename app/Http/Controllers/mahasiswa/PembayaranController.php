@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Log;
 
 class PembayaranController extends Controller
 {
+    private const DEFAULT_AMOUNT = 1800000;
+    private const INSTITUTION_CODE = '87654';
+    
     private $siakuBaseUrl;
     private $siakuToken;
 
     public function __construct()
     {
-        // Konfigurasi SIAKU API - sesuaikan dengan environment Anda
         $this->siakuBaseUrl = config('services.siaku.base_url');
         $this->siakuToken = config('services.siaku.token');
     }
@@ -23,54 +25,40 @@ class PembayaranController extends Controller
     public function index()
     {
         $mahasiswa = Auth::user();
-        $tagihan = null;
-        $brivaNumber = null;
-        $error = null;
-
+        
         try {
-            // Get data tagihan dari SIAKU API
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->siakuToken,
-                'Accept' => 'application/json',
-            ])->get($this->siakuBaseUrl . '/api/tagihan-wisuda', [
-                'nim' => $mahasiswa->nim,
-            ]);
-
+            $response = $this->fetchPaymentData($mahasiswa->nim);
+            
             if ($response->successful()) {
                 $data = $response->json();
-                $tagihan = $data['data']['amount'] ?? 1800000; // Default fallback
+                $tagihan = $data['data']['amount'] ?? self::DEFAULT_AMOUNT;
                 $brivaNumber = $data['data']['briva_number'] ?? $this->generateBrivaNumber($mahasiswa->nim);
                 
-                // Simpan ke session atau database jika perlu
-                session(['briva_number' => $brivaNumber]);
-                session(['tagihan_amount' => $tagihan]);
+                session([
+                    'briva_number' => $brivaNumber,
+                    'tagihan_amount' => $tagihan
+                ]);
             } else {
-                $error = 'Gagal mengambil data tagihan dari sistem.';
-                // Fallback values
-                $tagihan = 1800000;
+                $tagihan = self::DEFAULT_AMOUNT;
                 $brivaNumber = $this->generateBrivaNumber($mahasiswa->nim);
             }
         } catch (\Exception $e) {
             Log::error('Error fetching payment data: ' . $e->getMessage());
-            $error = 'Terjadi kesalahan saat mengambil data pembayaran.';
-            // Fallback values
-            $tagihan = 1800000;
+            $tagihan = self::DEFAULT_AMOUNT;
             $brivaNumber = $this->generateBrivaNumber($mahasiswa->nim);
         }
 
-        return view('mahasiswa.pembayaran.index', compact('tagihan', 'brivaNumber', 'error'));
+        return view('mahasiswa.pembayaran.index', compact('tagihan', 'brivaNumber'));
     }
 
     public function checkStatus(Request $request)
     {
-        $mahasiswa = Auth::user();
-
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->siakuToken,
                 'Accept' => 'application/json',
             ])->get($this->siakuBaseUrl . '/api/status-pembayaran', [
-                'nim' => $mahasiswa->nim,
+                'nim' => Auth::user()->nim,
                 'briva_number' => session('briva_number')
             ]);
 
@@ -78,16 +66,16 @@ class PembayaranController extends Controller
                 $data = $response->json();
                 return response()->json([
                     'success' => true,
-                    'status' => $data['data']['status'],
+                    'status' => $data['data']['status'] ?? 'unpaid',
                     'paid_at' => $data['data']['paid_at'] ?? null,
-                    'message' => $this->getStatusMessage($data['data']['status'])
+                    'message' => $this->getStatusMessage($data['data']['status'] ?? 'unpaid')
                 ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal memeriksa status pembayaran'
-                ], 500);
             }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memeriksa status pembayaran'
+            ], 500);
         } catch (\Exception $e) {
             Log::error('Error checking payment status: ' . $e->getMessage());
             return response()->json([
@@ -97,11 +85,19 @@ class PembayaranController extends Controller
         }
     }
 
+    private function fetchPaymentData($nim)
+    {
+        return Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->siakuToken,
+            'Accept' => 'application/json',
+        ])->get($this->siakuBaseUrl . '/api/tagihan-wisuda', [
+            'nim' => $nim,
+        ]);
+    }
+
     private function generateBrivaNumber($nim)
     {
-        // Generate BRIVA number dari NIM + kode institusi
-        $institutionCode = '87654'; // Kode institusi UNWAHAS
-        return $institutionCode . str_pad($nim, 13, '0', STR_PAD_LEFT);
+        return self::INSTITUTION_CODE . str_pad($nim, 13, '0', STR_PAD_LEFT);
     }
 
     private function getStatusMessage($status)

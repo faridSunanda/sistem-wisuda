@@ -9,13 +9,13 @@
 @endpush
 
 @section('content')
-<div class="max-w-4xl mx-auto pb-10"> 
-
+<div class="max-w-4xl mx-auto pb-10">
     @if (session('success'))
         <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
             <p>{{ session('success') }}</p>
         </div>
     @endif
+
     @if (session('error'))
         <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded" role="alert">
             <p>{{ session('error') }}</p>
@@ -49,7 +49,7 @@
             </div>
         </div>
     @endif
-    
+
     <form action="{{ route('mahasiswa.biodata.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
@@ -59,11 +59,14 @@
                 <div class="flex-shrink-0 mx-auto sm:mx-0">
                     <div class="w-24 h-24 sm:w-32 sm:h-32 rounded-lg bg-gray-100 border-2 border-gray-300 flex items-center justify-center overflow-hidden">
                         <img id="preview-foto" 
-                             src="{{ $biodata && $biodata->foto_profile ? asset('storage/' . $biodata->foto_profile) : '' }}" 
+                             src="{{ $biodata?->foto_profile ? asset('storage/' . $biodata->foto_profile) : '' }}" 
                              alt="Foto Profil" 
-                             class="w-full h-full object-cover {{ !($biodata && $biodata->foto_profile) ? 'hidden' : '' }}">
-                        
-                        <svg id="placeholder-icon" class="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 {{ ($biodata && $biodata->foto_profile) ? 'hidden' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             class="w-full h-full object-cover {{ !$biodata?->foto_profile ? 'hidden' : '' }}">
+                        <svg id="placeholder-icon" 
+                             class="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 {{ $biodata?->foto_profile ? 'hidden' : '' }}" 
+                             fill="none" 
+                             stroke="currentColor" 
+                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </div>
@@ -84,12 +87,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                        
                         <input type="text" name="name_lengkap" class="input-field" value="{{ old('name_lengkap', Auth::user()->name_lengkap) }}">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        
                         <input type="email" name="email" class="input-field" value="{{ old('email', Auth::user()->email) }}">
                     </div>
                     <div>
@@ -160,48 +161,33 @@
             </div>
         </div>
 
-
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
             <h2 class="text-lg md:text-xl font-semibold text-gray-900 mb-4 md:mb-6">Detail Skripsi/TA/Tesis</h2>
             <div class="space-y-4 md:space-y-6">
-                
-                
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Dosen Pembimbing</label>
                     <div class="space-y-3">
                         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
-                            
                             <select id="dosen-select" class="input-field flex-1">
                                 <option value="">Pilih Dosen Pembimbing</option>
                                 <option value="1">Dr. Ahmad, M.Kom</option>
                                 <option value="2">Dr. Siti, M.T.</option>
                                 <option value="3">Budi Santoso, M.Kom</option>
                                 <option value="4">Rina Wijaya, M.Kom</option>
-                                
                             </select>
                             <button type="button" id="tambah-dosen" class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                                 Tambah
                             </button>
                         </div>
-                        
                         <div id="dosen-list" class="space-y-2">
                             @php
-                                
-                                $listDosen = old('dosen_pembimbing');
-
-                                if (empty($listDosen) && $biodata && $biodata->dosenPembimbings) {
-                                    
-                                    $listDosen = $biodata->dosenPembimbings->pluck('nama')->toArray();
-                                }
+                                $listDosen = old('dosen_pembimbing', $biodata?->dosenPembimbings?->pluck('nama')->toArray() ?? []);
                             @endphp
-                            
-                            
                             @if (!empty($listDosen) && is_array($listDosen))
                                 @foreach ($listDosen as $namaDosen)
-                                    @if (!empty($namaDosen)) 
+                                    @if (!empty($namaDosen))
                                         <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                             <span class="text-sm text-gray-700">{{ $namaDosen }}</span>
-                                            
                                             <input type="hidden" name="dosen_pembimbing[]" value="{{ $namaDosen }}">
                                             <button type="button" class="text-red-600 hover:text-red-700 text-sm" onclick="this.parentElement.remove()">
                                                 Hapus
@@ -221,14 +207,12 @@
             </div>
         </div>
 
-        
         <div class="flex justify-end pt-4">
-            
             <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-[#435ebe] text-white rounded-lg hover:opacity-90 transition-colors font-medium">
                 Simpan Semua Perubahan
             </button>
         </div>
-    </form> 
+    </form>
 </div>
 
 @push('scripts')

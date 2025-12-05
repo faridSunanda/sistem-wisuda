@@ -90,12 +90,14 @@ export function initDataTable(config) {
             {
                 data: 'nama_dokumen',
                 name: 'nama_dokumen',
-                width: '250px'
+                width: '250px',
+                className: 'text-center',
             },
             {
                 data: 'keterangan',
                 name: 'keterangan',
-                width: '350px'
+                width: '350px',
+                className: 'text-center',
             },
             {
                 data: 'berkas_link',
