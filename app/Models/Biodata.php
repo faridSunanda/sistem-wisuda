@@ -35,7 +35,7 @@ class Biodata extends Model
         'is_verified',
     ];
 
-     protected $casts = [
+    protected $casts = [
         'tanggal_lahir' => 'date',
     ];
 
@@ -44,9 +44,13 @@ class Biodata extends Model
         return $this->belongsTo(User::class);
     }
 
-public function dosenPembimbings()
+    public function wisuda()
     {
-        // Satu Biodata 'hasMany' (memiliki banyak) DosenPembimbing
+        return $this->belongsTo(Wisuda::class);
+    }
+
+    public function dosenPembimbings()
+    {
         return $this->hasMany(DosenPembimbing::class, 'biodata_id');
     }
 

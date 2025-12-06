@@ -13,3 +13,4 @@ class Wisuda extends Model
     protected $table = 'wisudas';
     protected $guarded = ['id'];
 }
+
