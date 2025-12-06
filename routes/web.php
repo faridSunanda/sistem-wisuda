@@ -228,27 +228,25 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
     });
 
     Route::prefix('sertifikat')->name('sertifikat.')->group(function () {
-        Route::get('/kompetensi', [SertifikatKompetensiController::class, 'index'])->name('kompetensi');
-        Route::post('/kompetensi', [SertifikatKompetensiController::class, 'store'])->name('kompetensi.store');
-        Route::get('/bahasa-internasional', [SertifikatBahasaInternasionalController::class, 'index'])->name('bahasa-internasional');
-        Route::post('/bahasa-internasional', [SertifikatBahasaInternasionalController::class, 'store'])->name('bahasa-internasional.store');
-        Route::get('/magang', [SertifikatMagangController::class, 'index'])->name('magang');
-        Route::post('/magang', [SertifikatMagangController::class, 'store'])->name('magang.store');
-        Route::get('/pendidikan-karakter', function () {
-            return view('mahasiswa.sertifikat.sertifikat-pendidikan-karakter.index');
-        })->name('pendidikan-karakter');
+        
+        $sertifikatTypes = [
+            'kompetensi'          => 'kompetensi',
+            'bahasa-internasional'=> 'bahasa',
+            'magang'              => 'magang',
+            'pendidikan-karakter' => 'karakter',
+            'penghargaan'         => 'penghargaan',
+            'organisasi'          => 'organisasi',
+        ];
 
-        // Sertifikat Pendidikan Karakter Routes
-        Route::get('/pendidikan-karakter', [SertifikatPendidikanKarakterController::class, 'index'])->name('pendidikan-karakter');
-        Route::post('/pendidikan-karakter', [SertifikatPendidikanKarakterController::class, 'store'])->name('pendidikan-karakter.store');
-
-        // Sertifikat Penghargaan
-        Route::get('/penghargaan', [SertifikatPenghargaanController::class, 'index'])->name('penghargaan');
-        Route::post('/penghargaan', [SertifikatPenghargaanController::class, 'store'])->name('penghargaan.store');
-
-        // Sertifikat Organisasi
-        Route::get('/organisasi', [SertifikatOrganisasiController::class, 'index'])->name('organisasi');
-        Route::post('/organisasi', [SertifikatOrganisasiController::class, 'store'])->name('organisasi.store');
+        foreach ($sertifikatTypes as $url => $dbJenis) {
+            Route::get("/$url", [App\Http\Controllers\Mahasiswa\SertifikatController::class, 'index'])
+                ->defaults('jenis', $dbJenis)
+                ->name($url);
+                
+            Route::post("/$url", [App\Http\Controllers\Mahasiswa\SertifikatController::class, 'store'])
+                ->defaults('jenis', $dbJenis)
+                ->name("$url.store");
+        }
     });
 
     Route::get('/download-formulir', function () {
@@ -262,4 +260,24 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
         Route::post('/verify', [PembayaranController::class, 'verifyPayment'])->name('verify');
     });
 
+});
+
+//
+//          KEUANGAN ROUTES
+//
+Route::prefix('keuangan')->name('keuangan.')->middleware(['auth', 'role:keuangan'])->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('keuangan.dashboard');
+    });
+    Route::get('/dashboard', [App\Http\Controllers\Keuangan\DashboardController::class, 'index'])->name('dashboard');
+});
+
+//
+//          AKADEMIK ROUTES
+//
+Route::prefix('akademik')->name('akademik.')->middleware(['auth', 'role:akademik'])->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('akademik.dashboard');
+    });
+    Route::get('/dashboard', [App\Http\Controllers\Akademik\DashboardController::class, 'index'])->name('dashboard');
 });

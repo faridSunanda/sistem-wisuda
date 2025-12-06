@@ -16,6 +16,10 @@ class AuthController extends Controller
                 return redirect()->route('admin.dashboard');
             } elseif (Auth::user()->role === 'mahasiswa') {
                 return redirect()->route('mahasiswa.dashboard');
+            } elseif (Auth::user()->role === 'keuangan') {
+                return redirect()->route('keuangan.dashboard');
+            } elseif (Auth::user()->role === 'akademik') {
+                return redirect()->route('akademik.dashboard');
             }
         }
         return view('auth.login');
@@ -37,6 +41,12 @@ class AuthController extends Controller
             }
             if ($user->role === 'mahasiswa') {
                 return redirect()->intended(route('mahasiswa.dashboard'));
+            }
+            if ($user->role === 'keuangan') {
+                return redirect()->intended(route('keuangan.dashboard'));
+            }
+            if ($user->role === 'akademik') {
+                return redirect()->intended(route('akademik.dashboard'));
             }
             return redirect('/');
         }

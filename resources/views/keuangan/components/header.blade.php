@@ -14,7 +14,7 @@
     <div x-data="{ open: false }" class="relative">
         <button @click="open = !open"
             class="flex items-center gap-3 rounded-full p-1 pl-3 pr-2 hover:bg-slate-100 transition-colors duration-300">
-            <span class="font-semibold text-slate-700 hidden sm:inline">{{ Auth::user()->name ?? 'Admin' }}</span>
+            <span class="font-semibold text-slate-700 hidden sm:inline">{{ Auth::user()->name_lengkap ?? 'Admin' }}</span>
             <img src="https://sicantik.unwahas.ac.id/assets/images/Unwahas.png" alt="User Avatar"
                 class="w-8 h-8 rounded-full object-cover" />
         </button>
@@ -38,7 +38,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-semibold text-slate-800 truncate">{{ Auth::user()->name_lengkap }}</p>
-                            <p class="text-xs text-slate-500 font-medium">{{ ucfirst(Auth::user()->role ?? 'Admin') }}</p>
+                            <p class="text-xs text-slate-500 font-medium">{{ ucfirst(Auth::user()->role ?? 'Keuangan') }}</p>
                         </div>
                     </div>
                 </div>

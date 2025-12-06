@@ -27,7 +27,6 @@ class User extends Authenticatable
         'password',
         'role',
         'sso_id',
-        'is_admin'
     ];
 
     /**

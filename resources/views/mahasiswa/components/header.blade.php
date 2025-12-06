@@ -32,9 +32,16 @@
             style="display: none;">
 
             @auth
-                <div class="px-4 py-2 border-b border-slate-100">
-                    <p class="font-semibold text-slate-800">{{ Auth::user()->name }}</p>
-                    <p class="text-xs text-slate-500">{{ ucfirst(Auth::user()->role ?? 'Admin') }}</p>
+                <div class="px-4 py-3 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-[#435ebe]/10 flex items-center justify-center text-[#435ebe]">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-semibold text-slate-800 truncate">{{ Auth::user()->name_lengkap }}</p>
+                            <p class="text-xs text-slate-500 font-medium">{{ ucfirst(Auth::user()->role ?? 'Mahasiswa') }}</p>
+                        </div>
+                    </div>
                 </div>
             @endauth
 

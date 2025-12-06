@@ -16,10 +16,9 @@ class Biodata extends Model
 
     protected $fillable = [
         'user_id',
+        'wisuda_id',
         'nim',
         'nik',
-        'nirm',
-        'nirl',
         'foto_profile',
         'tempat_lahir',
         'tanggal_lahir',
@@ -53,31 +52,31 @@ public function dosenPembimbings()
 
     public function sertifikatKompetensi()
     {
-        return $this->hasMany(SertifikatKompetensi::class);
+        return $this->hasMany(Sertifikat::class)->where('jenis', 'kompetensi');
     }
 
     public function sertifikatBahasaInternasional()
     {
-        return $this->hasMany(SertifikatBahasaInternasional::class);
+        return $this->hasMany(Sertifikat::class)->where('jenis', 'bahasa');
     }
 
     public function sertifikatMagang()
     {
-        return $this->hasMany(SertifikatMagang::class);
+        return $this->hasMany(Sertifikat::class)->where('jenis', 'magang');
     }
 
     public function sertifikatPendidikanKarakter()
     {
-        return $this->hasMany(SertifikatPendidikanKarakter::class);
+        return $this->hasMany(Sertifikat::class)->where('jenis', 'karakter');
     }
 
     public function sertifikatOrganisasi()
     {
-        return $this->hasMany(SertifikatOrganisasi::class);
+        return $this->hasMany(Sertifikat::class)->where('jenis', 'organisasi');
     }
 
     public function sertifikatPenghargaan()
     {
-        return $this->hasMany(SertifikatPenghargaan::class);
+        return $this->hasMany(Sertifikat::class)->where('jenis', 'penghargaan');
     }
 }

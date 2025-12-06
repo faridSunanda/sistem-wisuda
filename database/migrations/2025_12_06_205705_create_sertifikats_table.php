@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sertifikat_pendidikan_karakters', function (Blueprint $table) {
+        Schema::create('sertifikats', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('biodata_id')->constrained('biodatas')->cascadeOnDelete();
+            $table->string('jenis');
             $table->string('nama_sertifikat');
             $table->string('penerbit');
-            $table->date('tanggal_terbit');
-            $table->timestamps();
+            $table->date('tanggal_mulai')->nullable();
+            $table->date('tanggal_selesai')->nullable();
+            $table->date('tanggal_terbit')->nullable();
+            $table->string('berkas');
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sertifikat_pendidikan_karakters');
+        Schema::dropIfExists('sertifikats');
     }
 };

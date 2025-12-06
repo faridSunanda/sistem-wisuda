@@ -17,8 +17,6 @@ return new class extends Migration
             $table->foreignUuid('wisuda_id')->constrained('wisudas')->cascadeOnDelete();
             $table->string('nik')->nullable();
             $table->string('nim')->nullable();
-            $table->string('nirm')->nullable();
-            $table->string('nirl')->nullable();
             $table->string('foto_profile')->nullable();
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
@@ -32,7 +30,8 @@ return new class extends Migration
             $table->string('judul_skripsi')->nullable();
             $table->text('kesan_pesan')->nullable();
             $table->boolean('is_bayar')->default(false);
-            $table->boolean('is_verified')->default(false);
+            $table->boolean('is_verified_keuangan')->default(false);
+            $table->boolean('is_verified_akademik')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

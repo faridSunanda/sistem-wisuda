@@ -76,7 +76,6 @@ class DataWisudawanSeeder extends Seeder
                 'email' => $email,
                 'role' => 'mahasiswa',
                 'password' => Hash::make('password123'),
-                'is_admin' => false,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);

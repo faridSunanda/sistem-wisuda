@@ -44,8 +44,6 @@ class BiodataController extends Controller
                     ? Rule::unique('biodatas', 'nim')->ignore($biodataId, 'id')->whereNull('deleted_at')
                     : Rule::unique('biodatas', 'nim')->whereNull('deleted_at')
             ],
-            'nirm' => 'nullable|string|max:20',
-            'nirl' => 'nullable|string|max:20',
             'foto_profile' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'tempat_lahir' => 'nullable|string|max:100',
             'tanggal_lahir' => 'nullable|date',
@@ -75,11 +73,20 @@ class BiodataController extends Controller
             ]);
 
             $biodataData = $request->except([
-                '_token', 'name_lengkap', 'email', 'foto_profile', 'dosen_pembimbing'
+                '_token', 'name_lengkap', 'email', 'foto_profile', 'dosen_pembimbing', 'nirm', 'nirl'
             ]);
 
             if ($request->hasFile('foto_profile')) {
                 $biodataData['foto_profile'] = $this->handlePhotoUpload($request, $biodata);
+            }
+
+            // Jika biodata belum ada, kita perlu set wisuda_id
+            if (!$biodata) {
+                $activeWisuda = \App\Models\Wisuda::where('status', 'aktif')->first();
+                if (!$activeWisuda) {
+                    throw new \Exception('Tidak ada periode wisuda yang aktif saat ini.');
+                }
+                $biodataData['wisuda_id'] = $activeWisuda->id;
             }
 
             $biodata = $user->biodata()->updateOrCreate(

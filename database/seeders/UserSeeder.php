@@ -19,7 +19,6 @@ class UserSeeder extends Seeder
             'email' => 'admin@wisuda.com',
             'password' => Hash::make('123'),
             'role' => 'admin',
-            'is_admin' => true,
             'email_verified_at' => now(),
         ]);
 
@@ -28,7 +27,21 @@ class UserSeeder extends Seeder
             'email' => 'mahasiswa@wisuda.com',
             'password' => Hash::make('123'),
             'role' => 'mahasiswa',
-            'is_admin' => false,
+            'email_verified_at' => now(),
+        ]);
+        User::create([
+            'name_lengkap' => 'Keuangan Wisuda',
+            'email' => 'keuangan@wisuda.com',
+            'password' => Hash::make('123'),
+            'role' => 'keuangan',
+            'email_verified_at' => now(),
+        ]);
+
+        User::create([
+            'name_lengkap' => 'Akademik Wisuda',
+            'email' => 'akademik@wisuda.com',
+            'password' => Hash::make('123'),
+            'role' => 'akademik',
             'email_verified_at' => now(),
         ]);
     }

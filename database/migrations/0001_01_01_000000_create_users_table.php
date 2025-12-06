@@ -16,10 +16,10 @@ return new class extends Migration
             $table->uuid('sso_id')->nullable();
             $table->string('name_lengkap');
             $table->string('email')->unique();
-            $table->string('role');
+            // $table->string('role');
 
             // Sementara
-            $table->boolean('is_admin')->default(false);
+            $table->enum('role', ['admin', 'mahasiswa', 'keuangan', 'akademik'])->default('mahasiswa');
 
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

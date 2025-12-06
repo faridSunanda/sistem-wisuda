@@ -110,14 +110,6 @@
                         <input type="text" name="nim" class="input-field" value="{{ old('nim', $biodata?->nim) }}">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">NIRM</label>
-                        <input type="text" name="nirm" class="input-field" value="{{ old('nirm', $biodata?->nirm) }}">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">NIRL</label>
-                        <input type="text" name="nirl" class="input-field" value="{{ old('nirl', $biodata?->nirl) }}">
-                    </div>
-                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
                         <select name="jenis_kelamin" class="input-field">
                             <option value="">Pilih</option>
