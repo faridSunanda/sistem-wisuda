@@ -32,6 +32,9 @@ use App\Http\Controllers\Mahasiswa\SertifikatBahasaInternasionalController;
 use App\Http\Controllers\Mahasiswa\SertifikatMagangController;
 use App\Http\Controllers\Mahasiswa\DownloadFormulirController;
 
+// Akademik
+use App\Http\Controllers\Akademik\DataWisudawanController as AkademikController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -281,4 +284,19 @@ Route::prefix('akademik')->name('akademik.')->middleware(['auth', 'role:akademik
         return redirect()->route('akademik.dashboard');
     });
     Route::get('/dashboard', [App\Http\Controllers\Akademik\DashboardController::class, 'index'])->name('dashboard');
+
+    Route::controller(AkademikController::class)->prefix('data-wisudawan')->name('data-wisudawan.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/get-data', 'getData')->name('get-data');
+
+            Route::get('/{id}/show', 'show')->name('show');
+
+            Route::post('/{id}/verify', 'verify')->name('verify'); // Menggunakan POST
+
+            Route::get('/export', 'exportData')->name('export');
+            Route::get('/export-excel', 'exportExcel')->name('export-excel');
+            Route::get('/export-pdf', 'exportPdf')->name('export-pdf');
+        });
+
+    Route::resource('data-wisudawan', AkademikController::class);
 });
