@@ -21,7 +21,8 @@ class BiodataController extends Controller
     public function index()
     {
         $user = Auth::user();
-
+        
+        // Mengambil biodata beserta relasi dosen pembimbing
         $biodata = $user->biodata()->with('dosenPembimbings')->first();
 
         // Cari wisuda dengan status 'dibuka' (bukan 'aktif')
@@ -33,6 +34,10 @@ class BiodataController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
+
+        // --- PERBAIKAN: Definisikan variabel $biodata di sini ---
+        $biodata = $user->biodata; 
+        // --------------------------------------------------------
 
         // Cari wisuda dengan status 'dibuka'
         $wisudaAktif = Wisuda::where('status', 'dibuka')->first();
@@ -49,7 +54,8 @@ class BiodataController extends Controller
             return back()->with('error', 'Tidak ada periode wisuda yang dibuka. Silakan hubungi admin.');
         }
 
-        $biodataId = $user->biodata->id ?? 'NULL';
+        // Sekarang $biodata sudah terdefinisi, jadi baris ini aman
+        $biodataId = $biodata->id ?? 'NULL';
 
         // Validasi
         $validator = Validator::make($request->all(), [
@@ -116,15 +122,17 @@ class BiodataController extends Controller
 
             // Handle foto profile
             if ($request->hasFile('foto_profile')) {
-                if ($user->biodata && $user->biodata->foto_profile) {
-                    Storage::disk('public')->delete($user->biodata->foto_profile);
+                // Cek pakai variabel $biodata yang sudah didefinisikan di atas
+                if ($biodata && $biodata->foto_profile) {
+                    Storage::disk('public')->delete($biodata->foto_profile);
                 }
 
                 $path = $request->file('foto_profile')->store('foto_profil', 'public');
                 $biodataData['foto_profile'] = $path;
             }
 
-            // Jika biodata belum ada, kita perlu set wisuda_id
+            // Jika biodata belum ada, cek logic wisuda aktif
+            // Variabel $biodata sekarang dikenali di sini
             if (!$biodata) {
                 $activeWisuda = \App\Models\Wisuda::where('status', 'aktif')->first();
                 if (!$activeWisuda) {
@@ -188,8 +196,6 @@ class BiodataController extends Controller
         }
     }
 
-
-
     private function handlePhotoUpload(Request $request, $biodata = null)
     {
         if ($biodata && $biodata->foto_profile) {
@@ -213,4 +219,3 @@ class BiodataController extends Controller
         }
     }
 }
-

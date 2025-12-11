@@ -10,7 +10,6 @@
             
             <h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-6 pb-2 border-b-4 border-[#435ebe] inline-block">Sertifikat Bahasa Internasional</h2>
             
-            
             <div class="flex items-center bg-orange-50 border border-orange-200 rounded-lg px-4 py-3 mb-6">
                 <svg class="w-5 h-5 text-orange-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
@@ -22,9 +21,9 @@
 
             <div id="sertifikat-container" class="space-y-6">
 
+                {{-- LOOP DATA EXISTING (JIKA ADA ERROR VALIDASI / EDIT) --}}
                 @forelse($sertifikats as $sertifikat)
                     <div class="sertifikat-entry p-8 bg-white border border-gray-200 rounded-lg relative transition-shadow duration-200 hover:shadow-md">
-                        
                         
                         <button type="button" class="remove-sertifikat absolute -top-2 -right-2 w-8 h-8 bg-white border border-red-300 rounded-full flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-200 shadow-sm">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -35,29 +34,22 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label for="nama_sertifikat_{{ $loop->index }}" class="block text-sm font-medium text-gray-700 mb-1">Nama Sertifikat</label>
-                                
                                 <input type="text" name="nama_sertifikat[]" id="nama_sertifikat_{{ $loop->index }}" value="{{ old('nama_sertifikat.' . $loop->index, $sertifikat->nama_sertifikat) }}" placeholder="Contoh: TOEFL ITP" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
                             <div>
                                 <label for="penerbit_{{ $loop->index }}" class="block text-sm font-medium text-gray-700 mb-1">Penerbit</label>
-
                                 <input type="text" name="penerbit[]" id="penerbit_{{ $loop->index }}" value="{{ old('penerbit.' . $loop->index, $sertifikat->penerbit) }}" placeholder="Contoh: ETS" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
-                            <div class="relative">
+                            <div>
                                 <label for="tanggal_terbit_{{ $loop->index }}" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terbit</label>
-
-                                <input type="date" name="tanggal_terbit[]" id="tanggal_terbit_{{ $loop->index }}" value="{{ old('tanggal_terbit.' . $loop->index, $sertifikat->tanggal_terbit->format('Y-m-d')) }}" placeholder="dd/mm/yyyy" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
-                                
-                                <div class="absolute inset-y-0 right-0 top-6 pr-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5" />
-                                    </svg>
-                                </div>
+                                {{-- PERBAIKAN: class 'relative' dihapus & ikon SVG dihapus --}}
+                                <input type="date" name="tanggal_terbit[]" id="tanggal_terbit_{{ $loop->index }}" value="{{ old('tanggal_terbit.' . $loop->index, $sertifikat->tanggal_terbit instanceof \DateTime ? $sertifikat->tanggal_terbit->format('Y-m-d') : $sertifikat->tanggal_terbit) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
                         </div>
                     </div>
 
                 @empty
+                    {{-- DEFAULT FORM (INPUT KOSONG PERTAMA) --}}
                     <div class="sertifikat-entry p-8 bg-white border border-gray-200 rounded-lg relative transition-shadow duration-200 hover:shadow-md">
                         
                         <button type="button" class="remove-sertifikat absolute -top-2 -right-2 w-8 h-8 bg-white border border-red-300 rounded-full flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-200 shadow-sm hidden">
@@ -69,24 +61,16 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label for="nama_sertifikat_1" class="block text-sm font-medium text-gray-700 mb-1">Nama Sertifikat</label>
-                                
-                                <input type="text" name="nama_sertifikat[]" id="nama_sertifikat_1" placeholder="Contoh: TOEFL ITP" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
+                                <input type="text" name="nama_sertifikat[]" id="nama_sertifikat_1" value="{{ old('nama_sertifikat.0') }}" placeholder="Contoh: TOEFL ITP" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
                             <div>
                                 <label for="penerbit_1" class="block text-sm font-medium text-gray-700 mb-1">Penerbit</label>
-                                
                                 <input type="text" name="penerbit[]" id="penerbit_1" value="{{ old('penerbit.0') }}" placeholder="Contoh: ETS" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
-                            <div class="relative">
+                            <div>
                                 <label for="tanggal_terbit_1" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terbit</label>
-                                
-                                <input type="date" name="tanggal_terbit[]" id="tanggal_terbit_1" value="{{ old('tanggal_terbit.0') }}" placeholder="dd/mm/yyyy" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
-                                
-                                <div class="absolute inset-y-0 right-0 top-6 pr-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5" />
-                                    </svg>
-                                </div>
+                                {{-- PERBAIKAN: class 'relative' dihapus & ikon SVG dihapus --}}
+                                <input type="date" name="tanggal_terbit[]" id="tanggal_terbit_1" value="{{ old('tanggal_terbit.0') }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
                         </div>
                     </div>
@@ -95,7 +79,7 @@
             </div>
 
             <div class="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
-
+                
                 <button type="button" id="add-sertifikat" class="inline-flex items-center gap-x-2 px-4 py-2 bg-[#435ebe] text-white text-sm font-medium rounded-md shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#435ebe] disabled:opacity-50 disabled:cursor-not-allowed">
                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
@@ -103,7 +87,6 @@
                     Tambah Sertifikat
                 </button>
                 
-
                 <button type="submit" class="px-6 py-2 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                     Simpan Data
                 </button>

@@ -21,6 +21,7 @@
 
             <div id="sertifikat-container" class="space-y-6">
 
+                {{-- LOOP DATA EXISTING (JIKA ADA ERROR VALIDASI / EDIT) --}}
                 @forelse($sertifikats as $sertifikat)
                     <div class="sertifikat-entry p-8 bg-white border border-gray-200 rounded-lg relative transition-shadow duration-200 hover:shadow-md">
                         
@@ -33,31 +34,23 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label for="nama_sertifikat_{{ $loop->index }}" class="block text-sm font-medium text-gray-700 mb-1">Nama Sertifikat</label>
-                                
                                 <input type="text" name="nama_sertifikat[]" id="nama_sertifikat_{{ $loop->index }}" value="{{ old('nama_sertifikat.' . $loop->index, $sertifikat->nama_sertifikat) }}" placeholder="Contoh: Web Programming Dasar" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
                             <div>
                                 <label for="penerbit_{{ $loop->index }}" class="block text-sm font-medium text-gray-700 mb-1">Penerbit</label>
-                                
                                 <input type="text" name="penerbit[]" id="penerbit_{{ $loop->index }}" value="{{ old('penerbit.' . $loop->index, $sertifikat->penerbit) }}" placeholder="Contoh: Universitas Wahid Hasyim" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
-                            <div class="relative">
+                            <div>
                                 <label for="tanggal_terbit_{{ $loop->index }}" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terbit</label>
-                                
-                                <input type="date" name="tanggal_terbit[]" id="tanggal_terbit_{{ $loop->index }}" value="{{ old('tanggal_terbit.' . $loop->index, $sertifikat->tanggal_terbit->format('Y-m-d')) }}" placeholder="dd/mm/yyyy" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
-                                
-                                <div class="absolute inset-y-0 right-0 top-6 pr-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5" />
-                                    </svg>
-                                </div>
+                                {{-- PERBAIKAN: class 'relative' dihapus & ikon SVG dihapus --}}
+                                <input type="date" name="tanggal_terbit[]" id="tanggal_terbit_{{ $loop->index }}" value="{{ old('tanggal_terbit.' . $loop->index, $sertifikat->tanggal_terbit instanceof \DateTime ? $sertifikat->tanggal_terbit->format('Y-m-d') : $sertifikat->tanggal_terbit) }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
                         </div>
                     </div>
 
                 @empty
+                    {{-- DEFAULT FORM (INPUT KOSONG PERTAMA) --}}
                     <div class="sertifikat-entry p-8 bg-white border border-gray-200 rounded-lg relative transition-shadow duration-200 hover:shadow-md">
-                        
                         
                         <button type="button" class="remove-sertifikat absolute -top-2 -right-2 w-8 h-8 bg-white border border-red-300 rounded-full flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-200 shadow-sm hidden">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
@@ -68,29 +61,20 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label for="nama_sertifikat_1" class="block text-sm font-medium text-gray-700 mb-1">Nama Sertifikat</label>
-                                
                                 <input type="text" name="nama_sertifikat[]" id="nama_sertifikat_1" value="{{ old('nama_sertifikat.0') }}" placeholder="Contoh: Web Programming Dasar" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
                             <div>
                                 <label for="penerbit_1" class="block text-sm font-medium text-gray-700 mb-1">Penerbit</label>
-                                
                                 <input type="text" name="penerbit[]" id="penerbit_1" value="{{ old('penerbit.0') }}" placeholder="Contoh: Universitas Wahid Hasyim" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
-                            <div class="relative">
+                            <div>
                                 <label for="tanggal_terbit_1" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Terbit</label>
-                                
-                                <input type="date" name="tanggal_terbit[]" id="tanggal_terbit_1" value="{{ old('tanggal_terbit.0') }}" placeholder="dd/mm/yyyy" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
-                                
-                                <div class="absolute inset-y-0 right-0 top-6 pr-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5" />
-                                    </svg>
-                                </div>
+                                {{-- PERBAIKAN: class 'relative' dihapus & ikon SVG dihapus --}}
+                                <input type="date" name="tanggal_terbit[]" id="tanggal_terbit_1" value="{{ old('tanggal_terbit.0') }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#435ebe] focus:border-transparent" required>
                             </div>
                         </div>
                     </div>
                 @endforelse
-                
                 
             </div>
 

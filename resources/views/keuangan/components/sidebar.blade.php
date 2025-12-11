@@ -29,11 +29,11 @@
         <!-- Menu Label -->
         <p class="px-3 md:px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-4">MENU</p>
 
-        <!-- Testing -->
-        <a href="https://nandalemon0.wordpress.com/"
-            class="mt-1 flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.group-wisudawan*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+        <!-- Data Wisudawan -->
+        <a href="{{ route('keuangan.data-wisudawan.index') }}"
+            class="mt-1 flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('keuangan.data-wisudawan*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
             <i class="fas fa-users text-lg w-5 text-center"></i>
-            <span class="font-medium">Testing</span>
+            <span class="font-medium">Data Wisudawan</span>
         </a>
 
     </nav>

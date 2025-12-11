@@ -69,29 +69,22 @@
                 <table id="downloadPptTable" class="w-full">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider w-12">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>
                                 <input type="checkbox" id="selectAllHeader" class="w-4 h-4 text-[#435ebe] border-gray-300 rounded focus:ring-[#435ebe]">
                             </th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                No Urut</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                Nama Lengkap</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                NIM</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                Angkatan</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                Group</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                Sesi</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                Jenjang</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                Fakultas</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                Prodi</th>
-                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                                Aksi</th>
+                            <th>Nama Lengkap</th>
+                            <th>NIM</th>
+                            <th>Angkatan</th>
+                            <th>Group</th>
+                            <th>Sesi</th>
+                            <th>Jenjang</th>
+                            <th>Fakultas</th>
+                            <th>Prodi</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -164,11 +157,13 @@
 
 @push('styles')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css">
     @vite('resources/css/admin/group-wisudawan.css')
 @endpush
 
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -176,6 +171,7 @@
             getDataUrl: "{{ route('admin.group-wisudawan.get-data') }}",
             downloadPptUrl: "{{ route('admin.group-wisudawan.download') }}",
             pindahkanKeUrl: "{{ route('admin.group-wisudawan.pindahkan-ke') }}",
+            updateUrutanUrl: "{{ route('admin.group-wisudawan.update-urutan') }}",
             detailUrl: "{{ route('admin.group-wisudawan.show', ':id') }}",
             editUrl: "{{ route('admin.group-wisudawan.edit', ':id') }}",
             deleteUrl: "{{ route('admin.group-wisudawan.destroy', ':id') }}"

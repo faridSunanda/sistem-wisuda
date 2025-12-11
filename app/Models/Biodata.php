@@ -32,11 +32,15 @@ class Biodata extends Model
         'judul_skripsi',
         'kesan_pesan',
         'is_bayar',
-        'is_verified',
+        'is_verified_akademik',
+        'is_verified_keuangan',
     ];
 
     protected $casts = [
         'tanggal_lahir' => 'date',
+        'is_verified_akademik' => 'boolean',
+        'is_verified_keuangan' => 'boolean',
+        'is_bayar' => 'boolean',
     ];
 
     public function user()

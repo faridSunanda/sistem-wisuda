@@ -68,7 +68,6 @@ function initDropdownToggle(toggleBtnId, selectId, chevronId) {
         }
     });
 }
-
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initialize);
 } else {
