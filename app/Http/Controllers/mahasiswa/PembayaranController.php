@@ -28,7 +28,7 @@ class PembayaranController extends Controller
         
         try {
             $response = $this->fetchPaymentData($mahasiswa->nim);
-            
+
             if ($response->successful()) {
                 $data = $response->json();
                 $tagihan = $data['data']['amount'] ?? self::DEFAULT_AMOUNT;
@@ -72,10 +72,10 @@ class PembayaranController extends Controller
                 ]);
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal memeriksa status pembayaran'
-            ], 500);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal memeriksa status pembayaran'
+                ], 500);
         } catch (\Exception $e) {
             Log::error('Error checking payment status: ' . $e->getMessage());
             return response()->json([

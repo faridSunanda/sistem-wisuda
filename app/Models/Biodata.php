@@ -32,7 +32,7 @@ class Biodata extends Model
         'judul_skripsi',
         'kesan_pesan',
         'is_bayar',
-        'is_verified_akademik', 
+        'is_verified_akademik',
         'is_verified_keuangan',
     ];
 

@@ -207,6 +207,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
             Route::get('/get-data', 'getData')->name('get-data');
             Route::post('/download', 'downloadPpt')->name('download');
             Route::post('/pindahkan-ke', 'pindahkanKe')->name('pindahkan-ke');
+            Route::post('/update-urutan', 'updateUrutan')->name('update-urutan');
             Route::get('/{id}/edit', 'edit')->name('edit');
             Route::put('/{id}', 'update')->name('update');
             Route::delete('/{id}', 'destroy')->name('destroy');
@@ -274,6 +275,20 @@ Route::prefix('keuangan')->name('keuangan.')->middleware(['auth', 'role:keuangan
         return redirect()->route('keuangan.dashboard');
     });
     Route::get('/dashboard', [App\Http\Controllers\Keuangan\DashboardController::class, 'index'])->name('dashboard');
+
+    Route::controller(App\Http\Controllers\Keuangan\DataWisudawanController::class)
+        ->prefix('data-wisudawan')
+        ->name('data-wisudawan.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/get-data', 'getData')->name('get-data');
+            Route::get('/detail-mahasiswa/{id}', 'show')->name('detail-mahasiswa');
+            Route::get('/detail-mahasiswa/{id}/get-payment-data', 'getPaymentData')->name('get-payment-data');
+            Route::put('/verify/{id}', 'verify')->name('verify');
+            Route::put('/verify-all', 'verifyAll')->name('verify-all');
+            Route::put('/proses-wisudawan/{id}', 'prosesWisudawan')->name('proses-wisudawan');
+            Route::put('/proses-wisudawan-all', 'prosesWisudawanAll')->name('proses-wisudawan-all');
+        });
 });
 
 //

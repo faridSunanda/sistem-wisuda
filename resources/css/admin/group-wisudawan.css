@@ -71,6 +71,12 @@
     text-align: center !important;
 }
 
+/* Hide header for invisible columns */
+#downloadPptTable thead th:has(style[display="none"]),
+#downloadPptTable_wrapper .dataTables_scrollHead thead th:has(style[display="none"]) {
+    display: none !important;
+}
+
 /* Pastikan header di scrollHead memiliki style yang sama */
 #downloadPptTable_wrapper .dataTables_scrollHead thead th {
     position: relative;
@@ -398,6 +404,71 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+/* Sortable Styles */
+#downloadPptTable tbody tr {
+    cursor: default;
+}
+
+#downloadPptTable tbody td.reorder {
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+#downloadPptTable tbody td.reorder .drag-handle {
+    cursor: move;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+#downloadPptTable tbody td.reorder .drag-handle:hover {
+    background-color: #e5e7eb;
+    color: #6b7280;
+}
+
+#downloadPptTable tbody td.reorder .wisudawan-checkbox {
+    cursor: pointer;
+}
+
+#downloadPptTable tbody td.reorder:hover {
+    background-color: transparent;
+}
+
+#downloadPptTable tbody td.reorder > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#downloadPptTable tbody td.reorder .no-urut-text {
+    min-width: 35px;
+    text-align: center;
+}
+
+#downloadPptTable tbody.ui-sortable tr.ui-sortable-helper {
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #d1d5db;
+}
+
+#downloadPptTable tbody .sortable-placeholder {
+    height: 50px;
+    background-color: #e5e7eb;
+    border: 2px dashed #9ca3af;
+    visibility: visible !important;
+}
+
+#downloadPptTable tbody tr.ui-sortable-placeholder td {
+    border: 2px dashed #9ca3af;
+    background-color: #e5e7eb;
 }
 
 /* Responsive Design */

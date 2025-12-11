@@ -13,35 +13,26 @@ class GroupWisudawanController extends Controller
 {
     public function index()
     {
-        $groups = Group::all();
-        $sesis = Sesi::all();
-        
-        return view('admin.group-wisudawan.index', compact('groups', 'sesis'));
+        return view('admin.group-wisudawan.index', [
+            'groups' => Group::all(),
+            'sesis' => Sesi::all()
+        ]);
     }
 
     public function show(string $id)
     {
-        $user = $this->getUserWithGroupData($id);
-        
-        if (!$user) {
-            abort(404);
-        }
-
+        $user = $this->getUserWithGroupData($id) ?? abort(404);
         return view('admin.group-wisudawan.show', compact('user'));
     }
 
     public function edit(string $id)
     {
-        $user = $this->getUserWithGroupDataForEdit($id);
-        
-        if (!$user) {
-            abort(404);
-        }
-
-        $groups = Group::all();
-        $sesis = Sesi::all();
-
-        return view('admin.group-wisudawan.edit', compact('user', 'groups', 'sesis'));
+        $user = $this->getUserWithGroupDataForEdit($id) ?? abort(404);
+        return view('admin.group-wisudawan.edit', [
+            'user' => $user,
+            'groups' => Group::all(),
+            'sesis' => Sesi::all()
+        ]);
     }
 
     public function update(Request $request, string $id)
@@ -96,7 +87,6 @@ class GroupWisudawanController extends Controller
         }
     }
 
-    // Get data for DataTables
     public function getData(Request $request)
     {
         try {
@@ -105,15 +95,18 @@ class GroupWisudawanController extends Controller
 
             return DataTables::of($query)
                 ->addIndexColumn()
-                ->filterColumn('nim', fn($q, $keyword) => $q->whereRaw('biodatas.nim like ?', ["%{$keyword}%"]))
-                ->filterColumn('name_lengkap', fn($q, $keyword) => $q->whereRaw('users.name_lengkap like ?', ["%{$keyword}%"]))
-                ->filterColumn('fakultas', fn($q, $keyword) => $q->whereRaw('biodatas.fakultas like ?', ["%{$keyword}%"]))
-                ->filterColumn('prodi', fn($q, $keyword) => $q->whereRaw('biodatas.program_studi like ?', ["%{$keyword}%"]))
-                ->filterColumn('angkatan', fn($q, $keyword) => $q->whereRaw('biodatas.tahun_masuk like ?', ["%{$keyword}%"]))
-                ->filterColumn('group', fn($q, $keyword) => $q->whereRaw('groups.name like ?', ["%{$keyword}%"]))
-                ->filterColumn('sesi', fn($q, $keyword) => $q->whereRaw('sesi.name like ?', ["%{$keyword}%"]))
-                ->filterColumn('nomor_urut', fn($q, $keyword) => $q->whereRaw('CAST(group_wisudawans.nomor_urut AS CHAR) like ?', ["%{$keyword}%"]))
-                ->addColumn('no_urut', fn($row) => $row->nomor_urut ?? '-')
+                ->filterColumn('nim', fn($q, $keyword) => $q->whereRaw('biodatas.nim LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('name_lengkap', fn($q, $keyword) => $q->whereRaw('users.name_lengkap LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('fakultas', fn($q, $keyword) => $q->whereRaw('biodatas.fakultas LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('prodi', fn($q, $keyword) => $q->whereRaw('biodatas.program_studi LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('angkatan', fn($q, $keyword) => $q->whereRaw('biodatas.tahun_masuk LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('group', fn($q, $keyword) => $q->whereRaw('groups.name LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('sesi', fn($q, $keyword) => $q->whereRaw('sesi.name LIKE ?', ["%{$keyword}%"]))
+                ->filterColumn('nomor_urut', fn($q, $keyword) => $q->whereRaw('CAST(group_wisudawans.nomor_urut AS CHAR) LIKE ?', ["%{$keyword}%"]))
+                ->addColumn('group_wisudawan_id', fn($row) => $row->group_wisudawan_id ?? '')
+                ->addColumn('nomor_urut', fn($row) => $row->nomor_urut ?? 0)
+                ->addColumn('group_id', fn($row) => $row->group_id ?? '')
+                ->addColumn('sesi_id', fn($row) => $row->sesi_id ?? '')
                 ->addColumn('nama_lengkap', fn($row) => $row->name_lengkap ?? '-')
                 ->addColumn('nim', fn($row) => $row->nim ?? '-')
                 ->addColumn('angkatan', fn($row) => $row->angkatan ?? '-')
@@ -122,7 +115,7 @@ class GroupWisudawanController extends Controller
                 ->addColumn('jenjang', fn($row) => $row->jenjang ?? 'S1')
                 ->addColumn('fakultas', fn($row) => $row->fakultas ?? '-')
                 ->addColumn('prodi', fn($row) => $row->prodi ?? '-')
-                ->addColumn('checkbox', fn($row) => $this->renderCheckbox($row))
+                ->addColumn('checkbox', fn($row) => $this->renderCheckboxWithHandle($row))
                 ->addColumn('aksi', fn($row) => $this->getActionButtons($row->id))
                 ->rawColumns(['checkbox', 'aksi'])
                 ->make(true);
@@ -132,12 +125,9 @@ class GroupWisudawanController extends Controller
         }
     }
 
-    // Download PPT
     public function downloadPpt(Request $request)
     {
         $selectedIds = $request->input('ids', []);
-        $posisi = $request->input('posisi', 'kanan');
-        $urutan = $request->input('urutan', 'pertama');
         
         if (empty($selectedIds)) {
             return $this->jsonResponse(false, 'Pilih minimal satu wisudawan untuk download.', 400);
@@ -145,12 +135,11 @@ class GroupWisudawanController extends Controller
 
         return $this->jsonResponse(true, 'Download PPT berhasil dimulai.', 200, [
             'count' => count($selectedIds),
-            'posisi' => $posisi,
-            'urutan' => $urutan
+            'posisi' => $request->input('posisi', 'kanan'),
+            'urutan' => $request->input('urutan', 'pertama')
         ]);
     }
 
-    // Pindahkan ke
     public function pindahkanKe(Request $request)
     {
         $selectedIds = $request->input('ids', []);
@@ -192,42 +181,76 @@ class GroupWisudawanController extends Controller
         }
     }
 
-    // Private helper methods
-    private function getUserWithGroupData(string $id)
+    public function updateUrutan(Request $request)
     {
+        $validated = $request->validate([
+            'orders' => 'required|array',
+            'orders.*.id' => 'required|uuid|exists:group_wisudawans,id',
+            'orders.*.nomor_urut' => 'required|integer|min:1',
+            'group_id' => 'required|uuid|exists:groups,id',
+            'sesi_id' => 'required|uuid|exists:sesi,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $allGroupWisudawans = $this->getGroupWisudawansByGroupAndSesi(
+                $validated['group_id'],
+                $validated['sesi_id']
+            );
+
+            $reorderedMap = array_column($validated['orders'], 'nomor_urut', 'id');
+            $reorderedIds = array_keys($reorderedMap);
+
+            [$reorderedItems, $nonReorderedItems] = $this->separateItems(
+                $allGroupWisudawans,
+                $reorderedIds,
+                $reorderedMap
+            );
+
+            $finalOrder = array_merge($reorderedItems, $nonReorderedItems);
+            $this->updateNomorUrut($finalOrder);
+
+            DB::commit();
+
+            return $this->jsonResponse(true, 'Urutan data berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->jsonResponse(false, 'Gagal memperbarui urutan: ' . $e->getMessage(), 500);
+        }
+    }
+
+    private function getUserWithGroupData(string $id, bool $forEdit = false)
+    {
+        $selects = [
+            'users.*',
+            'biodatas.*',
+            'group_wisudawans.nomor_urut'
+        ];
+
+        if ($forEdit) {
+            $selects[] = 'groups.id as group_id';
+            $selects[] = 'sesi.id as sesi_id';
+            $selects[] = 'group_wisudawans.id as group_wisudawan_id';
+        } else {
+            $selects[] = 'groups.name as group_name';
+            $selects[] = 'sesi.name as sesi_name';
+        }
+
         return DB::table('users')
             ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
             ->leftJoin('group_wisudawans', 'biodatas.id', '=', 'group_wisudawans.biodata_id')
             ->leftJoin('groups', 'group_wisudawans.group_id', '=', 'groups.id')
             ->leftJoin('sesi', 'group_wisudawans.sesi_id', '=', 'sesi.id')
             ->where('users.id', $id)
-            ->select(
-                'users.*',
-                'biodatas.*',
-                'groups.name as group_name',
-                'sesi.name as sesi_name',
-                'group_wisudawans.nomor_urut'
-            )
+            ->select($selects)
             ->first();
     }
 
     private function getUserWithGroupDataForEdit(string $id)
     {
-        return DB::table('users')
-            ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
-            ->leftJoin('group_wisudawans', 'biodatas.id', '=', 'group_wisudawans.biodata_id')
-            ->leftJoin('groups', 'group_wisudawans.group_id', '=', 'groups.id')
-            ->leftJoin('sesi', 'group_wisudawans.sesi_id', '=', 'sesi.id')
-            ->where('users.id', $id)
-            ->select(
-                'users.*',
-                'biodatas.*',
-                'groups.id as group_id',
-                'sesi.id as sesi_id',
-                'group_wisudawans.nomor_urut',
-                'group_wisudawans.id as group_wisudawan_id'
-            )
-            ->first();
+        return $this->getUserWithGroupData($id, true);
     }
 
     private function updateOrCreateGroupWisudawan($biodata, array $validated)
@@ -247,9 +270,9 @@ class GroupWisudawanController extends Controller
                 ]);
         } else {
             if (!$biodata->wisuda_id) {
-                throw new \Exception('Biodata tidak memiliki wisuda_id. Tidak dapat menambahkan ke group.');
+                throw new \Exception('Biodata tidak memiliki wisuda_id.');
             }
-            
+
             DB::table('group_wisudawans')->insert([
                 'id' => \Illuminate\Support\Str::uuid(),
                 'wisuda_id' => $biodata->wisuda_id,
@@ -270,7 +293,7 @@ class GroupWisudawanController extends Controller
             ->leftJoin('group_wisudawans', 'biodatas.id', '=', 'group_wisudawans.biodata_id')
             ->leftJoin('groups', 'group_wisudawans.group_id', '=', 'groups.id')
             ->leftJoin('sesi', 'group_wisudawans.sesi_id', '=', 'sesi.id')
-            ->select(
+            ->select([
                 'users.id',
                 'users.name_lengkap',
                 DB::raw('COALESCE(biodatas.nim, "") as nim'),
@@ -281,10 +304,13 @@ class GroupWisudawanController extends Controller
                 DB::raw('COALESCE(biodatas.fakultas, "") as fakultas'),
                 DB::raw('COALESCE(biodatas.program_studi, "") as prodi'),
                 DB::raw('COALESCE(group_wisudawans.nomor_urut, 0) as nomor_urut'),
-                'group_wisudawans.id as group_wisudawan_id'
-            )
+                'group_wisudawans.id as group_wisudawan_id',
+                'group_wisudawans.group_id',
+                'group_wisudawans.sesi_id'
+            ])
             ->where('users.role', 'mahasiswa')
-            ->whereNotNull('biodatas.id');
+            ->whereNotNull('biodatas.id')
+            ->orderBy('group_wisudawans.nomor_urut', 'asc');
     }
 
     private function applyFilters($query, Request $request)
@@ -298,9 +324,7 @@ class GroupWisudawanController extends Controller
         ];
 
         foreach ($filters as $key => $column) {
-            if ($request->filled($key)) {
-                $query->where($column, $request->input($key));
-            }
+            $request->whenFilled($key, fn($value) => $query->where($column, $value));
         }
     }
 
@@ -324,13 +348,13 @@ class GroupWisudawanController extends Controller
     private function moveGroupWisudawans($biodatas, string $targetGroupId, string $targetSesiId)
     {
         $validBiodataIds = $biodatas->pluck('id')->toArray();
-        $existingGroupWisudawans = DB::table('group_wisudawans')
+        $existingBiodataIds = DB::table('group_wisudawans')
             ->whereIn('biodata_id', $validBiodataIds)
             ->pluck('biodata_id')
             ->toArray();
 
-        $toUpdate = array_intersect($validBiodataIds, $existingGroupWisudawans);
-        $toInsert = array_diff($validBiodataIds, $existingGroupWisudawans);
+        $toUpdate = array_intersect($validBiodataIds, $existingBiodataIds);
+        $toInsert = array_diff($validBiodataIds, $existingBiodataIds);
 
         if (!empty($toUpdate)) {
             DB::table('group_wisudawans')
@@ -374,25 +398,49 @@ class GroupWisudawanController extends Controller
         return $insertData;
     }
 
-    private function renderCheckbox($row)
+
+    private function renderCheckboxWithHandle($row)
     {
-        $disabled = '';
-        return '<input type="checkbox" class="wisudawan-checkbox" value="' . $row->id . '" data-group-wisudawan-id="' . ($row->group_wisudawan_id ?? '') . '" ' . $disabled . '>';
+        $checkbox = sprintf(
+            '<input type="checkbox" class="wisudawan-checkbox" value="%s" data-group-wisudawan-id="%s">',
+            e($row->id),
+            e($row->group_wisudawan_id ?? '')
+        );
+
+        $noUrut = sprintf(
+            '<span class="no-urut-text font-medium text-gray-700">%s</span>',
+            $row->nomor_urut ?? '-'
+        );
+
+        $handle = '<i class="fas fa-grip-vertical text-gray-400 cursor-move drag-handle"></i>';
+
+        return sprintf(
+            '<div class="flex items-center justify-center gap-2">%s%s%s</div>',
+            $checkbox,
+            $noUrut,
+            $handle
+        );
     }
 
     private function getActionButtons($id)
     {
-        return '<div class="flex items-center justify-center gap-2">' .
-            '<button class="btn-action btn-view" onclick="lihatData(\'' . $id . '\')" title="Lihat">' .
-            '<i class="fas fa-eye"></i>' .
-            '</button>' .
-            '<button class="btn-action btn-edit" onclick="editData(\'' . $id . '\')" title="Edit">' .
-            '<i class="fas fa-pencil-alt"></i>' .
-            '</button>' .
-            '<button class="btn-action btn-delete" onclick="hapusData(\'' . $id . '\', this)" title="Hapus">' .
-            '<i class="fas fa-trash"></i>' .
-            '</button>' .
-            '</div>';
+        $escapedId = e($id);
+        return sprintf(
+            '<div class="flex items-center justify-center gap-2">
+                <button class="btn-action btn-view" onclick="lihatData(\'%s\')" title="Lihat">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-action btn-edit" onclick="editData(\'%s\')" title="Edit">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn-action btn-delete" onclick="hapusData(\'%s\', this)" title="Hapus">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>',
+            $escapedId,
+            $escapedId,
+            $escapedId
+        );
     }
 
     private function jsonResponse(bool $success, string $message, int $status = 200, array $data = [])
@@ -407,6 +455,47 @@ class GroupWisudawanController extends Controller
         }
 
         return response()->json($response, $status);
+    }
+
+    private function getGroupWisudawansByGroupAndSesi(string $groupId, string $sesiId)
+    {
+        return DB::table('group_wisudawans')
+            ->where('group_id', $groupId)
+            ->where('sesi_id', $sesiId)
+            ->orderBy('nomor_urut', 'asc')
+            ->get();
+    }
+
+    private function separateItems($allItems, array $reorderedIds, array $reorderedMap)
+    {
+        $reorderedItems = [];
+        $nonReorderedItems = [];
+
+        foreach ($allItems as $item) {
+            if (in_array($item->id, $reorderedIds)) {
+                $reorderedItems[] = $item;
+            } else {
+                $nonReorderedItems[] = $item;
+            }
+        }
+
+        usort($reorderedItems, function($a, $b) use ($reorderedMap) {
+            return $reorderedMap[$a->id] <=> $reorderedMap[$b->id];
+        });
+
+        return [$reorderedItems, $nonReorderedItems];
+    }
+
+    private function updateNomorUrut(array $items)
+    {
+        foreach ($items as $index => $item) {
+            DB::table('group_wisudawans')
+                ->where('id', $item->id)
+                ->update([
+                    'nomor_urut' => $index + 1,
+                    'updated_at' => now()
+                ]);
+        }
     }
 
     private function datatableErrorResponse(Request $request, \Exception $e)
