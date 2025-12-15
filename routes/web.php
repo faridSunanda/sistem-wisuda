@@ -48,6 +48,7 @@ Route::get('/', [BerandaController::class, 'index'])->name('portal');
 Route::get('/login', [AuthController::class, 'create'])->name('login');
 Route::post('/login', [AuthController::class, 'store'])->name('login.store');
 Route::post('/logout', [AuthController::class, 'destroy'])->name('logout'); // <-- CUKUP SATU INI
+Route::post('/switch-role', \App\Http\Controllers\SwitchRoleController::class)->name('switch-role')->middleware('auth');
 
 //
 //          ADMIN ROUTES
@@ -227,43 +228,48 @@ Route::prefix('mahasiswa')->name('mahasiswa.')->middleware(['auth', 'role:mahasi
 
     Route::get('/dashboard', [MahasiswaDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/data-diri', [BiodataController::class, 'index'])->name('biodata.index');
-    Route::put('/biodata/update', [BiodataController::class, 'update'])->name('biodata.update');
-    Route::post('/biodata/sync', [BiodataController::class, 'syncFromApi'])->name('biodata.sync');
-
-    Route::get('/download-formulir', [DownloadFormulirController::class, 'index'])->name('download-formulir.index');
-    Route::get('/download-formulir/download', [DownloadFormulirController::class, 'downloadFormulirWisuda'])->name('download-formulir.download');
-    Route::get('/download-formulir/preview', [DownloadFormulirController::class, 'previewFormulirWisuda'])->name('download-formulir.preview');
-
-    Route::prefix('sertifikat')->name('sertifikat.')->group(function () {
-        
-        $sertifikatTypes = [
-            'kompetensi'          => 'kompetensi',
-            'bahasa-internasional'=> 'bahasa',
-            'magang'              => 'magang',
-            'pendidikan-karakter' => 'karakter',
-            'penghargaan'         => 'penghargaan',
-            'organisasi'          => 'organisasi',
-        ];
-
-        foreach ($sertifikatTypes as $url => $dbJenis) {
-            Route::get("/$url", [App\Http\Controllers\Mahasiswa\SertifikatController::class, 'index'])
-                ->defaults('jenis', $dbJenis)
-                ->name($url);
-                
-            Route::post("/$url", [App\Http\Controllers\Mahasiswa\SertifikatController::class, 'store'])
-                ->defaults('jenis', $dbJenis)
-                ->name("$url.store");
-        }
-    });
-
-
     Route::prefix('pembayaran')->name('pembayaran.')->group(function () {
         Route::get('/', [PembayaranController::class, 'index'])->name('index');
         Route::post('/create', [PembayaranController::class, 'createPayment'])->name('create');
         Route::post('/check-status', [PembayaranController::class, 'checkStatus'])->name('check-status');
         Route::post('/verify', [PembayaranController::class, 'verifyPayment'])->name('verify');
     });
+
+    Route::middleware(['is_verified_akademik'])->group(function () {
+        
+        Route::get('/data-diri', [BiodataController::class, 'index'])->name('biodata.index');
+        Route::put('/biodata/update', [BiodataController::class, 'update'])->name('biodata.update');
+        Route::post('/biodata/sync', [BiodataController::class, 'syncFromApi'])->name('biodata.sync');
+
+        Route::get('/download-formulir', [DownloadFormulirController::class, 'index'])->name('download-formulir.index');
+        Route::get('/download-formulir/download', [DownloadFormulirController::class, 'downloadFormulirWisuda'])->name('download-formulir.download');
+        Route::get('/download-formulir/preview', [DownloadFormulirController::class, 'previewFormulirWisuda'])->name('download-formulir.preview');
+
+        Route::prefix('sertifikat')->name('sertifikat.')->group(function () {
+            
+            $sertifikatTypes = [
+                'kompetensi'          => 'kompetensi',
+                'bahasa-internasional'=> 'bahasa',
+                'magang'              => 'magang',
+                'pendidikan-karakter' => 'karakter',
+                'penghargaan'         => 'penghargaan',
+                'organisasi'          => 'organisasi',
+            ];
+
+            foreach ($sertifikatTypes as $url => $dbJenis) {
+                Route::get("/$url", [App\Http\Controllers\Mahasiswa\SertifikatController::class, 'index'])
+                    ->defaults('jenis', $dbJenis)
+                    ->name($url);
+                    
+                Route::post("/$url", [App\Http\Controllers\Mahasiswa\SertifikatController::class, 'store'])
+                    ->defaults('jenis', $dbJenis)
+                    ->name("$url.store");
+            }
+        });
+    });
+
+
+
 
 });
 
