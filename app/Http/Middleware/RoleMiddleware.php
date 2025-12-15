@@ -16,7 +16,20 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (!Auth::check() || Auth::user()->role !== $role) {
+        if (!Auth::check()) {
+            abort(403, 'ANDA TIDAK PUNYA AKSES.');
+        }
+
+        // Check acting_role from session first (for role switching), then fall back to user's actual role
+        $actingRole = session('acting_role', Auth::user()->role);
+
+        // Allow access if acting role matches, OR if user's real role is admin (admins can access any dashboard via role switching)
+        if ($actingRole !== $role && Auth::user()->role !== 'admin') {
+            abort(403, 'ANDA TIDAK PUNYA AKSES.');
+        }
+
+        // If admin is acting as another role, still allow access
+        if ($actingRole !== $role && Auth::user()->role === 'admin' && !session('allow_role_switch')) {
             abort(403, 'ANDA TIDAK PUNYA AKSES.');
         }
 

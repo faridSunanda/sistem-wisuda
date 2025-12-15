@@ -36,6 +36,12 @@ class AuthController extends Controller
         if ($apakahBerhasil) {
             $request->session()->regenerate();
             $user = Auth::user();
+
+            // Enable role switching for admin users (or all users if needed)
+            if ($user->role === 'admin') {
+                session(['allow_role_switch' => true]);
+            }
+
             if ($user->role === 'admin') {
                 return redirect()->intended(route('admin.dashboard'));
             }
