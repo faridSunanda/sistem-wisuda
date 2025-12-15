@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="space-y-4 md:space-y-6 pb-10">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Formulir Wisuda</h1>
@@ -16,7 +15,7 @@
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-2">
                         <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                        <span class="text-sm font-medium text-green-700">   
+                        <span class="text-sm font-medium text-green-700">
                             Formulir Siap Didownload
                         </span>
                     </div>
@@ -26,7 +25,6 @@
 
         <!-- Action Buttons -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <!-- Ubah Data Diri -->
             <a href="{{ route('mahasiswa.biodata.index') }}"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center hover:shadow-md transition-shadow group hover:border-blue-500">
                 <div
@@ -37,8 +35,8 @@
                 <p class="text-sm text-gray-600">Perbarui data pribadi dan akademik</p>
             </a>
 
-            <!-- Ubah Sertifikat -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center relative group hover:border-green-500">
+            <div
+                class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center relative group hover:border-green-500">
                 <div
                     class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
                     <i class="fas fa-certificate text-green-600 text-2xl"></i>
@@ -46,7 +44,6 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Ubah Sertifikat</h3>
                 <p class="text-sm text-gray-600">Kelola semua jenis sertifikat</p>
 
-                <!-- Dropdown Menu -->
                 <div
                     class="absolute top-full left-0 mt-2 w-full bg-white shadow-lg rounded-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div class="py-2">
@@ -78,7 +75,6 @@
                 </div>
             </div>
 
-            <!-- Download PDF -->
             <button id="download-btn"
                 class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center hover:shadow-md transition-shadow group hover:border-orange-500">
                 <div
@@ -90,15 +86,13 @@
             </button>
         </div>
 
-        <!-- Preview Section dengan desain mirip admin -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
             <div class="p-6 border-b border-gray-100">
                 <h2 class="text-lg font-semibold text-gray-900">Preview Formulir Wisuda</h2>
                 <p class="text-sm text-gray-600 mt-1">Formulir akan terupdate otomatis ketika data diubah</p>
             </div>
-            
+
             <div class="p-6">
-                <!-- Container untuk preview formulir dengan scroll -->
                 <div class="border border-gray-300 rounded-lg overflow-auto max-h-[600px] p-4 bg-gray-50">
                     <div class="bg-white p-6 shadow-inner max-w-4xl mx-auto text-gray-800"
                         style="font-family: 'Cambria', serif; font-size: 12pt;">
@@ -120,15 +114,25 @@
                             <h2 class="text-xl font-bold uppercase underline">FORMULIR PENDAFTARAN WISUDA</h2>
                         </div>
 
-                        <!-- Data Pribadi dalam format tabel -->
+                        <!-- Data Pribadi dalam format tabel - SATU TABEL UNTUK SEMUA DATA -->
                         <div class="mb-6">
                             <div class="overflow-x-auto">
                                 <table class="min-w-full border border-gray-400 table-auto text-xs">
                                     <tbody>
                                         @php
+                                            // Data dari 1-14
                                             $dataPribadi = [
                                                 ['Nama Lengkap', $biodata->user->name_lengkap ?? '-'],
-                                                ['Tempat, Tgl Lahir', ($biodata->tempat_lahir ?? '-') . ', ' . ($biodata->tanggal_lahir ? \Carbon\Carbon::parse($biodata->tanggal_lahir)->format('d-m-Y') : '-')],
+                                                [
+                                                    'Tempat, Tgl Lahir',
+                                                    ($biodata->tempat_lahir ?? '-') .
+                                                    ', ' .
+                                                    ($biodata->tanggal_lahir
+                                                        ? \Carbon\Carbon::parse($biodata->tanggal_lahir)->format(
+                                                            'd-m-Y',
+                                                        )
+                                                        : '-'),
+                                                ],
                                                 ['NIK', $biodata->nik ?? '-'],
                                                 ['NIM', $biodata->nim ?? '-'],
                                                 ['NIRM', $biodata->nirm ?? '-'],
@@ -141,13 +145,15 @@
                                                 ['Alamat Rumah', $biodata->alamat_rumah ?? '-'],
                                                 ['Alamat Kantor', $biodata->alamat_kantor ?? '-'],
                                                 ['Nomor Telp/HP', $biodata->no_telepon ?? '-'],
-                                                ['Email', $biodata->email ?? '-'],
+                                                ['Email', $biodata->user->email ?? '-'],
                                             ];
                                         @endphp
-                                        
-                                        @foreach($dataPribadi as $index => $item)
+
+                                        <!-- Data 1-14 -->
+                                        @foreach ($dataPribadi as $index => $item)
                                             <tr>
-                                                <td class="border border-gray-400 px-3 py-2 text-center font-semibold w-10 bg-gray-50">
+                                                <td
+                                                    class="border border-gray-400 px-3 py-2 text-center font-semibold w-10 bg-gray-50">
                                                     {{ $index + 1 }}.
                                                 </td>
                                                 <td class="border border-gray-400 px-3 py-2 font-semibold w-40 bg-gray-50">
@@ -158,22 +164,14 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
 
-                        <!-- Data Akademik dalam format tabel -->
-                        <div class="mb-6">
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full border border-gray-400 table-auto text-xs">
-                                    <tbody>
-                                        <!-- Dosen Pembimbing -->
+                                        <!-- No. 15: Dosen Pembimbing -->
                                         <tr>
-                                            <td class="border border-gray-400 px-3 py-2 text-center font-semibold w-10 bg-gray-50">
-                                                16.
+                                            <td
+                                                class="border border-gray-400 px-3 py-2 text-center font-semibold w-10 bg-gray-50">
+                                                15.
                                             </td>
-                                            <td class="border border-gray-400 px-3 py-2 font-semibold bg-gray-50">
+                                            <td class="border border-gray-400 px-3 py-2 font-semibold w-40 bg-gray-50">
                                                 Dosen Pembimbing
                                             </td>
                                             <td class="border border-gray-400 px-3 py-2">
@@ -190,26 +188,28 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                        
-                                        <!-- Judul Skripsi/Tesis/TA -->
+
+                                        <!-- No. 16: Judul Skripsi/Tesis/TA -->
                                         <tr>
-                                            <td class="border border-gray-400 px-3 py-2 text-center font-semibold w-10 bg-gray-50">
-                                                17.
+                                            <td
+                                                class="border border-gray-400 px-3 py-2 text-center font-semibold w-10 bg-gray-50">
+                                                16.
                                             </td>
-                                            <td class="border border-gray-400 px-3 py-2 font-semibold bg-gray-50">
+                                            <td class="border border-gray-400 px-3 py-2 font-semibold w-40 bg-gray-50">
                                                 Judul Skripsi/Tesis/TA
                                             </td>
                                             <td class="border border-gray-400 px-3 py-2">
                                                 {{ $biodata->judul_skripsi ?? '-' }}
                                             </td>
                                         </tr>
-                                        
-                                        <!-- Kesan dan Pesan -->
+
+                                        <!-- No. 17: Kesan dan Pesan -->
                                         <tr>
-                                            <td class="border border-gray-400 px-3 py-2 text-center font-semibold w-10 bg-gray-50">
-                                                18.
+                                            <td
+                                                class="border border-gray-400 px-3 py-2 text-center font-semibold w-10 bg-gray-50">
+                                                17.
                                             </td>
-                                            <td class="border border-gray-400 px-3 py-2 font-semibold bg-gray-50">
+                                            <td class="border border-gray-400 px-3 py-2 font-semibold w-40 bg-gray-50">
                                                 Kesan dan Pesan
                                             </td>
                                             <td class="border border-gray-400 px-3 py-2">
@@ -223,40 +223,40 @@
 
                         <!-- Sertifikat Tables -->
                         <div class="space-y-6">
-                            @foreach([
-                                'Sertifikat Kompetensi' => [
-                                    'data' => $biodata->sertifikatKompetensi,
-                                    'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal']
-                                ],
-                                'Sertifikat Bahasa Internasional' => [
-                                    'data' => $biodata->sertifikatBahasaInternasional,
-                                    'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal']
-                                ],
-                                'Sertifikat Magang/Kerja Praktek/PPL' => [
-                                    'data' => $biodata->sertifikatMagang,
-                                    'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh']
-                                ],
-                                'Sertifikat Pendidikan Karakter' => [
-                                    'data' => $biodata->sertifikatPendidikanKarakter,
-                                    'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal']
-                                ],
-                                'Sertifikat Penghargaan' => [
-                                    'data' => $biodata->sertifikatPenghargaan,
-                                    'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal']
-                                ],
-                                'Sertifikat Organisasi' => [
-                                    'data' => $biodata->sertifikatOrganisasi,
-                                    'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Tanggal Mulai', 'Tanggal Selesai']
-                                ]
-                            ] as $title => $config)
-                                @if($config['data'] && $config['data']->count() > 0)
+                            @foreach ([
+            'Sertifikat Kompetensi' => [
+                'data' => $biodata->sertifikatKompetensi,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal'],
+            ],
+            'Sertifikat Bahasa Internasional' => [
+                'data' => $biodata->sertifikatBahasaInternasional,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal'],
+            ],
+            'Sertifikat Magang/Kerja Praktek/PPL' => [
+                'data' => $biodata->sertifikatMagang,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh'],
+            ],
+            'Sertifikat Pendidikan Karakter' => [
+                'data' => $biodata->sertifikatPendidikanKarakter,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal'],
+            ],
+            'Sertifikat Penghargaan' => [
+                'data' => $biodata->sertifikatPenghargaan,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal'],
+            ],
+            'Sertifikat Organisasi' => [
+                'data' => $biodata->sertifikatOrganisasi,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Tanggal Mulai', 'Tanggal Selesai'],
+            ],
+        ] as $title => $config)
+                                @if ($config['data'] && $config['data']->count() > 0)
                                     <div>
                                         <h4 class="font-bold mb-2 underline">{{ $title }}:</h4>
                                         <div class="overflow-x-auto">
                                             <table class="min-w-full border border-gray-400 table-auto text-xs">
                                                 <thead>
                                                     <tr class="bg-gray-100">
-                                                        @foreach($config['kolom'] as $kolom)
+                                                        @foreach ($config['kolom'] as $kolom)
                                                             <th class="border border-gray-400 px-2 py-1 text-left">
                                                                 {{ $kolom }}
                                                             </th>
@@ -264,7 +264,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($config['data'] as $index => $sertifikat)
+                                                    @foreach ($config['data'] as $index => $sertifikat)
                                                         <tr>
                                                             <td class="border border-gray-400 px-2 py-1 text-center">
                                                                 {{ $index + 1 }}
@@ -273,10 +273,39 @@
                                                                 {{ $sertifikat->nama_sertifikat }}
                                                             </td>
                                                             <td class="border border-gray-400 px-2 py-1">
-                                                                {{ $sertifikat->nama_inggris }}
+                                                                @php
+                                                                    // Simple translation tanpa label
+                                                                    if (!empty($sertifikat->nama_inggris)) {
+                                                                        $englishName = $sertifikat->nama_inggris;
+                                                                    } else {
+                                                                        try {
+                                                                            $translator = new \Stichoza\GoogleTranslate\GoogleTranslate(
+                                                                                'en',
+                                                                                'id',
+                                                                            );
+                                                                            $englishName = $translator->translate(
+                                                                                $sertifikat->nama_sertifikat,
+                                                                            );
+                                                                            $englishName = ucwords(
+                                                                                strtolower($englishName),
+                                                                            );
+                                                                        } catch (\Exception $e) {
+                                                                            // Fallback: keep original
+                                                                            $englishName = $sertifikat->nama_sertifikat;
+                                                                        }
+                                                                    }
+                                                                @endphp
+
+                                                                {{ $englishName }}
+                                                                {{-- TIDAK ADA LABEL AUTO-TRANSLATED DI SINI --}}
                                                             </td>
-                                                            
-                                                            @if(in_array($title, ['Sertifikat Kompetensi', 'Sertifikat Bahasa Internasional', 'Sertifikat Pendidikan Karakter', 'Sertifikat Penghargaan']))
+
+                                                            @if (in_array($title, [
+                                                                    'Sertifikat Kompetensi',
+                                                                    'Sertifikat Bahasa Internasional',
+                                                                    'Sertifikat Pendidikan Karakter',
+                                                                    'Sertifikat Penghargaan',
+                                                                ]))
                                                                 <td class="border border-gray-400 px-2 py-1">
                                                                     {{ $sertifikat->penerbit }}
                                                                 </td>
@@ -307,7 +336,8 @@
 
                         <!-- Validasi Sertifikat -->
                         <div class="mt-8">
-                            <h4 class="font-bold mb-2">Ceklist Ke-validan Sertifikat (Diisi Kaprodi/TU/Delegasi {{ $biodata->fakultas ?? 'Fakultas' }})</h4>
+                            <h4 class="font-bold mb-2">Ceklist Ke-validan Sertifikat (Diisi Kaprodi/TU/Delegasi
+                                {{ $biodata->fakultas ?? 'Fakultas' }})</h4>
                             <div class="overflow-x-auto">
                                 <table class="min-w-full border border-gray-400 table-auto text-xs">
                                     <thead>
@@ -318,16 +348,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach([
-                                            'Sertifikat Kompetensi',
-                                            'Sertifikat Bahasa Internasional',
-                                            'Sertifikat Magang/KP/PPL',
-                                            'Sertifikat Pendidikan Karakter',
-                                            'Sertifikat Penghargaan',
-                                            'Sertifikat Organisasi'
-                                        ] as $index => $jenis)
+                                        @foreach (['Sertifikat Kompetensi', 'Sertifikat Bahasa Internasional', 'Sertifikat Magang/KP/PPL', 'Sertifikat Pendidikan Karakter', 'Sertifikat Penghargaan', 'Sertifikat Organisasi'] as $index => $jenis)
                                             <tr>
-                                                <td class="border border-gray-400 px-2 py-1 text-center">{{ $index + 1 }}.</td>
+                                                <td class="border border-gray-400 px-2 py-1 text-center">
+                                                    {{ $index + 1 }}.</td>
                                                 <td class="border border-gray-400 px-2 py-1">{{ $jenis }}</td>
                                                 <td class="border border-gray-400 px-2 py-1"></td>
                                             </tr>
@@ -349,12 +373,14 @@
 
                             <div class="w-2/3 flex justify-end space-x-6">
                                 <div class="flex-shrink-0">
-                                    <div class="w-28 h-36 border border-gray-500 bg-gray-100 flex items-center justify-center shadow-md">
+                                    <div
+                                        class="w-28 h-36 border border-gray-500 bg-gray-100 flex items-center justify-center shadow-md">
                                         @if ($biodata->foto_profile)
-                                            <img src="{{ asset('storage/' . $biodata->foto_profile) }}"
-                                                alt="Foto Profil" class="w-full h-full object-cover">
+                                            <img src="{{ asset('storage/' . $biodata->foto_profile) }}" alt="Foto Profil"
+                                                class="w-full h-full object-cover">
                                         @else
-                                            <span class="text-xs text-gray-500 text-center">Pas Foto 4x6<br>(Latar Merah)</span>
+                                            <span class="text-xs text-gray-500 text-center">Pas Foto 4x6<br>(Latar
+                                                Merah)</span>
                                         @endif
                                     </div>
                                 </div>
@@ -370,11 +396,12 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Info Preview -->
                 <div class="mt-4 text-center text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
                     <i class="fas fa-info-circle mr-1 text-blue-500"></i>
-                    Ini adalah preview. Formulir PDF yang didownload akan memiliki format lengkap dengan kop surat resmi (diharapkan berukuran A4).
+                    Ini adalah preview. Formulir PDF yang didownload akan memiliki format lengkap dengan kop surat resmi
+                    (diharapkan berukuran A4).
                 </div>
             </div>
         </div>

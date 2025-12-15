@@ -24,7 +24,7 @@
 
         <div class="pt-4">
             <p class="px-3 md:px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pendaftaran</p>
-        
+
             <div class="space-y-2">
 
                 <a href="{{ route('mahasiswa.pembayaran.index') }}"
@@ -32,7 +32,7 @@
                     <i class="fas fa-credit-card text-lg w-5 text-center"></i>
                     <span class="font-medium">Pembayaran</span>
                 </a>
-                
+
                 <a href="{{ route('mahasiswa.biodata.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.biodata.*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                     <i class="fas fa-id-card text-lg w-5 text-center"></i>
@@ -50,7 +50,8 @@
                             :class="{ 'rotate-180': sertifikatOpen, 'text-[#435ebe]': sertifikatOpen }"></i>
                     </button>
 
-                    <div x-show="sertifikatOpen" x-collapse class="mt-1 space-y-1 pl-11 border-l-2 border-[#435ebe]/20 ml-4">
+                    <div x-show="sertifikatOpen" x-collapse
+                        class="mt-1 space-y-1 pl-11 border-l-2 border-[#435ebe]/20 ml-4">
                         <a href="{{ route('mahasiswa.sertifikat.kompetensi') }}"
                             class="block rounded-lg px-3 py-2 text-sm transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.kompetensi') ? 'text-[#435ebe] bg-[#435ebe]/10 font-medium' : 'text-gray-600 hover:bg-[#435ebe]/10 hover:text-[#435ebe]' }} hover:pl-4">
                             Sertifikat Kompetensi
@@ -76,18 +77,16 @@
                             Sertifikat Organisasi
                         </a>
                     </div>
-                
-                <a href="{{ route('mahasiswa.download-formulir.index') }}" 
+                </div>
+                <a href="{{ route('mahasiswa.download-formulir.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                     <i class="fas fa-file-arrow-down text-lg w-5 text-center"></i>
                     <span class="font-medium">Download Formulir</span>
                 </a>
-
             </div>
-        </div>
     </nav>
 </aside>
 
 @push('scripts')
-@vite('resources/js/mahasiswa/components/sidebar.js')
+    @vite('resources/js/mahasiswa/components/sidebar.js')
 @endpush

@@ -1,571 +1,468 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Wisuda - {{ $biodata->user->name_lengkap ?? '' }}</title>
+    <title>Formulir Wisuda - {{ $biodata->user->name_lengkap ?? 'Mahasiswa' }}</title>
     <style>
-        /* Reset default margin dan padding */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Cambria', serif;
             font-size: 12pt;
+            color: #000000;
             line-height: 1.4;
-            color: #000;
-            padding: 20px;
+            padding: 20px 30px;
         }
-        
-        /* Header */
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+
+        .header {
+            text-align: center;
             border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            min-height: 90px;
         }
-        
+
+        .logo-container {
+            position: absolute;
+            left: 0;
+            top: 15px;
+        }
+
         .logo {
-            width: 80px;
-            height: 80px;
-            flex-shrink: 0;
+            width: 70px;
+            height: 70px;
         }
-        
-        .header-center {
+
+        .univ-info {
+            display: inline-block;
             text-align: center;
-            flex-grow: 1;
-            margin: 0 15px;
+            margin-top: 10px;
         }
-        
-        .university-name {
-            font-weight: bold;
+
+        .univ-info h1 {
             font-size: 16pt;
-            line-height: 1.2;
-        }
-        
-        .committee {
             font-weight: bold;
-            font-size: 14pt;
-            line-height: 1.2;
-            margin-top: 2px;
+            margin-bottom: 5px;
         }
-        
-        .address {
+
+        .univ-info .panitia {
+            font-size: 14pt;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .univ-info .alamat {
             font-size: 10pt;
-            color: #666;
-            margin-top: 3px;
+            color: #555;
         }
-        
-        /* Title */
-        .form-title {
+
+        .title {
             text-align: center;
-            font-weight: bold;
-            font-size: 14pt;
-            text-decoration: underline;
             margin: 25px 0;
+        }
+
+        .title h2 {
+            font-size: 14pt;
+            font-weight: bold;
+            text-decoration: underline;
             text-transform: uppercase;
         }
-        
-        /* Biodata Grid */
-        .biodata-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 2px 5px;
-            margin-bottom: 20px;
-        }
-        
-        .biodata-label {
-            font-weight: bold;
-            white-space: nowrap;
-        }
-        
-        .biodata-value {
-            margin-left: 5px;
-        }
-        
-        /* Tables */
-        .certificate-table {
+
+        .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 25px;
-            font-size: 10pt;
-        }
-        
-        .certificate-table th,
-        .certificate-table td {
             border: 1px solid #000;
-            padding: 4px 6px;
-            text-align: left;
-            vertical-align: top;
-        }
-        
-        .certificate-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            text-align: center;
-        }
-        
-        .certificate-table td {
-            word-wrap: break-word;
-        }
-        
-        .table-number {
-            width: 30px;
-            text-align: center;
-        }
-        
-        .table-date {
-            width: 80px;
-            text-align: center;
-        }
-        
-        /* Section Titles */
-        .section-title {
-            font-weight: bold;
-            text-decoration: underline;
-            margin: 15px 0 8px 0;
+            margin-bottom: 20px;
             font-size: 11pt;
         }
-        
-        /* Footer */
-        .footer-section {
+
+        .data-table td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            vertical-align: top;
+        }
+
+        .data-table .no-col {
+            width: 30px;
+            text-align: center;
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+
+        .data-table .label-col {
+            width: 200px;
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+
+        .ttd-section {
             margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            padding-top: 20px;
+            border-top: 1px solid #000;
         }
-        
-        .left-signature {
-            width: 35%;
+
+        .ttd-wrapper {
+            display: table;
+            width: 100%;
         }
-        
-        .right-content {
-            width: 60%;
-            display: flex;
-            justify-content: space-between;
+
+        .ttd-left {
+            display: table-cell;
+            width: 40%;
+            vertical-align: top;
+            text-align: left;
         }
-        
-        .photo-container {
-            flex-shrink: 0;
-            width: 110px;
-            margin-right: 20px;
+
+        .ttd-center {
+            display: table-cell;
+            width: 20%;
+            vertical-align: top;
+            text-align: right;
         }
-        
-        .photo-box {
-            width: 110px;
-            height: 150px;
+
+        .ttd-right {
+            display: table-cell;
+            width: 40%;
+            vertical-align: top;
+            text-align: left;
+            padding-left: 30px;
+        }
+
+        .foto-container {
+            text-align: right;
+            margin-top: 10px;
+            margin-right: -10px;
+        }
+
+        .foto-box {
+            width: 100px;
+            height: 135px;
             border: 1px solid #666;
-            background-color: #f8f8f8;
+            background-color: #f9f9f9;
+            display: inline-block;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
-        
-        .photo-box img {
+
+        .foto-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
-        .photo-label {
+
+        .foto-placeholder {
             font-size: 9pt;
             color: #666;
-            text-align: center;
-            line-height: 1.2;
+            text-align: right;
+            padding: 10px;
+            line-height: 1.3;
         }
-        
-        .student-signature {
-            text-align: left;
-        }
-        
-        .signature-line {
+
+        .ttd-line {
             border-top: 1px solid #000;
             padding-top: 5px;
-            margin-top: 50px;
+            margin-top: 60px;
+            font-weight: normal;
             width: 200px;
+            text-align: left;
         }
-        
-        .signature-label {
-            font-size: 9pt;
-            color: #666;
-            margin-top: 2px;
+
+        .ttd-info {
+            margin-top: 5px;
+            font-size: 10pt;
+            color: #000;
+            font-weight: normal;
         }
-        
-        /* No Data */
-        .no-data {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            margin: 10px 0;
+
+        .divider {
+            border-bottom: 1px solid #ccc;
+            margin: 15px 0;
         }
-        
-        /* Page Break */
-        .page-break {
-            page-break-before: always;
+
+        .ttd-content {
+            min-height: 150px;
         }
-        
-        /* Utilities */
-        .text-center {
-            text-align: center;
+
+        .ttd-text {
+            font-weight: normal;
+            text-align: left;
         }
-        
-        .mt-10 {
-            margin-top: 10px;
-        }
-        
-        .mt-20 {
-            margin-top: 20px;
-        }
-        
-        .mt-30 {
-            margin-top: 30px;
-        }
-        
-        .mb-10 {
-            margin-bottom: 10px;
-        }
-        
-        .mb-20 {
-            margin-bottom: 20px;
+
+        .mahasiswa-info {
+            text-align: left;
+            font-weight: normal;
         }
     </style>
 </head>
+
 <body>
-    <!-- Header dengan logo -->
-    <div class="header-container">
-        <img src="{{ public_path('img/unwahas_putih.jpg') }}" alt="Logo UNWAHAS" class="logo">
-        
-        <div class="header-center">
-            <div class="university-name">UNIVERSITAS WAHID HASYIM</div>
-            <div class="committee">PANITIA WISUDA KE 44 TAHUN 2025</div>
-            <div class="address">Jl. Menoreh Tengah X/22 Sampangan Semarang. Telp. 024-8505680/81</div>
+    <!-- KOP SURAT -->
+    <div class="header">
+        <div class="logo-container">
+            <img src="{{ public_path('img/unwahas_putih.jpg') }}" alt="Logo UNWAHAS" class="logo">
         </div>
-        
-        <div style="width: 80px;"></div> <!-- Spacer untuk alignment -->
+
+        <div class="univ-info">
+            <h1>UNIVERSITAS WAHID HASYIM</h1>
+            <div class="panitia">PANITIA WISUDA KE 44 TAHUN 2025</div>
+            <div class="alamat">Jl. Menoreh Tengah X/22 Sampangan Semarang. Telp. 024-8505680/81</div>
+        </div>
     </div>
-    
-    <!-- Judul Formulir -->
-    <div class="form-title">FORMULIR PENDAFTARAN WISUDA</div>
-    
-    <!-- Data Pribadi -->
-    <div class="biodata-grid">
-        <div class="biodata-label">1. Nama Lengkap</div>
-        <div class="biodata-value">: {{ $biodata->user->name_lengkap ?? '-' }}</div>
-        
-        <div class="biodata-label">2. Tempat, Tgl Lahir</div>
-        <div class="biodata-value">: {{ $biodata->tempat_lahir ?? '-' }}, 
-            {{ $biodata->tanggal_lahir ? \Carbon\Carbon::parse($biodata->tanggal_lahir)->format('d-m-Y') : '-' }}
-        </div>
-        
-        <div class="biodata-label">3. NIK</div>
-        <div class="biodata-value">: {{ $biodata->nik ?? '-' }}</div>
-        
-        <div class="biodata-label">4. NIM</div>
-        <div class="biodata-value">: {{ $biodata->nim ?? '-' }}</div>
-        
-        <div class="biodata-label">5. NIRM</div>
-        <div class="biodata-value">: {{ $biodata->nirm ?? '-' }}</div>
-        
-        <div class="biodata-label">6. NIRL</div>
-        <div class="biodata-value">: {{ $biodata->nirl ?? '-' }}</div>
-        
-        <div class="biodata-label">7. Jenis Kelamin</div>
-        <div class="biodata-value">: {{ $biodata->jenis_kelamin ?? '-' }}</div>
-        
-        <div class="biodata-label">8. Status Mahasiswa</div>
-        <div class="biodata-value">: {{ $biodata->status_mahasiswa ?? '-' }}</div>
-        
-        <div class="biodata-label">9. Tahun Masuk</div>
-        <div class="biodata-value">: {{ $biodata->tahun_masuk ?? '-' }}</div>
-        
-        <div class="biodata-label">10. Fakultas</div>
-        <div class="biodata-value">: {{ $biodata->fakultas ?? '-' }}</div>
-        
-        <div class="biodata-label">11. Program Studi</div>
-        <div class="biodata-value">: {{ $biodata->program_studi ?? '-' }}</div>
-        
-        <div class="biodata-label">12. Alamat Rumah</div>
-        <div class="biodata-value">: {{ $biodata->alamat_rumah ?? '-' }}</div>
-        
-        <div class="biodata-label">13. Alamat Kantor</div>
-        <div class="biodata-value">: {{ $biodata->alamat_kantor ?? '-' }}</div>
-        
-        <div class="biodata-label">14. Nomor Telp/HP</div>
-        <div class="biodata-value">: {{ $biodata->no_telepon ?? '-' }}</div>
-        
-        <div class="biodata-label">15. Email</div>
-        <div class="biodata-value">: {{ $biodata->email ?? '-' }}</div>
-        
-        <div class="biodata-label">16. Dosen Pembimbing</div>
-        <div class="biodata-value">
-            @php $i = 1; @endphp
-            @if ($biodata->dosenPembimbings && $biodata->dosenPembimbings->count() > 0)
-                @foreach ($biodata->dosenPembimbings as $dosen)
-                    <div>
-                        @if ($i == 1)
-                            : {{ $i }}. {{ $dosen->nama ?? '-' }}
-                        @else
-                            &nbsp;&nbsp;&nbsp;{{ $i }}. {{ $dosen->nama ?? '-' }}
-                        @endif
-                    </div>
-                    @php $i++; @endphp
-                @endforeach
-            @else
-                : 1. -<br>
-                &nbsp;&nbsp;&nbsp;2. -
-            @endif
-        </div>
-        
-        <div class="biodata-label">17. Judul Skripsi/Tesis/TA</div>
-        <div class="biodata-value">: {{ $biodata->judul_skripsi ?? '-' }}</div>
-        
-        <div class="biodata-label">18. Kesan dan Pesan</div>
-        <div class="biodata-value">: {{ $biodata->kesan_pesan ?? '-' }}</div>
+
+    <!-- JUDUL FORMULIR -->
+    <div class="title">
+        <h2>FORMULIR PENDAFTARAN WISUDA</h2>
     </div>
-    
-    <!-- Sertifikat Kompetensi -->
-    <div class="section-title">Sertifikat Kompetensi:</div>
-    @if($biodata->sertifikatKompetensi && $biodata->sertifikatKompetensi->count() > 0)
-        <table class="certificate-table">
-            <thead>
+
+    <!-- DATA PRIBADI -->
+    <table class="data-table">
+        <tbody>
+            @php
+                $dataPribadi = [
+                    ['Nama Lengkap', $biodata->user->name_lengkap ?? '-'],
+                    [
+                        'Tempat, Tgl Lahir',
+                        ($biodata->tempat_lahir ?? '-') .
+                        ', ' .
+                        ($biodata->tanggal_lahir
+                            ? \Carbon\Carbon::parse($biodata->tanggal_lahir)->format('d-m-Y')
+                            : '-'),
+                    ],
+                    ['NIK', $biodata->nik ?? '-'],
+                    ['NIM', $biodata->nim ?? '-'],
+                    ['NIRM', $biodata->nirm ?? '-'],
+                    ['NIRL', $biodata->nirl ?? '-'],
+                    ['Jenis Kelamin', $biodata->jenis_kelamin ?? '-'],
+                    ['Status Mahasiswa', $biodata->status_mahasiswa ?? '-'],
+                    ['Tahun Masuk', $biodata->tahun_masuk ?? '-'],
+                    ['Fakultas', $biodata->fakultas ?? '-'],
+                    ['Program Studi', $biodata->program_studi ?? '-'],
+                    ['Alamat Rumah', $biodata->alamat_rumah ?? '-'],
+                    ['Alamat Kantor', $biodata->alamat_kantor ?? '-'],
+                    ['Nomor Telp/HP', $biodata->no_telepon ?? '-'],
+                    ['Email', $biodata->user->email ?? '-'],
+                ];
+            @endphp
+
+            @foreach ($dataPribadi as $index => $item)
                 <tr>
-                    <th class="table-number">No.</th>
-                    <th>Nama Sertifikat</th>
-                    <th>Nama dalam Inggris</th>
-                    <th>Dikeluarkan Oleh</th>
-                    <th class="table-date">Tanggal</th>
+                    <td class="no-col">{{ $index + 1 }}.</td>
+                    <td class="label-col">{{ $item[0] }}</td>
+                    <td>{{ $item[1] }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach($biodata->sertifikatKompetensi as $sertifikat)
+            @endforeach
+
+            <!-- DOSEN PEMBIMBING -->
+            <tr>
+                <td class="no-col">16.</td>
+                <td class="label-col">Dosen Pembimbing</td>
+                <td>
+                    @php $i = 1; @endphp
+                    @if ($biodata->dosenPembimbings && $biodata->dosenPembimbings->count() > 0)
+                        @foreach ($biodata->dosenPembimbings as $dosen)
+                            <div>{{ $i++ }}. {{ $dosen->nama ?? '-' }}</div>
+                        @endforeach
+                    @else
+                        <div>1. -</div>
+                        <div>2. -</div>
+                    @endif
+                </td>
+            </tr>
+
+            <!-- JUDUL SKRIPSI -->
+            <tr>
+                <td class="no-col">17.</td>
+                <td class="label-col">Judul Skripsi/Tesis/TA</td>
+                <td>{{ $biodata->judul_skripsi ?? '-' }}</td>
+            </tr>
+
+            <!-- KESAN PESAN -->
+            <tr>
+                <td class="no-col">18.</td>
+                <td class="label-col">Kesan dan Pesan</td>
+                <td>{{ $biodata->kesan_pesan ?? '-' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="divider"></div>
+
+    <!-- SERTIFIKAT -->
+    @php
+        $sertifikatConfig = [
+            'Sertifikat Kompetensi' => [
+                'data' => $biodata->sertifikatKompetensi,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal'],
+            ],
+            'Sertifikat Bahasa Internasional' => [
+                'data' => $biodata->sertifikatBahasaInternasional,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal'],
+            ],
+            'Sertifikat Magang/Kerja Praktek/PPL' => [
+                'data' => $biodata->sertifikatMagang,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh'],
+            ],
+            'Sertifikat Pendidikan Karakter' => [
+                'data' => $biodata->sertifikatPendidikanKarakter,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal'],
+            ],
+            'Sertifikat Penghargaan' => [
+                'data' => $biodata->sertifikatPenghargaan,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Dikeluarkan Oleh', 'Tanggal'],
+            ],
+            'Sertifikat Organisasi' => [
+                'data' => $biodata->sertifikatOrganisasi,
+                'kolom' => ['No.', 'Nama Sertifikat', 'Nama dalam Inggris', 'Tanggal Mulai', 'Tanggal Selesai'],
+            ],
+        ];
+    @endphp
+
+    @foreach ($sertifikatConfig as $title => $config)
+        @if ($config['data'] && $config['data']->count() > 0)
+            <div style="font-weight: bold; margin-top: 15px; text-decoration: underline; font-size: 11pt;">
+                {{ $title }}:
+            </div>
+            <table
+                style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin: 10px 0 20px 0; font-size: 10pt;">
+                <thead>
                     <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $sertifikat->nama_sertifikat }}</td>
-                        <td>{{ $sertifikat->nama_inggris }}</td>
-                        <td>{{ $sertifikat->penerbit }}</td>
-                        <td class="text-center">{{ $sertifikat->tanggal_terbit ? \Carbon\Carbon::parse($sertifikat->tanggal_terbit)->format('d-m-Y') : '-' }}</td>
+                        @foreach ($config['kolom'] as $kolom)
+                            <th
+                                style="border: 1px solid #000; padding: 5px 6px; background-color: #f0f0f0; font-weight: bold;">
+                                {{ $kolom }}</th>
+                        @endforeach
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="no-data">Tidak ada data.</div>
-    @endif
-    
-    <!-- Sertifikat Bahasa Internasional -->
-    <div class="section-title">Sertifikat Bahasa Internasional:</div>
-    @if($biodata->sertifikatBahasaInternasional && $biodata->sertifikatBahasaInternasional->count() > 0)
-        <table class="certificate-table">
-            <thead>
-                <tr>
-                    <th class="table-number">No.</th>
-                    <th>Nama Sertifikat</th>
-                    <th>Nama dalam Inggris</th>
-                    <th>Dikeluarkan Oleh</th>
-                    <th class="table-date">Tanggal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($biodata->sertifikatBahasaInternasional as $sertifikat)
-                    <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $sertifikat->nama_sertifikat }}</td>
-                        <td>{{ $sertifikat->nama_inggris }}</td>
-                        <td>{{ $sertifikat->penerbit }}</td>
-                        <td class="text-center">{{ $sertifikat->tanggal_terbit ? \Carbon\Carbon::parse($sertifikat->tanggal_terbit)->format('d-m-Y') : '-' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="no-data">Tidak ada data.</div>
-    @endif
-    
-    <!-- Sertifikat Magang/Kerja Praktek/PPL -->
-    <div class="section-title">Sertifikat Magang/Kerja Praktek/PPL:</div>
-    @if($biodata->sertifikatMagang && $biodata->sertifikatMagang->count() > 0)
-        <table class="certificate-table">
-            <thead>
-                <tr>
-                    <th class="table-number">No.</th>
-                    <th>Nama Sertifikat</th>
-                    <th>Nama dalam Inggris</th>
-                    <th>Dikeluarkan Oleh</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($biodata->sertifikatMagang as $sertifikat)
-                    <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $sertifikat->nama_sertifikat }}</td>
-                        <td>{{ $sertifikat->nama_inggris }}</td>
-                        <td>{{ $sertifikat->penerbit }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="no-data">Tidak ada data.</div>
-    @endif
-    
-    <!-- Sertifikat Pendidikan Karakter -->
-    <div class="section-title">Sertifikat Pendidikan Karakter:</div>
-    @if($biodata->sertifikatPendidikanKarakter && $biodata->sertifikatPendidikanKarakter->count() > 0)
-        <table class="certificate-table">
-            <thead>
-                <tr>
-                    <th class="table-number">No.</th>
-                    <th>Nama Sertifikat</th>
-                    <th>Nama dalam Inggris</th>
-                    <th>Dikeluarkan Oleh</th>
-                    <th class="table-date">Tanggal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($biodata->sertifikatPendidikanKarakter as $sertifikat)
-                    <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $sertifikat->nama_sertifikat }}</td>
-                        <td>{{ $sertifikat->nama_inggris }}</td>
-                        <td>{{ $sertifikat->penerbit }}</td>
-                        <td class="text-center">{{ $sertifikat->tanggal_terbit ? \Carbon\Carbon::parse($sertifikat->tanggal_terbit)->format('d-m-Y') : '-' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="no-data">Tidak ada data.</div>
-    @endif
-    
-    <!-- Sertifikat Penghargaan -->
-    <div class="section-title">Sertifikat Penghargaan:</div>
-    @if($biodata->sertifikatPenghargaan && $biodata->sertifikatPenghargaan->count() > 0)
-        <table class="certificate-table">
-            <thead>
-                <tr>
-                    <th class="table-number">No.</th>
-                    <th>Nama Sertifikat</th>
-                    <th>Nama dalam Inggris</th>
-                    <th>Dikeluarkan Oleh</th>
-                    <th class="table-date">Tanggal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($biodata->sertifikatPenghargaan as $sertifikat)
-                    <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $sertifikat->nama_sertifikat }}</td>
-                        <td>{{ $sertifikat->nama_inggris }}</td>
-                        <td>{{ $sertifikat->penerbit }}</td>
-                        <td class="text-center">{{ $sertifikat->tanggal_terbit ? \Carbon\Carbon::parse($sertifikat->tanggal_terbit)->format('d-m-Y') : '-' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="no-data">Tidak ada data.</div>
-    @endif
-    
-    <!-- Sertifikat Organisasi -->
-    <div class="section-title">Sertifikat Organisasi:</div>
-    @if($biodata->sertifikatOrganisasi && $biodata->sertifikatOrganisasi->count() > 0)
-        <table class="certificate-table">
-            <thead>
-                <tr>
-                    <th class="table-number">No.</th>
-                    <th>Nama Sertifikat</th>
-                    <th>Nama dalam Inggris</th>
-                    <th class="table-date">Tanggal Mulai</th>
-                    <th class="table-date">Tanggal Selesai</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($biodata->sertifikatOrganisasi as $sertifikat)
-                    <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $sertifikat->nama_sertifikat }}</td>
-                        <td>{{ $sertifikat->nama_inggris }}</td>
-                        <td class="text-center">{{ $sertifikat->tanggal_mulai ? \Carbon\Carbon::parse($sertifikat->tanggal_mulai)->format('d-m-Y') : '-' }}</td>
-                        <td class="text-center">{{ $sertifikat->tanggal_selesai ? \Carbon\Carbon::parse($sertifikat->tanggal_selesai)->format('d-m-Y') : '-' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="no-data">Tidak ada data.</div>
-    @endif
-    
-    <!-- Checklist Validasi -->
-    <div class="section-title mt-20">Ceklist Ke-validan Sertifikat (Diisi Kaprodi/TU/Delegasi Fakultas Teknik)</div>
-    <table class="certificate-table">
+                </thead>
+                <tbody>
+                    @foreach ($config['data'] as $index => $sertifikat)
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 5px 6px; text-align: center; width: 30px;">
+                                {{ $index + 1 }}</td>
+                            <td style="border: 1px solid #000; padding: 5px 6px;">{{ $sertifikat->nama_sertifikat }}
+                            </td>
+                            <td style="border: 1px solid #000; padding: 5px 6px;">
+                                @php
+                                    if (!empty($sertifikat->nama_inggris)) {
+                                        $englishName = $sertifikat->nama_inggris;
+                                    } else {
+                                        try {
+                                            $translator = new \Stichoza\GoogleTranslate\GoogleTranslate('en', 'id');
+                                            $englishName = $translator->translate($sertifikat->nama_sertifikat);
+                                            $englishName = ucwords(strtolower($englishName));
+                                        } catch (\Exception $e) {
+                                            $englishName = $sertifikat->nama_sertifikat;
+                                        }
+                                    }
+                                @endphp
+                                {{ $englishName }}
+                            </td>
+
+                            @if (in_array($title, [
+                                    'Sertifikat Kompetensi',
+                                    'Sertifikat Bahasa Internasional',
+                                    'Sertifikat Pendidikan Karakter',
+                                    'Sertifikat Penghargaan',
+                                ]))
+                                <td style="border: 1px solid #000; padding: 5px 6px;">{{ $sertifikat->penerbit }}</td>
+                                <td style="border: 1px solid #000; padding: 5px 6px; text-align: center;">
+                                    {{ $sertifikat->tanggal_terbit ? \Carbon\Carbon::parse($sertifikat->tanggal_terbit)->format('d-m-Y') : '-' }}
+                                </td>
+                            @elseif($title === 'Sertifikat Magang/Kerja Praktek/PPL')
+                                <td style="border: 1px solid #000; padding: 5px 6px;">{{ $sertifikat->penerbit }}</td>
+                            @elseif($title === 'Sertifikat Organisasi')
+                                <td style="border: 1px solid #000; padding: 5px 6px; text-align: center;">
+                                    {{ $sertifikat->tanggal_mulai ? \Carbon\Carbon::parse($sertifikat->tanggal_mulai)->format('d-m-Y') : '-' }}
+                                </td>
+                                <td style="border: 1px solid #000; padding: 5px 6px; text-align: center;">
+                                    {{ $sertifikat->tanggal_selesai ? \Carbon\Carbon::parse($sertifikat->tanggal_selesai)->format('d-m-Y') : '-' }}
+                                </td>
+                            @endif
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    @endforeach
+
+    <div class="divider"></div>
+
+    <!-- VALIDASI SERTIFIKAT -->
+    <div style="font-weight: bold; margin-top: 15px; text-decoration: underline; font-size: 11pt;">
+        Ceklist Ke-validan Sertifikat (Diisi Kaprodi/TU/Delegasi {{ $biodata->fakultas ?? 'Fakultas' }})
+    </div>
+    <table
+        style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin: 10px 0 20px 0; font-size: 10pt;">
         <thead>
             <tr>
-                <th class="table-number">No.</th>
-                <th>Jenis Sertifikat</th>
-                <th class="table-date">Cek</th>
+                <th
+                    style="border: 1px solid #000; padding: 5px 6px; background-color: #f0f0f0; font-weight: bold; width: 30px; text-align: center;">
+                    No.</th>
+                <th style="border: 1px solid #000; padding: 5px 6px; background-color: #f0f0f0; font-weight: bold;">
+                    Jenis Sertifikat</th>
+                <th
+                    style="border: 1px solid #000; padding: 5px 6px; background-color: #f0f0f0; font-weight: bold; width: 60px;">
+                    Cek</th>
             </tr>
         </thead>
         <tbody>
-            @for($i = 1; $i <= 6; $i++)
+            @foreach (['Sertifikat Kompetensi', 'Sertifikat Bahasa Internasional', 'Sertifikat Magang/KP/PPL', 'Sertifikat Pendidikan Karakter', 'Sertifikat Penghargaan', 'Sertifikat Organisasi'] as $index => $jenis)
                 <tr>
-                    <td class="text-center">{{ $i }}.</td>
-                    <td>
-                        @if($i == 1) Sertifikat Kompetensi
-                        @elseif($i == 2) Sertifikat Bahasa Internasional
-                        @elseif($i == 3) Sertifikat Magang/KP/PPL
-                        @elseif($i == 4) Sertifikat Pendidikan Karakter
-                        @elseif($i == 5) Sertifikat Penghargaan
-                        @elseif($i == 6) Sertifikat Organisasi
-                        @endif
-                    </td>
-                    <td></td>
+                    <td style="border: 1px solid #000; padding: 5px 6px; text-align: center;">{{ $index + 1 }}.</td>
+                    <td style="border: 1px solid #000; padding: 5px 6px;">{{ $jenis }}</td>
+                    <td style="border: 1px solid #000; padding: 5px 6px; text-align: center;"></td>
                 </tr>
-            @endfor
+            @endforeach
         </tbody>
     </table>
-    
-    <!-- Footer dengan tanda tangan dan foto -->
-    <div class="footer-section">
-        <!-- Tanda tangan kiri -->
-        <div class="left-signature">
-            <div>Kajur/Kaprodi/Delegasi Fakultas Teknik</div>
-            <div style="height: 80px;"></div>
-            <div class="signature-line">(................................)</div>
-            <div class="signature-label">Tanda Tangan dan Stempel</div>
-        </div>
-        
-        <!-- Konten kanan: foto dan tanda tangan mahasiswa -->
-        <div class="right-content">
-            <!-- Foto -->
-            <div class="photo-container">
-                <div class="photo-box">
-                    @if($biodata->foto_profile && file_exists(storage_path('app/public/' . $biodata->foto_profile)))
-                        <img src="{{ storage_path('app/public/' . $biodata->foto_profile) }}" 
-                             alt="Foto Profil">
-                    @else
-                        <div class="photo-label">
-                            Pas Foto 4x6<br>
-                            (Latar Merah)
-                        </div>
-                    @endif
+
+    <!-- TANDA TANGAN -->
+    <div class="ttd-section">
+        <div class="ttd-wrapper">
+            <div class="ttd-left">
+                <div class="ttd-content">
+                    <p class="ttd-text">Kajur/Kaprodi/Delegasi</p>
+                    <p class="ttd-text">Fakultas {{ $biodata->fakultas ?? 'Fakultas' }}</p>
+
+                    <div class="ttd-line">(................................)</div>
+                    <p class="ttd-info">Tanda Tangan dan Stempel</p>
                 </div>
             </div>
-            
-            <!-- Tanda tangan mahasiswa -->
-            <div class="student-signature">
-                <div>Semarang, {{ date('d F Y') }}</div>
-                <div>Mahasiswa (Calon wisudawan),</div>
-                <div style="height: 80px;"></div>
-                <div class="signature-line">{{ $biodata->user->name_lengkap ?? '-' }}</div>
-                <div>NIM. {{ $biodata->nim ?? '-' }}</div>
+
+            <div class="ttd-center">
+                <div class="foto-container">
+                    <div class="foto-box">
+                        @if ($biodata->foto_profile && file_exists(public_path('storage/' . $biodata->foto_profile)))
+                            <img src="{{ public_path('storage/' . $biodata->foto_profile) }}" alt="Foto Profil">
+                        @else
+                            <div class="foto-placeholder">
+                                Pas Foto 4x6<br>(Latar Merah)
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="ttd-right">
+                <div class="ttd-content">
+                    <div class="mahasiswa-info">
+                        <p>Semarang, {{ date('d F Y') }}</p>
+                        <p>Mahasiswa (Calon wisudawan),</p>
+                    </div>
+
+                    <div class="ttd-line">{{ $biodata->user->name_lengkap ?? '-' }}</div>
+                    <p class="ttd-info">NIM. {{ $biodata->nim ?? '-' }}</p>
+                </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

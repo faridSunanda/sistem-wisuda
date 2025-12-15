@@ -34,6 +34,7 @@ use App\Http\Controllers\Mahasiswa\DownloadFormulirController;
 
 // Akademik
 use App\Http\Controllers\Akademik\DataWisudawanController as AkademikController;
+use App\Http\Controllers\TestTranslationController;
 
 
 /*
@@ -315,3 +316,9 @@ Route::prefix('akademik')->name('akademik.')->middleware(['auth', 'role:akademik
 
     Route::resource('data-wisudawan', AkademikController::class);
 });
+
+
+// Test routes
+Route::get('/test-translation', [TestTranslationController::class, 'test']);
+Route::post('/api/translate-test', [TestTranslationController::class, 'translateApi']);
+Route::post('/api/bulk-translate', [TestTranslationController::class, 'bulkTranslate']);
