@@ -174,7 +174,8 @@ class DataWisudawanController extends Controller
                 DB::raw($this->getJenjangCaseStatement() . ' as jenjang')
             )
             ->whereNull('biodatas.deleted_at')
-            ->whereNull('users.deleted_at');
+            ->whereNull('users.deleted_at')
+            ->where('biodatas.is_verified_keuangan', true);
     }
 
     private function applyFilters($query, Request $request)

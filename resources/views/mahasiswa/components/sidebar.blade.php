@@ -26,28 +26,43 @@
             <p class="px-3 md:px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Pendaftaran</p>
 
             <div class="space-y-2">
+                @php
+                    $biodata = Auth::user()->biodata;
+                    $isPaid = $biodata && $biodata->is_bayar;
+                    // Unlock menus only if ACADEMIC verification is true (as requested)
+                    $isUnlocked = $biodata && $biodata->is_verified_akademik; 
+                    
+                    $disabledClass = 'opacity-50 cursor-not-allowed pointer-events-none bg-gray-100';
+                @endphp
 
                 <a href="{{ route('mahasiswa.pembayaran.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.pembayaran*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                     <i class="fas fa-credit-card text-lg w-5 text-center"></i>
                     <span class="font-medium">Pembayaran</span>
                 </a>
-
-                <a href="{{ route('mahasiswa.biodata.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.biodata.*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                
+                <a href="{{ $isUnlocked ? route('mahasiswa.biodata.index') : '#' }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.biodata.*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }} {{ !$isUnlocked ? $disabledClass : '' }}">
                     <i class="fas fa-id-card text-lg w-5 text-center"></i>
                     <span class="font-medium">Data Diri</span>
+                    @if(!$isUnlocked)
+                        <i class="fas fa-lock ml-auto text-xs text-gray-400"></i>
+                    @endif
                 </a>
 
-                <div x-data="{ sertifikatOpen: {{ request()->routeIs('mahasiswa.sertifikat.*') ? 'true' : 'false' }} }">
-                    <button @click="sertifikatOpen = !sertifikatOpen"
+                <div x-data="{ sertifikatOpen: {{ request()->routeIs('mahasiswa.sertifikat.*') ? 'true' : 'false' }} }" class="{{ !$isUnlocked ? $disabledClass . ' rounded-lg' : '' }}">
+                    <button @click="sertifikatOpen = !sertifikatOpen" {{ !$isUnlocked ? 'disabled' : '' }}
                         class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.sertifikat.*') ? 'text-[#435ebe] bg-[#435ebe]/10 border border-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                         <span class="flex items-center gap-3">
                             <i class="fas fa-scroll text-lg w-5 text-center"></i>
                             <span class="font-medium">Sertifikat</span>
                         </span>
-                        <i class="fas fa-chevron-down text-xs transition-transform duration-200"
-                            :class="{ 'rotate-180': sertifikatOpen, 'text-[#435ebe]': sertifikatOpen }"></i>
+                        @if(!$isUnlocked)
+                             <i class="fas fa-lock text-xs text-gray-400"></i>
+                        @else
+                             <i class="fas fa-chevron-down text-xs transition-transform duration-200"
+                                :class="{ 'rotate-180': sertifikatOpen, 'text-[#435ebe]': sertifikatOpen }"></i>
+                        @endif
                     </button>
 
                     <div x-show="sertifikatOpen" x-collapse
@@ -78,10 +93,14 @@
                         </a>
                     </div>
                 </div>
-                <a href="{{ route('mahasiswa.download-formulir.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
+                
+                <a href="{{ $isUnlocked ? route('mahasiswa.download-formulir.index') : '#' }}" 
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }} {{ !$isUnlocked ? $disabledClass : '' }}">
                     <i class="fas fa-file-arrow-down text-lg w-5 text-center"></i>
                     <span class="font-medium">Download Formulir</span>
+                    @if(!$isUnlocked)
+                        <i class="fas fa-lock ml-auto text-xs text-gray-400"></i>
+                    @endif
                 </a>
             </div>
     </nav>
