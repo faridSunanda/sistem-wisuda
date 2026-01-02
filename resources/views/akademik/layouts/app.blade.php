@@ -15,8 +15,15 @@
     @stack('styles')
 </head>
 
-<body class="bg-gray-50" x-data="{ sidebarOpen: false, showFooter: true }">
-    <div class="flex h-screen overflow-hidden">
+<body class="bg-gray-50">
+    <div x-data="{ 
+        sidebarOpen: window.innerWidth >= 1024, 
+        showFooter: true,
+        init() {
+            // Set default sidebar state based on screen size
+            this.sidebarOpen = window.innerWidth >= 1024;
+        }
+    }" class="flex h-screen overflow-hidden">
         <!-- Backdrop for Mobile -->
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
             class="fixed inset-0 z-40 bg-gray-500/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
@@ -28,7 +35,8 @@
         <!-- Sidebar -->
         @include('akademik.components.sidebar')
 
-        <div class="flex flex-col flex-1 overflow-hidden lg:ml-64">
+        <div class="flex flex-col flex-1 overflow-hidden transition-all duration-300"
+             :class="sidebarOpen ? 'lg:pl-64' : 'lg:pl-0'">
             <!-- Header -->
             @include('akademik.components.header')
 

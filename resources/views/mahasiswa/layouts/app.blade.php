@@ -11,7 +11,14 @@
 </head>
 <body class="bg-gray-50">
 
-    <div x-data="{ sidebarOpen: false, showFooter: true }" class="flex h-screen overflow-hidden">
+    <div x-data="{ 
+        sidebarOpen: window.innerWidth >= 1024, 
+        showFooter: true,
+        init() {
+            // Set default sidebar state based on screen size
+            this.sidebarOpen = window.innerWidth >= 1024;
+        }
+    }" class="flex h-screen overflow-hidden">
         <!-- Backdrop for Mobile -->
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
             class="fixed inset-0 z-40 bg-gray-500/20 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
@@ -22,7 +29,8 @@
 
         @include('mahasiswa.components.sidebar')
         
-        <div class="flex flex-col flex-1 overflow-hidden w-full lg:w-auto lg:pl-64">
+        <div class="flex flex-col flex-1 overflow-hidden w-full transition-all duration-300"
+             :class="sidebarOpen ? 'lg:pl-64' : 'lg:pl-0'">
             
             @include('mahasiswa.components.header')
             

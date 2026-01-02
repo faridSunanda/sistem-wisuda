@@ -25,14 +25,14 @@
             class="bg-white min-w-[200px] rounded-lg shadow-xl absolute right-0 top-full mt-2 z-50 py-2 border border-slate-200"
             style="display: none;">
             @auth
-                <div class="px-4 py-2 border-b">
+                <div class="px-4 py-2 border-b border-slate-200">
                     <p class="font-semibold text-slate-800">{{ Auth::user()->name_lengkap ?? Auth::user()->name }}</p>
-                    <p class="text-xs text-slate-500">Role: <span id="activeRoleLabel">{{ ucfirst(session('acting_role', Auth::user()->role)) }}</span></p>
+                    <p class="text-xs text-slate-500"> <span id="activeRoleLabel">{{ ucfirst(session('acting_role', Auth::user()->role)) }}</span></p>
                 </div>
             @endauth
 
             @if(session('allow_role_switch'))
-                <div class="px-4 py-3 border-b space-y-2">
+                <div class="px-4 py-3 border-b border-slate-200 space-y-2">
                     <div class="flex items-center gap-2 text-xs font-semibold text-slate-600 uppercase tracking-wide">
                         <i class="fa-solid fa-shuffle" style="color: #435EBE;"></i>
                         <span>Ganti Role</span>

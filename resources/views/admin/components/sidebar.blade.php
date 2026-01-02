@@ -1,5 +1,5 @@
 <aside
-    class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:shadow-none shadow-xl"
+    class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col transform transition-transform duration-300 ease-in-out lg:shadow-none shadow-xl"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
     <!-- Header Sidebar -->
@@ -77,7 +77,7 @@
                 class="flex w-full items-center justify-between gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('admin.wisuda*') ? 'text-[#435ebe] bg-[#435ebe]/10 border border-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }}">
                 <span class="flex items-center gap-3">
                     <i class="fas fa-graduation-cap text-lg w-5 text-center"></i>
-                    <span>Wisuda</span>
+                    <span class="font-medium">Wisuda</span>
                 </span>
                 <i class="fas fa-chevron-down text-xs transition-transform duration-200"
                     :class="{ 'rotate-180': settingOpen, 'text-[#435ebe]': settingOpen }"></i>
