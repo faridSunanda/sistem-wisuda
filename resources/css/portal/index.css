@@ -25,9 +25,6 @@
     from {
         width: 0;
     }
-    to {
-        width: calc(1165 / 1300 * 100%);
-    }
 }
 
 @keyframes shimmer {
@@ -69,9 +66,14 @@
    Progress Bar
    ============================================ */
 .progress-bar {
-    animation: growBar 1.2s ease-out forwards;
     position: relative;
     overflow: hidden;
+    width: 0;
+    transition: width 1.2s ease-out;
+}
+
+.progress-bar.animate {
+    animation: growBar 1.2s ease-out forwards;
 }
 
 .progress-bar::after {
@@ -126,11 +128,13 @@
 .alur-step:nth-child(10) { animation-delay: 1s; }
 
 .alur-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 1.25rem;
     padding: 2.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border: 2px solid #e5e7eb;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     transition: all 0.3s ease;
     width: 420px;
     min-height: 280px;
@@ -143,41 +147,45 @@
 
 .alur-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: #3b82f6;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .alur-badge {
-    position: absolute;
-    top: -28px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 64px;
-    height: 64px;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    border-radius: 50%;
+    position: relative;
+    width: auto;
+    height: auto;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border: 5px solid white;
+    box-shadow: none;
+    border: none;
     z-index: 20;
     transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+    text-align: center;
 }
 
 .alur-card:hover .alur-badge {
-    transform: translateX(-50%) scale(1.1);
-    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.2);
+    transform: scale(1.1);
+    box-shadow: none;
+    border-color: transparent;
+    background: none;
 }
 
 .alur-number {
     color: white;
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .alur-content {
-    margin-top: 2rem;
+    margin-top: 0;
     text-align: center;
     flex: 1;
     display: flex;
@@ -188,18 +196,18 @@
 .alur-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1f2937;
+    color: white;
     margin-bottom: 1.25rem;
     transition: color 0.3s ease;
 }
 
 .alur-card:hover .alur-title {
-    color: #3b82f6;
+    color: white;
 }
 
 .alur-description {
     font-size: 1.125rem;
-    color: #6b7280;
+    color: rgba(255, 255, 255, 0.9);
     line-height: 1.7;
     flex: 1;
 }
@@ -216,20 +224,9 @@
 .alur-line {
     width: 120px;
     height: 4px;
-    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
     border-radius: 2px 0 0 2px;
     position: relative;
-}
-
-.alur-line::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-    animation: shimmer 2s infinite;
 }
 
 .alur-arrow {
@@ -239,9 +236,20 @@
     transform: translateY(-50%);
     width: 16px;
     height: 20px;
-    background: #3b82f6;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
     clip-path: polygon(0 0, 100% 50%, 0 100%);
-    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 2px 6px rgba(251, 191, 36, 0.5);
+}
+
+/* ============================================
+   Glassmorphism Card
+   ============================================ */
+.glassmorphism-card {
+    background: rgba(22, 101, 52, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.15);
 }
 
 /* ============================================
@@ -259,9 +267,12 @@
     }
 
     .alur-badge {
-        width: 60px;
-        height: 60px;
-        top: -26px;
+        width: auto;
+        height: auto;
+        background: none;
+        border: none;
+        box-shadow: none;
+        margin-bottom: 0.5rem;
     }
 
     .alur-number {
@@ -290,6 +301,7 @@
         padding: 1.5rem 0;
         overflow-x: auto;
         overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
     }
 
     .alur-container {
@@ -299,27 +311,31 @@
 
     .alur-card {
         width: 280px;
-        padding: 1.75rem;
-        min-height: 240px;
+        padding: 1.75rem 1.5rem;
+        min-height: 220px;
     }
 
     .alur-badge {
-        width: 50px;
-        height: 50px;
-        top: -20px;
+        width: auto;
+        height: auto;
+        background: none;
+        border: none;
+        box-shadow: none;
+        margin-bottom: 0.625rem;
     }
 
     .alur-number {
-        font-size: 1.375rem;
+        font-size: 1.5rem;
     }
 
     .alur-title {
         font-size: 1.125rem;
-        margin-bottom: 0.875rem;
+        margin-bottom: 0.75rem;
     }
 
     .alur-description {
         font-size: 0.9375rem;
+        line-height: 1.6;
     }
 
     .alur-connector {
@@ -340,24 +356,24 @@
 
 @media (max-width: 640px) {
     .alur-wrapper {
-        padding: 2rem 0;
+        padding: 1.5rem 0 2rem 0;
         overflow-x: hidden;
         overflow-y: hidden;
-        max-height: 70vh;
-        height: 70vh;
         position: relative;
+        height: 70vh;
+        max-height: 70vh;
     }
 
     .alur-container {
         flex-direction: column;
         align-items: center;
-        padding: 0 1.5rem;
-        padding-bottom: calc(70vh - 2rem);
+        padding: 0 1rem 2rem 1rem;
         min-width: auto;
         width: 100%;
         gap: 0;
         transition: transform 0.1s linear;
         will-change: transform;
+        position: relative;
     }
 
     .alur-step {
@@ -365,44 +381,46 @@
         max-width: 100%;
         flex-direction: column;
         align-items: center;
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
     }
 
     .alur-step:last-child {
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
     }
 
     .alur-card {
         width: 100%;
         max-width: 100%;
-        padding: 2rem 1.5rem;
+        padding: 1.5rem 1.25rem;
         margin: 0 auto;
         min-height: auto;
         box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
     }
     
     .alur-card:hover {
-        transform: translateY(-4px);
+        transform: translateY(-2px);
     }
 
     .alur-badge {
-        width: 50px;
-        height: 50px;
-        top: -22px;
-        border: 4px solid white;
+        width: auto;
+        height: auto;
+        background: none;
+        border: none;
+        box-shadow: none;
+        margin-bottom: 0.75rem;
     }
 
     .alur-number {
-        font-size: 1.375rem;
+        font-size: 1.5rem;
     }
 
     .alur-content {
-        margin-top: 1.5rem;
+        margin-top: 0;
     }
     
     .alur-title {
         font-size: 1.125rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
 
     .alur-description {
@@ -411,7 +429,7 @@
     }
 
     .alur-connector {
-        margin: 0;
+        margin: 0.5rem 0;
         width: 100%;
         height: 40px;
         flex-direction: column;
@@ -423,64 +441,68 @@
     .alur-line {
         width: 3px;
         height: 40px;
-        background: linear-gradient(180deg, #3b82f6 0%, #60a5fa 100%);
+        background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
         border-radius: 2px;
         position: relative;
-    }
-    
-    .alur-line::before {
-        background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-        animation: shimmerVertical 2s infinite;
     }
 
     .alur-arrow {
         position: absolute;
-        bottom: -12px;
+        bottom: -14px;
         right: auto;
         top: auto;
-        transform: translateX(-50%) rotate(90deg);
         left: 50%;
+        transform: translateX(-50%) rotate(90deg);
         width: 12px;
         height: 16px;
+        background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+        box-shadow: 0 2px 4px rgba(251, 191, 36, 0.4);
     }
 }
 
 @media (max-width: 480px) {
     .alur-wrapper {
-        padding: 1.5rem 0;
+        padding: 1.25rem 0;
     }
 
     .alur-container {
-        padding: 0 1rem;
+        padding: 0 0.75rem 1.5rem 0.75rem;
     }
 
     .alur-step {
-        margin-bottom: 2rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .alur-step:last-child {
+        margin-bottom: 1.25rem;
     }
 
     .alur-card {
-        padding: 1.75rem 1.25rem;
+        padding: 1.25rem 1rem;
         border-radius: 1rem;
     }
 
     .alur-badge {
-        width: 46px;
-        height: 46px;
-        top: -20px;
-        border: 3px solid white;
+        width: auto;
+        height: auto;
+        background: none;
+        border: none;
+        box-shadow: none;
+        margin-bottom: 0.625rem;
     }
     
     .alur-number {
-        font-size: 1.25rem;
+        font-size: 1.375rem;
     }
 
     .alur-content {
-        margin-top: 1.25rem;
+        margin-top: 0;
     }
 
     .alur-title {
         font-size: 1rem;
-        margin-bottom: 0.875rem;
+        margin-bottom: 0.625rem;
     }
 
     .alur-description {
@@ -489,16 +511,25 @@
     }
 
     .alur-connector {
-        height: 36px;
+        margin: 0.5rem 0;
+        height: 32px;
     }
 
     .alur-line {
-        height: 36px;
+        height: 32px;
     }
 
     .alur-arrow {
-        bottom: -10px;
+        position: absolute;
+        bottom: -12px;
+        right: auto;
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%) rotate(90deg);
         width: 10px;
         height: 14px;
+        background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+        box-shadow: 0 2px 4px rgba(251, 191, 36, 0.4);
     }
 }

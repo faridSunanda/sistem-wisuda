@@ -91,7 +91,7 @@ export function initDataTable(config) {
                 data: 'angkatan',
                 className: 'text-center',
                 name: 'angkatan',
-                width: '150px'
+                width: '270px'
             },
             {
                 data: 'tanggal_pendaftaran',

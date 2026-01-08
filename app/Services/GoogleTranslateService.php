@@ -12,15 +12,26 @@ class GoogleTranslateService
     private $translator;
     private $cacheDuration = 86400; // 24 jam
     
-    public function __construct()
+    /**
+     * Get translator instance (lazy loading)
+     */
+    private function getTranslator()
     {
-        // Initialize translator
-        $this->translator = new GoogleTranslate();
-        $this->translator->setSource('id'); // Bahasa Indonesia
-        $this->translator->setTarget('en'); // Bahasa Inggris
+        if ($this->translator === null) {
+            try {
+                $this->translator = new GoogleTranslate();
+                $this->translator->setSource('id'); // Bahasa Indonesia
+                $this->translator->setTarget('en'); // Bahasa Inggris
+                
+                // Set proxy/options jika perlu
+                $this->setTranslatorOptions();
+            } catch (\Exception $e) {
+                Log::error('Failed to initialize GoogleTranslate: ' . $e->getMessage());
+                throw $e;
+            }
+        }
         
-        // Set proxy/options jika perlu
-        $this->setTranslatorOptions();
+        return $this->translator;
     }
     
     private function setTranslatorOptions()
@@ -34,7 +45,7 @@ class GoogleTranslateService
         // Jika perlu proxy (opsional)
         // $options['proxy'] = 'http://proxy.unwahas.ac.id:8080';
         
-        $this->translator->setOptions($options);
+        $this->getTranslator()->setOptions($options);
     }
     
     /**
@@ -93,7 +104,7 @@ class GoogleTranslateService
                     sleep(rand(1, 3));
                 }
                 
-                return $this->translator->translate($text);
+                return $this->getTranslator()->translate($text);
                 
             } catch (Exception $e) {
                 $retries++;
@@ -108,7 +119,7 @@ class GoogleTranslateService
                     'http://translate.googleapis.com/translate_a/single',
                 ];
                 
-                $this->translator->setUrl($urls[$retries % count($urls)]);
+                $this->getTranslator()->setUrl($urls[$retries % count($urls)]);
             }
         }
         
@@ -307,7 +318,7 @@ class GoogleTranslateService
         
         try {
             $startTime = microtime(true);
-            $result = $this->translator->translate($testText);
+            $result = $this->getTranslator()->translate($testText);
             $endTime = microtime(true);
             
             return [

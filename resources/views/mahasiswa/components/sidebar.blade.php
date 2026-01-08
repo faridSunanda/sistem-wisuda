@@ -30,7 +30,10 @@
                     $biodata = Auth::user()->biodata;
                     $isPaid = $biodata && $biodata->is_bayar;
                     // Unlock menus only if ACADEMIC verification is true (as requested)
-                    $isUnlocked = $biodata && $biodata->is_verified_akademik; 
+                    $isUnlocked = $biodata && $biodata->is_verified_akademik;
+                    // Download formulir harus terkunci sampai data diri divalidasi oleh keuangan
+                    // Jadi perlu is_verified_keuangan (pembayaran) DAN is_verified_akademik (data diri)
+                    $canDownloadFormulir = $biodata && $biodata->is_verified_keuangan && $biodata->is_verified_akademik;
                     
                     $disabledClass = 'opacity-50 cursor-not-allowed pointer-events-none bg-gray-100';
                 @endphp
@@ -94,11 +97,11 @@
                     </div>
                 </div>
                 
-                <a href="{{ $isUnlocked ? route('mahasiswa.download-formulir.index') : '#' }}" 
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }} {{ !$isUnlocked ? $disabledClass : '' }}">
+                <a href="{{ $canDownloadFormulir ? route('mahasiswa.download-formulir.index') : '#' }}" 
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('mahasiswa.download-formulir*') ? 'text-white bg-[#435ebe] shadow-md shadow-[#435ebe]/20' : 'text-gray-700 hover:bg-[#435ebe]/10 hover:text-[#435ebe] border border-transparent hover:border-[#435ebe]/20' }} {{ !$canDownloadFormulir ? $disabledClass : '' }}">
                     <i class="fas fa-file-arrow-down text-lg w-5 text-center"></i>
                     <span class="font-medium">Download Formulir</span>
-                    @if(!$isUnlocked)
+                    @if(!$canDownloadFormulir)
                         <i class="fas fa-lock ml-auto text-xs text-gray-400"></i>
                     @endif
                 </a>

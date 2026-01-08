@@ -289,10 +289,16 @@ class GroupWisudawanController extends Controller
     private function buildBaseQuery()
     {
         return DB::table('users')
-            ->leftJoin('biodatas', 'users.id', '=', 'biodatas.user_id')
+            ->join('biodatas', 'users.id', '=', 'biodatas.user_id')
             ->leftJoin('group_wisudawans', 'biodatas.id', '=', 'group_wisudawans.biodata_id')
             ->leftJoin('groups', 'group_wisudawans.group_id', '=', 'groups.id')
             ->leftJoin('sesi', 'group_wisudawans.sesi_id', '=', 'sesi.id')
+            ->whereExists(function($query) {
+                $query->select(DB::raw(1))
+                    ->from('sertifikats')
+                    ->whereColumn('sertifikats.biodata_id', 'biodatas.id')
+                    ->whereNull('sertifikats.deleted_at');
+            })
             ->select([
                 'users.id',
                 'users.name_lengkap',
@@ -309,7 +315,10 @@ class GroupWisudawanController extends Controller
                 'group_wisudawans.sesi_id'
             ])
             ->where('users.role', 'mahasiswa')
-            ->whereNotNull('biodatas.id')
+            ->where('biodatas.is_bayar', true)
+            ->where('biodatas.is_verified_akademik', true)
+            ->where('biodatas.is_verified_keuangan', true)
+            ->whereNull('biodatas.deleted_at')
             ->orderBy('group_wisudawans.nomor_urut', 'asc');
     }
 

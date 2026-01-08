@@ -544,5 +544,48 @@
         text-align: center;
         margin-top: 1rem;
     }
+
+    /* Mobile table adjustments */
+    #paymentTable_wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #paymentTable_wrapper .dataTables_scrollHead,
+    #paymentTable_wrapper .dataTables_scrollBody {
+        overflow-x: auto;
+    }
+
+    #paymentTable thead th,
+    #paymentTable tbody td {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    /* Mobile form adjustments */
+    #verifyForm button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    /* Extra small devices */
+    #paymentTable thead th,
+    #paymentTable tbody td {
+        padding: 0.375rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    #paymentTable_wrapper .dataTables_length,
+    #paymentTable_wrapper .dataTables_filter {
+        font-size: 0.75rem;
+    }
+
+    #paymentTable_wrapper .dataTables_length select,
+    #paymentTable_wrapper .dataTables_filter input {
+        padding: 0.375rem;
+        font-size: 0.75rem;
+    }
 }
 

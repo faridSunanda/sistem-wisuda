@@ -1,6 +1,6 @@
 <header
     class="h-16 bg-white/80 backdrop-blur-sm flex items-center px-4 md:px-6 shrink-0 sticky top-0 z-30 shadow-sm">
-    
+
     <button @click.stop="sidebarOpen = !sidebarOpen"
         class="w-10 h-10 flex items-center justify-center rounded-full text-slate-600 hover:bg-slate-200 transition-colors"
         aria-label="Toggle Sidebar">
@@ -10,18 +10,18 @@
     <div class="flex-1"></div>
 
     <div x-data="{ open: false }" class="relative">
-        
+
         <button @click="open = !open"
             class="flex items-center gap-3 rounded-full p-1 pl-3 pr-2 hover:bg-slate-100 transition-colors duration-300">
             <span class="font-semibold text-slate-700 hidden sm:inline">{{ Auth::user()->name_lengkap ?? 'Mahasiswa' }}</span>
-            
+
             <div
                 class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold text-sm shadow-sm shrink-0">
                 {{ strtoupper(substr(Auth::user()->name_lengkap ?? 'A', 0, 1)) }}
             </div>
         </button>
 
-        <div x-show="open" @click.away="open = false" 
+        <div x-show="open" @click.away="open = false"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 transform scale-95"
             x-transition:enter-end="opacity-100 transform scale-100"

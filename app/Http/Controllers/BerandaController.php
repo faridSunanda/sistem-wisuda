@@ -3,81 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\AlurPendaftaran;
 use App\Models\DokumenPersyaratan;
-use App\Models\JadwalPendaftaran;
-use App\Models\KuotaWisudawan;
 use App\Models\Biodata;
-use Illuminate\Support\Facades\DB;
+use App\Models\PelaksanaanWisuda;
+use App\Models\Wisuda;
 use Carbon\Carbon;
 
 class BerandaController extends Controller
 {
+    /**
+     * Menampilkan halaman beranda portal
+     */
     public function index()
     {
+        // Data alur pendaftaran dan dokumen persyaratan
         $alurPendaftaran = AlurPendaftaran::orderBy('no_urut', 'asc')->get();
-
         $dokumenPersyaratan = DokumenPersyaratan::latest()->get();
 
-        $now = now();
-        // Ambil jadwal dengan eager load kuota untuk performa lebih baik
-        // Gunakan fresh() untuk memastikan data terbaru dari database
-        $jadwal = JadwalPendaftaran::with('kuotaWisudawan')
-                                    ->where('waktu_tutup_pendaftaran', '>', $now)
-                                    ->orderBy('waktu_buka_pendaftaran', 'asc')
-                                    ->first();
+        // Ambil data wisuda aktif
+        $wisuda = $this->getWisudaAktif();
 
-        if (!$jadwal) {
-            $jadwal = JadwalPendaftaran::with('kuotaWisudawan')
-                                        ->orderBy('waktu_tutup_pendaftaran', 'desc')
-                                        ->first();
-        }
-        
-        // Refresh relasi kuota jika sudah ada untuk memastikan data terbaru
-        if ($jadwal && $jadwal->relationLoaded('kuotaWisudawan') && $jadwal->kuotaWisudawan) {
-            $jadwal->kuotaWisudawan->refresh();
-        }
-
+        // Inisialisasi variabel default
         $statusInfo = ['text' => 'Belum Dibuka', 'color' => 'bg-gray-500'];
         $totalPendaftar = 0;
         $totalKuota = 0;
         $persentase = 0;
+        $countdownTarget = null;
+        $sisaKuota = 0;
 
-        if ($jadwal) {
-            $statusInfo = $this->getJadwalStatusInfo($jadwal);
-            
-            // Ambil kuota untuk jadwal aktif menggunakan relasi yang sudah di-eager load
-            // Jika belum di-load, ambil langsung dari database
-            if ($jadwal->relationLoaded('kuotaWisudawan')) {
-                $kuota = $jadwal->kuotaWisudawan;
-            } else {
-                // Reload relasi untuk memastikan data terbaru
-                $jadwal->load('kuotaWisudawan');
-                $kuota = $jadwal->kuotaWisudawan;
-            }
-            
-            if ($kuota) {
-                $totalKuota = $kuota->jumlah_kuota;
-            }
+        if ($wisuda) {
+            $statusInfo = $this->getWisudaStatusInfo($wisuda);
+            $totalKuota = $wisuda->kuota_wisudawan ?? 0;
+            $countdownTarget = Carbon::parse($wisuda->tanggal_penutupan);
+            $totalPendaftar = $this->hitungTotalPendaftar($wisuda->id);
 
-            // Hitung total pendaftar yang benar-benar terdaftar untuk wisuda ini
-            // Pendaftar yang sudah verified atau sudah bayar dianggap sudah terdaftar
-            $totalPendaftar = Biodata::whereNotNull('user_id')
-                                    ->whereHas('user', function($query) {
-                                        $query->where('role', 'mahasiswa');
-                                    })
-                                    ->where(function($query) {
-                                        $query->where('is_verified', true)
-                                              ->orWhere('is_bayar', true);
-                                    })
-                                    ->count();
-
-            // Hitung persentase
             if ($totalKuota > 0) {
                 $persentase = min(100, round(($totalPendaftar / $totalKuota) * 100, 1));
+                $sisaKuota = max(0, $totalKuota - $totalPendaftar);
             }
         }
+
+        // Jadwal pelaksanaan wisuda
+        $jadwalPelaksanaan = PelaksanaanWisuda::with(['sesi'])
+            ->where('waktu_pelaksanaan', '>=', now())
+            ->orderBy('waktu_pelaksanaan', 'asc')
+            ->get();
 
         return view('portal.index', [
             'alurPendaftaran' => $alurPendaftaran,
@@ -86,15 +57,50 @@ class BerandaController extends Controller
             'totalPendaftar' => $totalPendaftar,
             'totalKuota' => $totalKuota,
             'persentase' => $persentase,
-            'jadwal' => $jadwal
+            'wisuda' => $wisuda,
+            'jadwalPelaksanaan' => $jadwalPelaksanaan,
+            'countdownTarget' => $countdownTarget,
+            'sisaKuota' => $sisaKuota
         ]);
     }
 
-    private function getJadwalStatusInfo($jadwal)
+    //Mengambil wisuda aktif dengan prioritas status dibuka
+    private function getWisudaAktif()
+    {
+        $wisuda = Wisuda::whereRaw('LOWER(status) = ?', ['dibuka'])
+            ->orderBy('tanggal_pendaftaran', 'desc')
+            ->first();
+
+        if (!$wisuda) {
+            $wisuda = Wisuda::orderBy('tanggal_pendaftaran', 'desc')->first();
+        }
+
+        return $wisuda;
+    }
+
+    // Menghitung total pendaftar yang sudah terverifikasi atau sudah bayar
+    private function hitungTotalPendaftar($wisudaId)
+    {
+        return Biodata::whereNotNull('user_id')
+            ->where('wisuda_id', $wisudaId)
+            ->whereHas('user', function($query) {
+                $query->where('role', 'mahasiswa');
+            })
+            ->where(function($query) {
+                $query->where('is_verified_akademik', true)
+                      ->orWhere('is_verified_keuangan', true)
+                      ->orWhere('is_bayar', true);
+            })
+            ->count();
+    }
+
+    // Menentukan status dan warna badge berdasarkan kondisi wisuda
+    private function getWisudaStatusInfo($wisuda)
     {
         $now = now();
-        $buka = Carbon::parse($jadwal->waktu_buka_pendaftaran);
-        $tutup = Carbon::parse($jadwal->waktu_tutup_pendaftaran);
+        $buka = Carbon::parse($wisuda->tanggal_pendaftaran);
+        $tutup = Carbon::parse($wisuda->tanggal_penutupan);
+        $status = strtolower($wisuda->status);
 
         if ($now > $tutup) {
             return ['text' => 'Pendaftaran Ditutup', 'color' => 'bg-red-500'];
@@ -104,12 +110,16 @@ class BerandaController extends Controller
             return ['text' => 'Segera Dibuka', 'color' => 'bg-yellow-500'];
         }
 
-        if ($jadwal->status == 'Dibuka') {
-             return ['text' => 'Pendaftaran Dibuka', 'color' => 'bg-green-500'];
+        if (in_array($status, ['dibuka', 'aktif']) && $now >= $buka && $now <= $tutup) {
+            return ['text' => 'Pendaftaran Dibuka', 'color' => 'bg-green-500'];
         }
 
-        if ($jadwal->status == 'Ditutup') {
-             return ['text' => 'Pendaftaran Ditutup', 'color' => 'bg-red-500'];
+        if ($status == 'ditutup') {
+            return ['text' => 'Pendaftaran Ditutup', 'color' => 'bg-red-500'];
+        }
+
+        if ($status == 'selesai') {
+            return ['text' => 'Pendaftaran Selesai', 'color' => 'bg-gray-500'];
         }
 
         return ['text' => 'Belum Dibuka', 'color' => 'bg-gray-500'];

@@ -24,13 +24,14 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
-            BiodataSeeder::class, // Added BiodataSeeder
+            BiodataSeeder::class,
             DataWisudawanSeeder::class,
             PembayaranSeeder::class,
             AlurPendaftaranSeeder::class,
             GroupSeeder::class,
             SesiSeeder::class,
             WisudaSeeder::class,
+            SertifikatSeeder::class,
         ]);
     }
 }

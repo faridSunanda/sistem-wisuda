@@ -2,9 +2,9 @@
 const INFO_TEXT_FADE_DELAY = 500;
 const INFO_TEXT_MESSAGE_INTERVAL = 3000;
 //Alur pendaftaran
-const ALUR_SCROLL_SPEED_DESKTOP = 0.7;
-const ALUR_SCROLL_SPEED_MOBILE = 0.5;
-const ALUR_INIT_DELAY_DESKTOP = 500;
+const ALUR_SCROLL_SPEED_DESKTOP = 1.9;
+const ALUR_SCROLL_SPEED_MOBILE = 1.5;
+const ALUR_INIT_DELAY_DESKTOP = 800;
 const ALUR_INIT_DELAY_MOBILE = 800;
 const ALUR_BOUNCE_PAUSE_DELAY = 2000;
 const ALUR_MOBILE_BREAKPOINT = 640;
@@ -98,18 +98,28 @@ window.initAlurAutoScroll = function() {
         if (!container) return;
 
         const calculateMaxScroll = () => {
-            const containerSize = isMobile 
-                ? container.scrollHeight || container.offsetHeight
-                : container.scrollWidth || container.offsetWidth;
-            const wrapperSize = isMobile ? wrapper.clientHeight : wrapper.clientWidth;
-            return Math.max(0, containerSize - wrapperSize);
+            if (isMobile) {
+                // Untuk mobile
+                const containerHeight = container.scrollHeight;
+                const wrapperHeight = wrapper.clientHeight;
+                const maxScroll = Math.max(0, containerHeight - wrapperHeight);
+                return maxScroll;
+            } else {
+                const containerSize = container.scrollWidth || container.offsetWidth;
+                const wrapperSize = wrapper.clientWidth;
+                return Math.max(0, containerSize - wrapperSize);
+            }
         };
 
         const setScroll = (value) => {
-            const transform = isMobile 
-                ? `translateY(-${value}px)` 
-                : `translateX(-${value}px)`;
-            container.style.transform = transform;
+            if (isMobile) {
+                // Untuk mobile
+                container.style.transform = `translateY(-${value}px)`;
+                container.style.willChange = 'transform';
+            } else {
+                container.style.transform = `translateX(-${value}px)`;
+                container.style.willChange = 'transform';
+            }
         };
 
         const pauseAndBounce = (newDirection) => {
@@ -151,7 +161,17 @@ window.initAlurAutoScroll = function() {
             animationFrameId = requestAnimationFrame(autoScroll);
         };
 
-        autoScroll();
+        // Untuk mobile, tunggu sebentar untuk memastikan layout sudah selesai
+        if (isMobile) {
+            setTimeout(() => {
+                const maxScroll = calculateMaxScroll();
+                if (maxScroll > 0) {
+                    autoScroll();
+                }
+            }, 500);
+        } else {
+            autoScroll();
+        }
 
         window.addEventListener('beforeunload', () => {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -163,5 +183,39 @@ window.initAlurAutoScroll = function() {
         document.addEventListener('DOMContentLoaded', init);
     } else {
         init();
+    }
+};
+
+// Initialize all portal features
+window.initPortal = function(options = {}) {
+    const { persentase } = options;
+
+    const initializeFeatures = function() {
+        setTimeout(function() {
+            // Initialize info text animation
+            if (persentase !== undefined && typeof window.initInfoTextAnimation === 'function') {
+                window.initInfoTextAnimation(persentase);
+            }
+
+            // Initialize alur auto scroll
+            if (typeof window.initAlurAutoScroll === 'function') {
+                window.initAlurAutoScroll();
+            } else {
+                // Retry jika function belum tersedia
+                setTimeout(function() {
+                    if (typeof window.initAlurAutoScroll === 'function') {
+                        window.initAlurAutoScroll();
+                    }
+                }, 500);
+            }
+        }, 100);
+    };
+
+    // Jika halaman sudah ter-load, langsung jalankan
+    if (document.readyState === 'complete') {
+        initializeFeatures();
+    } else {
+        // Jika belum, tunggu event load
+        window.addEventListener('load', initializeFeatures);
     }
 };

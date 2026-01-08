@@ -91,7 +91,7 @@ $(document).ready(function() {
                     data: 'pembayaran',
                     name: 'pembayaran',
                     className: 'text-center',
-                    width: '120px'
+                    width: '150px'
                 },
                 {
                     data: 'nominal',
@@ -103,7 +103,7 @@ $(document).ready(function() {
                     data: 'status_badge',
                     name: 'status',
                     className: 'text-center',
-                    width: '140px',
+                    width: '200px',
                     orderable: false,
                     searchable: false
                 },
@@ -132,7 +132,7 @@ $(document).ready(function() {
                     data: 'semester',
                     name: 'semester',
                     className: 'text-center',
-                    width: '100px'
+                    width: '150px'
                 }
             ],
             language: {
@@ -170,7 +170,7 @@ $(document).ready(function() {
     }
 
     // Verify form handler
-    $('#verifyForm').on('submit', function(e) {
+    $(document).on('submit', '#verifyForm', function(e) {
         e.preventDefault();
         
         Swal.fire({
@@ -193,21 +193,91 @@ $(document).ready(function() {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: 'Pembayaran berhasil diverifikasi',
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => {
-                            location.reload();
-                        });
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message || 'Pembayaran berhasil diverifikasi',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message || 'Terjadi kesalahan saat memverifikasi pembayaran'
+                            });
+                        }
                     },
                     error: function(xhr) {
+                        let errorMessage = 'Terjadi kesalahan saat memverifikasi pembayaran';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
                         Swal.fire({
                             icon: 'error',
                             title: 'Gagal',
-                            text: xhr.responseJSON?.message || 'Terjadi kesalahan saat memverifikasi pembayaran'
+                            text: errorMessage
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    // Proses Wisudawan form handler
+    $(document).on('submit', '#prosesWisudawanForm', function(e) {
+        e.preventDefault();
+        
+        Swal.fire({
+            title: 'Proses Wisudawan?',
+            text: 'Apakah Anda yakin ingin memproses wisudawan ini? Status akan berubah menjadi "Terverifikasi".',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#435ebe',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Proses',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: form.serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: response.message || 'Wisudawan berhasil diproses',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message || 'Terjadi kesalahan saat memproses wisudawan'
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'Terjadi kesalahan saat memproses wisudawan';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: errorMessage
                         });
                     }
                 });
