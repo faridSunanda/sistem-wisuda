@@ -4,6 +4,7 @@
 <div class="space-y-4 md:space-y-6 pb-10">
     <div class="mb-6">
         <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p class="mt-2 text-sm md:text-base text-gray-600">Selamat datang di dashboard sistem wisuda. Berikut adalah ringkasan statistik wisudawan saat ini.</p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -26,7 +27,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow p-4 md:p-6 border border-gray-200">
             <div class="flex items-center justify-between mb-3 md:mb-4">
                 <h3 class="text-xs md:text-sm font-medium text-gray-600 flex items-center gap-2">
@@ -46,7 +47,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow p-4 md:p-6 border border-gray-200 sm:col-span-2 lg:col-span-1">
             <div class="flex items-center justify-between mb-3 md:mb-4">
                 <h3 class="text-xs md:text-sm font-medium text-gray-600 flex items-center gap-2">
@@ -64,7 +65,7 @@
             </div>
         </div>
     </div>
-    
+
     @php
         $fakultasLabelsRaw = $charts['fakultas']['labels'] ?? ['', '', '', ''];
         // Tambahkan prefix "Fakultas" pada setiap label jika belum ada
@@ -83,7 +84,7 @@
         $tahunMasukValues = $charts['tahun_masuk']['data'] ?? [0, 0, 0, 0];
         $jenjangLabels = $charts['jenjang']['labels'] ?? ['S1', 'S2', 'S3'];
         $jenjangValues = $charts['jenjang']['data'] ?? [0, 0, 0];
-        
+
         $fakultasColors = ['#3b82f6', '#10b981', '#eab308', '#ef4444'];
         $tahunMasukColors = ['#10b981', '#3b82f6', '#ef4444', '#eab308'];
         $jenjangColors = ['#a855f7', '#ec4899', '#eab308'];
@@ -95,7 +96,7 @@
             <div class="h-48 md:h-64 flex items-center justify-center">
                 <canvas id="fakultasChart"></canvas>
             </div>
-            <div class="mt-3 md:mt-4 space-y-1 md:space-y-2">
+            <div class="mt-4 space-y-1 md:space-y-2">
                 @foreach($fakultasLabels as $index => $label)
                     @if($label)
                         <div class="flex items-center gap-2 text-xs md:text-sm">
@@ -108,14 +109,15 @@
                     <p class="text-xs md:text-sm text-gray-500">Belum ada data</p>
                 @endif
             </div>
+            <p id="fakultasSummary" class="mt-3 md:mt-4 text-xs md:text-sm text-gray-600 text-center"></p>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow p-4 md:p-6 border border-gray-200">
             <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Wisudawan Berdasarkan Tahun Masuk</h3>
             <div class="h-48 md:h-64 flex items-center justify-center">
                 <canvas id="tahunMasukChart"></canvas>
             </div>
-            <div class="mt-3 md:mt-4 space-y-1 md:space-y-2">
+            <div class="mt-4 space-y-1 md:space-y-2">
                 @foreach($tahunMasukLabels as $index => $label)
                     @if($label)
                         <div class="flex items-center gap-2 text-xs md:text-sm">
@@ -128,14 +130,15 @@
                     <p class="text-xs md:text-sm text-gray-500">Belum ada data</p>
                 @endif
             </div>
+            <p id="tahunMasukSummary" class="mt-3 md:mt-4 text-xs md:text-sm text-gray-600 text-center"></p>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow p-4 md:p-6 border border-gray-200">
             <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4">Wisudawan Berdasarkan Jenjang</h3>
             <div class="h-48 md:h-64 flex items-center justify-center">
                 <canvas id="jenjangChart"></canvas>
             </div>
-            <div class="mt-3 md:mt-4 space-y-1 md:space-y-2">
+            <div class="mt-4 space-y-1 md:space-y-2">
                 <div class="flex items-center gap-2 text-xs md:text-sm">
                     <div class="w-3 h-3 md:w-4 md:h-4 bg-purple-500 rounded flex-shrink-0"></div>
                     <span>S1</span>
@@ -149,6 +152,7 @@
                     <span>S3</span>
                 </div>
             </div>
+            <p id="jenjangSummary" class="mt-3 md:mt-4 text-xs md:text-sm text-gray-600 text-center"></p>
         </div>
     </div>
 </div>
@@ -156,7 +160,9 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <script>
+    Chart.register(ChartDataLabels);
     const fakultasData = {
         labels: @json($fakultasLabels),
         datasets: [{
@@ -187,6 +193,28 @@
         plugins: {
             legend: {
                 display: false
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const value = context.parsed;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return `${context.label}: ${value} (${percentage}%)`;
+                    }
+                }
+            },
+            datalabels: {
+                color: '#fff',
+                font: {
+                    weight: 'bold',
+                    size: 11
+                },
+                formatter: function(value, context) {
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return `${value}\n${percentage}%`;
+                }
             }
         }
     };
@@ -208,6 +236,35 @@
         data: jenjangData,
         options: chartOptions
     });
+
+    // Fungsi untuk membuat narasi dinamis
+    function generateSummary(data) {
+        const values = data.datasets[0].data;
+        const labels = data.labels;
+        const total = values.reduce((a, b) => a + b, 0);
+
+        if (total === 0) return 'Belum ada data tersedia';
+
+        // Cari nilai terbesar
+        let maxIndex = 0;
+        let maxValue = values[0];
+        for (let i = 1; i < values.length; i++) {
+            if (values[i] > maxValue) {
+                maxValue = values[i];
+                maxIndex = i;
+            }
+        }
+
+        const percentage = ((maxValue / total) * 100).toFixed(1);
+        const label = labels[maxIndex];
+
+        return `Sebagian besar wisudawan (${percentage}%) berasal dari ${label} dengan total ${maxValue} dari ${total} wisudawan.`;
+    }
+
+    // Update narasi untuk setiap chart
+    document.getElementById('fakultasSummary').textContent = generateSummary(fakultasData);
+    document.getElementById('tahunMasukSummary').textContent = generateSummary(tahunMasukData);
+    document.getElementById('jenjangSummary').textContent = generateSummary(jenjangData);
 </script>
 @endpush
 @endsection
