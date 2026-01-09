@@ -53,7 +53,7 @@ function getMessagesByPercentage(persentase) {
             '<span class="text-red-600 font-bold">Pendaftaran Ditutup</span>'
         ];
     }
-    
+
     if (persentase >= 80) {
         return [
             `<span class="text-orange-600 font-bold">${persentase.toFixed(1)}% kuota telah terpenuhi</span>`,
@@ -61,7 +61,7 @@ function getMessagesByPercentage(persentase) {
             '<span class="text-orange-600 font-bold">Segera Daftar!</span>'
         ];
     }
-    
+
     return [
         `<span class="font-semibold text-gray-800">${persentase.toFixed(1)}% kuota telah terpenuhi</span>`,
         '<span class="font-semibold text-gray-800">Lengkapi syarat pendaftaran</span>',
@@ -197,17 +197,17 @@ window.initPortal = function(options = {}) {
                 window.initInfoTextAnimation(persentase);
             }
 
-            // Initialize alur auto scroll
-            if (typeof window.initAlurAutoScroll === 'function') {
-                window.initAlurAutoScroll();
-            } else {
-                // Retry jika function belum tersedia
-                setTimeout(function() {
-                    if (typeof window.initAlurAutoScroll === 'function') {
-                        window.initAlurAutoScroll();
-                    }
-                }, 500);
-            }
+            // Auto scroll disabled - all content now visible
+            // if (typeof window.initAlurAutoScroll === 'function') {
+            //     window.initAlurAutoScroll();
+            // } else {
+            //     // Retry jika function belum tersedia
+            //     setTimeout(function() {
+            //         if (typeof window.initAlurAutoScroll === 'function') {
+            //             window.initAlurAutoScroll();
+            //         }
+            //     }, 500);
+            // }
         }, 100);
     };
 
