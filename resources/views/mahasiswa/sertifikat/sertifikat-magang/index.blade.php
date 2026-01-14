@@ -8,7 +8,7 @@
         
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
             
-            <h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-6 pb-2 border-b-4 border-[#435ebe] inline-block">Sertifikat Organisasi</h2>
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-900 mb-6 pb-2 border-b-4 border-[#435ebe] inline-block">Sertifikat Magang</h2>
             
             <div class="flex items-center bg-orange-50 border border-orange-200 rounded-lg px-4 py-3 mb-6">
                 <svg class="w-5 h-5 text-orange-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

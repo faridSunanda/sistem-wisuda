@@ -87,9 +87,9 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-            <div class="p-6 border-b border-gray-100">
-                <h2 class="text-lg font-semibold text-gray-900">Preview Formulir Wisuda</h2>
-                <p class="text-sm text-gray-600 mt-1">Formulir akan terupdate otomatis ketika data diubah</p>
+            <div class="p-6 border-b border-[#435ebe] bg-[#435ebe]">
+                <h2 class="text-lg font-semibold text-white">Preview Formulir Wisuda</h2>
+                <p class="text-sm text-indigo-100 mt-1">Formulir akan terupdate otomatis ketika data diubah</p>
             </div>
 
             <div class="p-6">

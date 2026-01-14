@@ -22,7 +22,7 @@
                     </div>
                     
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-4 md:px-6 py-4">
+        <div class="bg-[#435ebe] px-4 md:px-6 py-4">
             <h2 class="text-lg md:text-xl font-semibold text-white">Ringkasan Pembayaran</h2>
                     </div>
                     
@@ -65,7 +65,7 @@
                     </div>
                     
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-4 md:px-6 py-4">
+        <div class="bg-[#435ebe] px-4 md:px-6 py-4">
             <h2 class="text-lg md:text-xl font-semibold text-white">Tutorial Pembayaran BRIVA</h2>
             <p class="text-sm text-indigo-100 mt-1">Pilih metode pembayaran, lalu ikuti langkah-langkahnya. Simpan bukti/struk setelah bayar.</p>
                         </div>
